@@ -11,14 +11,14 @@ function Login() {
     const [password, setPassword] = useState("");
 
     const signIn = (e) => {
-        e.preventDefault();
+        e.preventDefault();     //prevent page from refreshing
 
         //do something with email and password
         console.log(email, password);
     };
 
     const register = (e) => {
-        e.preventDefault();
+        e.preventDefault();     //prevent page from refreshing
 
         //do something with email and password
         console.log(email, password);
