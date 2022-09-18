@@ -1,6 +1,8 @@
 import React from "react";
+import "./Header.css";
 import { Link } from "react-router-dom";
 import { defaultLink } from "../constants";
+import { useStateValue } from "../StateProvider";
 // react-bootstrap
 import Container from "react-bootstrap/container";
 import Navbar from "react-bootstrap/Navbar";
@@ -8,9 +10,21 @@ import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import NavDropdown from "react-bootstrap/NavDropdown";
+//firebase
+import { auth } from "../firebase";
 
 function Header() {
-    console.log(defaultLink);
+    //grab user from reducer
+    const [{ user }] = useStateValue();
+
+    //handle's if the user clicks on the sign in / sign out
+    const handleAuth = () => {
+        //if user is signed in
+        if (user) {
+            //sign's out the user
+            auth.signOut();
+        }
+    };
 
     return (
         <Navbar sticky="top" bg="dark" expand="lg" variant="dark">
@@ -85,9 +99,15 @@ function Header() {
                             Search
                         </Button>
                     </Form>
-                    <Navbar.Text>
-                        <Link to={defaultLink + "/login"}>Sign In</Link>
-                    </Navbar.Text>
+                    <Link to={!user && (defaultLink + "/login")}>
+                        <div onClick={handleAuth} className="Header__flexDown">
+                            <div className="Header__helloText">Hello {user ? user?.email : "Guest"}</div>
+                            <div className="Header__helloText">
+                                {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
+                                {user ? "Sign Out" : "Sign In"}
+                            </div>
+                        </div>
+                    </Link>
                 </Navbar.Collapse>
             </Container>
         </Navbar>

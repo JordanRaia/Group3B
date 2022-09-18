@@ -1,0 +1,8 @@
+.Header__flexDown {
+    display: flex;
+    flex-direction: column;
+}
+
+.Header__helloText {
+    color: white;
+}

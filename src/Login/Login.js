@@ -1,56 +1,49 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import { defaultLink } from "../constants";
 // react-bootstrap
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+//firebase
+import { auth } from "../firebase";
+import {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+} from "firebase/auth";
 
 function Login() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const signIn = (e) => {
-        e.preventDefault();     //prevent page from refreshing
+        e.preventDefault(); //prevent page from refreshing
 
-        //do something with email and password
-        console.log(email, password);
+        //send email and password to firebase for sign in authentication
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                //sign in was successful and redirecting to homepage
+                navigate(defaultLink + "/");
+            })
+            //signing in was unsuccessful and alerting user with error message
+            .catch((error) => alert(error.message));
     };
 
     const register = (e) => {
-        e.preventDefault();     //prevent page from refreshing
+        e.preventDefault(); //prevent page from refreshing
 
-        //do something with email and password
-        console.log(email, password);
+        //send email and password to firebase for register
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                if (auth) {
+                    //creating account was successful and redirecting to homepage
+                    navigate(defaultLink + "/");
+                }
+            })
+            //creating an account was unsuccessful and alerting user with error message
+            .catch((error) => alert(error.message));
     };
-
-    function export_JSON() {
-        const form = document.getElementById("login__form");
-        const input_email = form.elements["formBasicEmail"];
-        const input_password = form.elements["formBasicPassword"];
-
-        let xhr = new XMLHttpRequest();
-        let url = "https://students.cs.niu.edu/~z1860207/Group3B/submit.php";
-
-        xhr.open("POST", url, true);
-
-        // Set the request header i.e. which type of content you are sending
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-        // Create a state change callback
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                // TODO:ERROR - Print received data from server
-                //result.innerHTML = this.responseText;
-            }
-        };
-
-        var user_credentials = JSON.stringify({
-            email: input_email,
-            password: input_password,
-        });
-        xhr.send(user_credentials);
-    }
 
     return (
         <div className="login">
