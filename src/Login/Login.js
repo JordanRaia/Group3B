@@ -17,12 +17,12 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const signIn = (e) => {
+    const signIn = async (e) => {
         e.preventDefault(); //prevent page from refreshing
 
         //send email and password to firebase for sign in authentication
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
+        await signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
                 //sign in was successful and redirecting to homepage
                 navigate(defaultLink + "/");
             })
@@ -30,12 +30,12 @@ function Login() {
             .catch((error) => alert(error.message));
     };
 
-    const register = (e) => {
+    const register = async (e) => {
         e.preventDefault(); //prevent page from refreshing
 
         //send email and password to firebase for register
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
+        await createUserWithEmailAndPassword(auth, email, password)
+            .then(() => {
                 if (auth) {
                     //creating account was successful and redirecting to homepage
                     navigate(defaultLink + "/");

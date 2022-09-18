@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
 import { defaultLink } from "../constants";
-import { useStateValue } from "../StateProvider";
 // react-bootstrap
 import Container from "react-bootstrap/container";
 import Navbar from "react-bootstrap/Navbar";
@@ -12,12 +11,18 @@ import Button from "react-bootstrap/Button";
 import NavDropdown from "react-bootstrap/NavDropdown";
 //firebase
 import { auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 function Header() {
-    //grab user from reducer
-    const [{ user }] = useStateValue();
+    //grab user
+    const [user, setUser] = useState({});
+    
+    //set user to current user
+    onAuthStateChanged(auth, (currentUser) => {
+        setUser(currentUser);
+    })
 
-    //handle's if the user clicks on the sign in / sign out
+    //handle's if the user clicks on sign out
     const handleAuth = () => {
         //if user is signed in
         if (user) {
