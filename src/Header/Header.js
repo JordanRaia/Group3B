@@ -3,12 +3,14 @@ import "./Header.css";
 import { Link } from "react-router-dom";
 import { defaultLink } from "../constants";
 // react-bootstrap
-import Container from "react-bootstrap/container";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import {
+    Container,
+    Navbar,
+    Nav,
+    Form,
+    Button,
+    NavDropdown,
+} from "react-bootstrap";
 //firebase
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -16,11 +18,11 @@ import { onAuthStateChanged } from "firebase/auth";
 function Header() {
     //grab user
     const [user, setUser] = useState({});
-    
+
     //set user to current user
     onAuthStateChanged(auth, (currentUser) => {
         setUser(currentUser);
-    })
+    });
 
     //handle's if the user clicks on sign out
     const handleAuth = () => {
@@ -104,9 +106,11 @@ function Header() {
                             Search
                         </Button>
                     </Form>
-                    <Link to={!user && (defaultLink + "/login")}>
+                    <Link to={!user && defaultLink + "/login"}>
                         <div onClick={handleAuth} className="Header__flexDown">
-                            <div className="Header__helloText">Hello {user ? user?.email : "Guest"}</div>
+                            <div className="Header__helloText">
+                                Hello {user ? user?.email : "Guest"}
+                            </div>
                             <div className="Header__helloText">
                                 {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
                                 {user ? "Sign Out" : "Sign In"}
