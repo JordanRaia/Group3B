@@ -47,7 +47,7 @@ function Login() {
 
     return (
         <div className="login">
-            <Link to={defaultLink} style={{ textDecoration: "none" }}>
+            <Link to={defaultLink + "/"} style={{ textDecoration: "none" }}>
                 <h1 className="login__logo">Logo</h1>
             </Link>
             <div className="login__border">
