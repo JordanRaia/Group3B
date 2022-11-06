@@ -63,55 +63,56 @@ function Header() {
                 </Link>
                 {/* adds hamburger menu for mobile */}
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                {/* Navbar Start */}
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         {/* Navbar Links */}
                         <Link to={"/"} style={{ textDecoration: "none" }}>
-                            <Nav.Link>Home</Nav.Link>
+                            <Nav.Link className="header__navLink">Home</Nav.Link>
                         </Link>
                         <Link to={"/"} style={{ textDecoration: "none" }}>
-                            <Nav.Link>Link1</Nav.Link>
+                            <Nav.Link className="header__navLink">Link1</Nav.Link>
                         </Link>
                         <Link to={"/"} style={{ textDecoration: "none" }}>
-                            <Nav.Link>Link2</Nav.Link>
+                            <Nav.Link className="header__navLink">Link2</Nav.Link>
                         </Link>
                         <Link to={"/"} style={{ textDecoration: "none" }}>
-                            <Nav.Link>Link3</Nav.Link>
+                            <Nav.Link className="header__navLink">Link3</Nav.Link>
                         </Link>
                         {/* Dropdown Links */}
-                        <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+                        <NavDropdown className="header__navDropdown" title="Dropdown" id="basic-nav-dropdown">
                             <Link to={"/"} style={{ textDecoration: "none" }}>
-                                <NavDropdown.Item>Drop1</NavDropdown.Item>
+                                <NavDropdown.Item className="header__navDropdownItem">Drop1</NavDropdown.Item>
                             </Link>
                             <Link to={"/"} style={{ textDecoration: "none" }}>
-                                <NavDropdown.Item>Drop2</NavDropdown.Item>
+                                <NavDropdown.Item className="header__navDropdownItem">Drop2</NavDropdown.Item>
                             </Link>
                             <NavDropdown.Divider />
                             <Link to={"/"} style={{ textDecoration: "none" }}>
-                                <NavDropdown.Item>Drop3</NavDropdown.Item>
+                                <NavDropdown.Item className="header__navDropdownItem">Drop3</NavDropdown.Item>
                             </Link>
                         </NavDropdown>
                     </Nav>
-                    <div className="Header__flex">
+                    <div className="header__flex">
                         <img
-                            className="Header__profilePic"
+                            className="header__profilePic"
                             id="profile"
                             src={profileUrl}
                             alt="profile"
                         />
-                        <div className="Header__flexDown">
-                            <div className="Header__helloText">
+                        <div className="header__flexDown">
+                            <div className="header__helloText">
                                 Hello {user ? name : "Guest"}
                             </div>
                             {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
-                            <div className="Header__linkFlex">
+                            <div className="header__linkFlex">
                                 <Link
-                                    className="Header__link"
+                                    className="header__link"
                                     to={!user && "/login"}
                                 >
                                     <div
                                         onClick={handleAuth}
-                                        className="Header__SignIn"
+                                        className="header__signIn"
                                     >
                                         {user ? "Sign Out" : "Sign In"}
                                     </div>
@@ -119,7 +120,7 @@ function Header() {
                             </div>
                         </div>
                         <img
-                            className="Header__profilePic"
+                            className="header__profilePic"
                             id="profile1"
                             src={profileUrl}
                             alt="profile"

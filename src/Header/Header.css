@@ -1,50 +1,54 @@
-.Header__flexDown {
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+.header__flexDown {
     display: flex;
     flex-direction: column;
 }
 
-.Header__flex {
+.header__flex {
     display: flex;
 }
 
-.Header__flex img:first-child {
+.header__flex img:first-child {
     display: none;
 }
 
 @media screen and (max-width: 920px) {
-    .Header__flex img:first-child {
+    .header__flex img:first-child {
         display: flex;
     }
 
-    .Header__flex img:last-child {
+    .header__flex img:last-child {
         display: none;
     }
 }
 
-.Header__helloText {
+.header__helloText {
     color: rgba(255, 255, 255, 0.55);;
     text-decoration: none;
+    font-family: Poppins;
+    font-weight: 400;
 }
 
-.Header__link {
+.header__link {
     text-decoration: none;
     color: rgba(255, 255, 255, 0.55);
     transition: color 150ms;
 }
 
-.Header__link:hover {
+.header__link:hover {
     text-decoration: underline;
     color: white;
     transition: color 150ms;
 }
 
-.Header__linkFlex {
+.header__linkFlex {
     display: flex;
     justify-content: right;
 }
 
 @media screen and (max-width: 920px) {
-    .Header__linkFlex {
+    .header__linkFlex {
         justify-content: left;
     }
 }
@@ -54,9 +58,10 @@
     width: 3rem;
     border: 1px solid rgba(255, 255, 255, 0.55);
     border-radius: 100%;
+    margin-right: .5rem;
 }
 
-.Header__profilePic {
+.header__profilePic {
     height: 3rem;
     width: 3rem;
     border-radius: 50%;
@@ -67,8 +72,13 @@
 }
 
 @media screen and (max-width: 920px) {
-    .Header__profilePic {
+    .header__profilePic {
         margin-right: .5rem;
         margin-left: 0;
     }
+}
+
+.header__navLink, .header__navDropdown, .header__navDropDownItem, .header__signIn {
+    font-family: Poppins!important;
+    font-weight: 400!important;
 }
