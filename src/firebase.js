@@ -1,5 +1,5 @@
-
 import { getDatabase } from "firebase/database";
+import { getStorage } from "firebase/storage";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
@@ -20,7 +20,10 @@ const app = initializeApp(firebaseConfig);
 //firebase realtime database
 const db = getDatabase(app);
 
+//firebase storage
+const storage = getStorage();
+
 //firebase authentication
 const auth = getAuth();
 
-export { db, auth };
+export { db, storage, auth };

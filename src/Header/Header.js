@@ -5,24 +5,52 @@ import Logo from "../logo/3B-logos_white.png";
 // react-bootstrap
 import { Container, Navbar, Nav, NavDropdown } from "react-bootstrap";
 //firebase
-import { auth } from "../firebase";
+import { auth, db, storage } from "../firebase";
+import { onValue, ref as dbRef } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
+import { getDownloadURL, ref as stoRef } from "firebase/storage";
 
 function Header() {
+    const defaultProfileUrl =
+        "https://firebasestorage.googleapis.com/v0/b/group3b-38bd5.appspot.com/o/users%2Fdefault%2Fprofile.png?alt=media&token=ee6e94df-17f3-4ccc-b805-29aef7475798";
+
     //grab user
     const [user, setUser] = useState({});
+    const [name, setName] = useState("");
+    //Url to profile picture
+    const [profileUrl, setProfileUrl] = useState(defaultProfileUrl);
 
     //set user to current user
     onAuthStateChanged(auth, (currentUser) => {
         setUser(currentUser);
+
+        if (user) {
+            //get ref to name from realtime database
+            const nameRef = dbRef(db, `users/${currentUser.uid}/fullname`);
+            //when value is changed in database
+            onValue(nameRef, (snapshot) => {
+                //set data to name
+                const data = snapshot.val();
+                //save name to useState name
+                setName(data);
+            });
+
+            //get the URL for the profile picture
+            getDownloadURL(
+                stoRef(storage, `users/${currentUser.uid}/profile.jpg`)
+            ).then((url) => {
+                setProfileUrl(url);
+            });
+        }
     });
 
     //handle's if the user clicks on sign out
-    const handleAuth = () => {
+    const handleAuth = async () => {
         //if user is signed in
         if (user) {
             //sign's out the user
-            auth.signOut();
+            await auth.signOut();
+            await setProfileUrl(defaultProfileUrl);
         }
     };
 
@@ -64,16 +92,38 @@ function Header() {
                             </Link>
                         </NavDropdown>
                     </Nav>
-                    <div onClick={handleAuth} className="Header__flexDown">
-                        <div className="Header__helloText">
-                            Hello {user ? user?.email : "Guest"}
-                        </div>
-                        {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
-                        <Link className="Header__link" to={!user && "/login"}>
-                            <div className="Header__SignIn">
-                                {user ? "Sign Out" : "Sign In"}
+                    <div className="Header__flex">
+                        <img
+                            className="Header__profilePic"
+                            id="profile"
+                            src={profileUrl}
+                            alt="profile"
+                        />
+                        <div className="Header__flexDown">
+                            <div className="Header__helloText">
+                                Hello {user ? name : "Guest"}
                             </div>
-                        </Link>
+                            {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
+                            <div className="Header__linkFlex">
+                                <Link
+                                    className="Header__link"
+                                    to={!user && "/login"}
+                                >
+                                    <div
+                                        onClick={handleAuth}
+                                        className="Header__SignIn"
+                                    >
+                                        {user ? "Sign Out" : "Sign In"}
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                        <img
+                            className="Header__profilePic"
+                            id="profile1"
+                            src={profileUrl}
+                            alt="profile"
+                        />
                     </div>
                 </Navbar.Collapse>
             </Container>

@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+.register__logoContainer {
+    height: 9.375rem;
+    width: 9.375rem;
+}
+
+.register__centerLogo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.register__uploadButtonFlex {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.register__uploadButton {
+    color: #3abb20!important;
+    border-radius: .5rem!important;
+    font-family: Poppins!important;
+    font-weight: 600!important;
+}
+
+.register__uploadButton:hover {
+    background-color: #e3fedc!important;
+    border-radius: .5rem!important;
+}
+
+.register__icon {
+    font-size: 1rem!important;
+}

@@ -3,31 +3,72 @@
     flex-direction: column;
 }
 
+.Header__flex {
+    display: flex;
+}
+
+.Header__flex img:first-child {
+    display: none;
+}
+
+@media screen and (max-width: 920px) {
+    .Header__flex img:first-child {
+        display: flex;
+    }
+
+    .Header__flex img:last-child {
+        display: none;
+    }
+}
+
 .Header__helloText {
-    color: white;
+    color: rgba(255, 255, 255, 0.55);;
     text-decoration: none;
 }
 
 .Header__link {
-    display: flex;
-    justify-content: right;
     text-decoration: none;
-    color: white;
-}
-
-@media screen and (max-width: 920px) {
-    .Header__link {
-        justify-content: left;
-    }
+    color: rgba(255, 255, 255, 0.55);
+    transition: color 150ms;
 }
 
 .Header__link:hover {
     text-decoration: underline;
     color: white;
+    transition: color 150ms;
+}
+
+.Header__linkFlex {
+    display: flex;
+    justify-content: right;
+}
+
+@media screen and (max-width: 920px) {
+    .Header__linkFlex {
+        justify-content: left;
+    }
 }
 
 .header__logo {
     height: 3rem;
-    border: 1px solid white;
+    width: 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.55);
     border-radius: 100%;
+}
+
+.Header__profilePic {
+    height: 3rem;
+    width: 3rem;
+    border-radius: 50%;
+    margin-left: .5rem;
+    margin-right: 0;
+    border: 2px solid rgba(255, 255, 255, 0.55);
+    object-fit: cover;
+}
+
+@media screen and (max-width: 920px) {
+    .Header__profilePic {
+        margin-right: .5rem;
+        margin-left: 0;
+    }
 }
