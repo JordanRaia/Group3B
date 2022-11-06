@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Home/Home";
 import Header from "./Header/Header";
 import Login from "./Login/Login";
+import Register from "./Login/Register";
 import { defaultLink } from "./constants";
 
 function App() {
@@ -21,6 +22,8 @@ function App() {
                         path={defaultLink + "/login"}
                         element={[<Login />]}
                     />
+                    {/* Register Page */}
+                    <Route path={"/register"} element={[<Register />]}/>
                 </Routes>
             </div>
         </BrowserRouter>
