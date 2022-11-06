@@ -79,18 +79,33 @@ function Login() {
                                         </div>
                                     </div>
                                 </button>
-                                <div className="login__register">
-                                    <span className="login__registerText">
-                                        • Don't have an account?{" "}
-                                    </span>
-                                    <Link
-                                        to={"/register"}
-                                        className="login__link"
-                                    >
-                                        <div className="login__registerLink">
-                                            Sign up
-                                        </div>
-                                    </Link>
+                                <div>
+                                    <div className="login__register">
+                                        <span className="login__registerText">
+                                            • Don't have an account?{" "}
+                                        </span>
+                                        <Link
+                                            to={"/register"}
+                                            className="login__link"
+                                        >
+                                            <div className="login__registerLink">
+                                                Sign up
+                                            </div>
+                                        </Link>
+                                    </div>
+                                    <div className="login__register">
+                                        <span className="login__registerText">
+                                            • Return to homepage?{" "}
+                                        </span>
+                                        <Link
+                                            to={"/"}
+                                            className="login__link"
+                                        >
+                                            <div className="login__registerLink">
+                                                Home
+                                            </div>
+                                        </Link>
+                                    </div>
                                 </div>
                             </FormControl>
                         </Box>

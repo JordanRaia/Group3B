@@ -5,4 +5,29 @@
 
 .Header__helloText {
     color: white;
+    text-decoration: none;
+}
+
+.Header__link {
+    display: flex;
+    justify-content: right;
+    text-decoration: none;
+    color: white;
+}
+
+@media screen and (max-width: 920px) {
+    .Header__link {
+        justify-content: left;
+    }
+}
+
+.Header__link:hover {
+    text-decoration: underline;
+    color: white;
+}
+
+.header__logo {
+    height: 3rem;
+    border: 1px solid white;
+    border-radius: 100%;
 }

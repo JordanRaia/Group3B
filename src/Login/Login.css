@@ -97,12 +97,15 @@
     font-weight: 600;
 }
 
+.login__register:first-child {
+    margin-top: 10rem;
+}
+
 /* register */
 .login__register {
     display: flex;
     white-space: pre-wrap;
     list-style-type: circle;
-    margin-top: 10rem;
 }
 
 .login__registerText {
