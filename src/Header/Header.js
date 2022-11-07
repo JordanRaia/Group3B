@@ -3,7 +3,7 @@ import "./Header.css";
 import { Link } from "react-router-dom";
 import Logo from "../logo/3B-logos_white.png";
 // react-bootstrap
-import { Container, Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { Container, Navbar, Nav } from "react-bootstrap";
 //firebase
 import { auth, db, storage } from "../firebase";
 import { onValue, ref as dbRef } from "firebase/database";
@@ -67,31 +67,50 @@ function Header() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         {/* Navbar Links */}
-                        <Link to={"/"} style={{ textDecoration: "none" }}>
-                            <Nav.Link className="header__navLink">Home</Nav.Link>
-                        </Link>
-                        <Link to={"/"} style={{ textDecoration: "none" }}>
-                            <Nav.Link className="header__navLink">Link1</Nav.Link>
-                        </Link>
-                        <Link to={"/"} style={{ textDecoration: "none" }}>
-                            <Nav.Link className="header__navLink">Link2</Nav.Link>
-                        </Link>
-                        <Link to={"/"} style={{ textDecoration: "none" }}>
-                            <Nav.Link className="header__navLink">Link3</Nav.Link>
-                        </Link>
-                        {/* Dropdown Links */}
-                        <NavDropdown className="header__navDropdown" title="Dropdown" id="basic-nav-dropdown">
-                            <Link to={"/"} style={{ textDecoration: "none" }}>
-                                <NavDropdown.Item className="header__navDropdownItem">Drop1</NavDropdown.Item>
-                            </Link>
-                            <Link to={"/"} style={{ textDecoration: "none" }}>
-                                <NavDropdown.Item className="header__navDropdownItem">Drop2</NavDropdown.Item>
-                            </Link>
-                            <NavDropdown.Divider />
-                            <Link to={"/"} style={{ textDecoration: "none" }}>
-                                <NavDropdown.Item className="header__navDropdownItem">Drop3</NavDropdown.Item>
-                            </Link>
-                        </NavDropdown>
+                        {/* Home */}
+                        <Nav.Link as={Link} to="/" className="header__navLink">
+                            Home
+                        </Nav.Link>
+                        {/* New Quote */}
+                        <Nav.Link
+                            as={Link}
+                            to="/NewQuote"
+                            className="header__navLink"
+                        >
+                            New Quote
+                        </Nav.Link>
+                        {/* Finalize Quote */}
+                        <Nav.Link
+                            as={Link}
+                            to="/FinalizeQuote"
+                            className="header__navLink"
+                        >
+                            Finalize Quote
+                        </Nav.Link>
+                        {/* Sanction Quote */}
+                        <Nav.Link
+                            as={Link}
+                            to="/SanctionQuote"
+                            className="header__navLink"
+                        >
+                            Sanction Quote
+                        </Nav.Link>
+                        {/* Administration */}
+                        <Nav.Link
+                            as={Link}
+                            to="/Administration"
+                            className="header__navLink"
+                        >
+                            Administration
+                        </Nav.Link>
+                        {/* Quotes */}
+                        <Nav.Link
+                            as={Link}
+                            to="/Quotes"
+                            className="header__navLink"
+                        >
+                            Quotes
+                        </Nav.Link>
                     </Nav>
                     <div className="header__flex">
                         <img

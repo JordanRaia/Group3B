@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
 /* Responsive width, matches with default bootstrap navbar */
 .home {
     max-width: 1300px;
@@ -39,4 +41,34 @@
     .home {
         max-width: 96.5%;
     }
+}
+
+.home__flex {
+    display: flex;
+    margin-top: 5rem;
+    justify-content: space-evenly;
+}
+
+.home__flexColumn {
+    margin: 2rem;
+    margin: 1rem;
+}
+
+.home__Header {
+    font-family: Poppins;
+    font-weight: 700;
+    font-size: xx-large;
+}
+
+.home__subHeader {
+    font-family: Poppins;
+    font-weight: 600;
+    font-size: x-large;
+}
+
+.home__logo {
+    border: 5px solid black;
+    border-radius: 50%;
+    width: 50%;
+    margin: 1rem;
 }
