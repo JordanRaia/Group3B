@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "./Home/Home";
 import Header from "./Header/Header";
 import Login from "./Login/Login";
@@ -12,46 +12,39 @@ import Quotes from "./Quotes/Quotes";
 
 function App() {
     return (
-        <BrowserRouter>
+        <div className="app">
+            <Header />
             <Routes>
                 {/* Home Page */}
-                <Route exact path={"/"} element={[<Header />, <Home />]} />
+                <Route exact path={"/"} element={[<Home />]} />
                 {/* Login Page */}
                 <Route exact path={"/login"} element={[<Login />]} />
                 {/* Register Page */}
                 <Route exact path={"/register"} element={[<Register />]} />
                 {/* New Quote */}
-                <Route
-                    exact
-                    path={"/NewQuote"}
-                    element={[<Header />, <NewQuote />]}
-                />
+                <Route exact path={"/NewQuote"} element={[<NewQuote />]} />
                 {/* Finalize Quote */}
                 <Route
                     exact
                     path={"/FinalizeQuote"}
-                    element={[<Header />, <FinalizeQuote />]}
+                    element={[<FinalizeQuote />]}
                 />
                 {/* Finalize Quote */}
                 <Route
                     exact
                     path={"/SanctionQuote"}
-                    element={[<Header />, <SanctionQuote />]}
+                    element={[<SanctionQuote />]}
                 />
                 {/* Finalize Quote */}
                 <Route
                     exact
                     path={"/Administration"}
-                    element={[<Header />, <Administration />]}
+                    element={[<Administration />]}
                 />
                 {/* Finalize Quote */}
-                <Route
-                    exact
-                    path={"/Quotes"}
-                    element={[<Header />, <Quotes />]}
-                />
+                <Route exact path={"/Quotes"} element={[<Quotes />]} />
             </Routes>
-        </BrowserRouter>
+        </div>
     );
 }
 

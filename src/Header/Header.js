@@ -68,13 +68,17 @@ function Header() {
                     <Nav className="me-auto">
                         {/* Navbar Links */}
                         {/* Home */}
-                        <Nav.Link as={Link} to="/" className="header__navLink">
+                        <Nav.Link
+                            as={Link}
+                            to={"/"}
+                            className="header__navLink"
+                        >
                             Home
                         </Nav.Link>
                         {/* New Quote */}
                         <Nav.Link
                             as={Link}
-                            to="/NewQuote"
+                            to={"/NewQuote"}
                             className="header__navLink"
                         >
                             New Quote
@@ -82,7 +86,7 @@ function Header() {
                         {/* Finalize Quote */}
                         <Nav.Link
                             as={Link}
-                            to="/FinalizeQuote"
+                            to={"/FinalizeQuote"}
                             className="header__navLink"
                         >
                             Finalize Quote
@@ -90,7 +94,7 @@ function Header() {
                         {/* Sanction Quote */}
                         <Nav.Link
                             as={Link}
-                            to="/SanctionQuote"
+                            to={"/SanctionQuote"}
                             className="header__navLink"
                         >
                             Sanction Quote
@@ -98,7 +102,7 @@ function Header() {
                         {/* Administration */}
                         <Nav.Link
                             as={Link}
-                            to="/Administration"
+                            to={"/Administration"}
                             className="header__navLink"
                         >
                             Administration
@@ -106,7 +110,7 @@ function Header() {
                         {/* Quotes */}
                         <Nav.Link
                             as={Link}
-                            to="/Quotes"
+                            to={"/Quotes"}
                             className="header__navLink"
                         >
                             Quotes
