@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
+import "./SanctionQuote.css";
 
 function SanctionQuote() {
-  return (
-    <div>SanctionQuote</div>
-  )
+    return <div className="sanction">SanctionQuote</div>;
 }
 
-export default SanctionQuote
+export default SanctionQuote;

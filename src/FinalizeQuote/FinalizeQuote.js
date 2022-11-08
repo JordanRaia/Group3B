@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
+import "./FinalizeQuote.css";
 
 function FinalizeQuote() {
-  return (
-    <div>FinalizeQuote</div>
-  )
+    return <div className="final">FinalizeQuote</div>;
 }
 
-export default FinalizeQuote
+export default FinalizeQuote;

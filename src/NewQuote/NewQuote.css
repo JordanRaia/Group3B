@@ -1,0 +1,42 @@
+/* Responsive width, matches with default bootstrap navbar */
+.new {
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media screen and (max-width: 1400px) {
+    .new {
+        max-width: 1120px;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .new {
+        max-width: 940px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .new {
+        max-width: 700px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .new {
+        max-width: 520px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .new {
+        max-width: 520px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .new {
+        max-width: 96.5%;
+    }
+}

@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
+import "./NewQuote.css";
 
 function NewQuote() {
-  return (
-    <div>NewQuote</div>
-  )
+    return <div className="new">NewQuote</div>;
 }
 
-export default NewQuote
+export default NewQuote;
