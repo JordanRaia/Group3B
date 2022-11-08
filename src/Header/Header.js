@@ -42,6 +42,11 @@ function Header() {
                 setProfileUrl(url);
             });
         }
+        else
+        {
+            //set profile picture to deafult
+            setProfileUrl(defaultProfileUrl);
+        }
     });
 
     //handle's if the user clicks on sign out
@@ -50,7 +55,6 @@ function Header() {
         if (user) {
             //sign's out the user
             await auth.signOut();
-            await setProfileUrl(defaultProfileUrl);
         }
     };
 
