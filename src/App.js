@@ -17,10 +17,10 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/" element={<Header />}>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/NewQuote" element={<NewQuote />} />
-                    <Route path="/FinalizeQuote" element={<FinalizeQuote />} />
-                    <Route path="/SanctionQuote" element={<SanctionQuote />} />
+                    <Route path="" element={<Home />} />
+                    <Route path="NewQuote" element={<NewQuote />} />
+                    <Route path="FinalizeQuote" element={<FinalizeQuote />} />
+                    <Route path="SanctionQuote" element={<SanctionQuote />} />
                     <Route path="Administration" element={<Administration />} />
                     <Route path="Quotes" element={<Quotes />} />
                 </Route>
