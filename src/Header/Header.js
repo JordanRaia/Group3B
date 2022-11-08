@@ -155,6 +155,7 @@ function Header() {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
+            {/* Allows for elemnts underneath in react-router-dom (in App.js) */}
             <Outlet />
         </>
     );
