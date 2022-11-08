@@ -13,36 +13,17 @@ import Quotes from "./Quotes/Quotes";
 function App() {
     return (
         <div className="app">
-            <Header />
             <Routes>
-                {/* Home Page */}
-                <Route exact path={"/"} element={[<Home />]} />
-                {/* Login Page */}
-                <Route exact path={"/login"} element={[<Login />]} />
-                {/* Register Page */}
-                <Route exact path={"/register"} element={[<Register />]} />
-                {/* New Quote */}
-                <Route exact path={"/NewQuote"} element={[<NewQuote />]} />
-                {/* Finalize Quote */}
-                <Route
-                    exact
-                    path={"/FinalizeQuote"}
-                    element={[<FinalizeQuote />]}
-                />
-                {/* Finalize Quote */}
-                <Route
-                    exact
-                    path={"/SanctionQuote"}
-                    element={[<SanctionQuote />]}
-                />
-                {/* Finalize Quote */}
-                <Route
-                    exact
-                    path={"/Administration"}
-                    element={[<Administration />]}
-                />
-                {/* Finalize Quote */}
-                <Route exact path={"/Quotes"} element={[<Quotes />]} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/" element={<Header />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/NewQuote" element={<NewQuote />} />
+                    <Route path="/FinalizeQuote" element={<FinalizeQuote />} />
+                    <Route path="/SanctionQuote" element={<SanctionQuote />} />
+                    <Route path="Administration" element={<Administration />} />
+                    <Route path="Quotes" element={<Quotes />} />
+                </Route>
             </Routes>
         </div>
     );

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Header.css";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import Logo from "../logo/3B-logos_white.png";
 // react-bootstrap
 import { Container, Navbar, Nav } from "react-bootstrap";
@@ -41,9 +41,7 @@ function Header() {
             ).then((url) => {
                 setProfileUrl(url);
             });
-        }
-        else
-        {
+        } else {
             //set profile picture to deafult
             setProfileUrl(defaultProfileUrl);
         }
@@ -59,103 +57,106 @@ function Header() {
     };
 
     return (
-        <Navbar sticky="top" bg="dark" expand="lg" variant="dark">
-            <Container>
-                {/* Logo or Title Here */}
-                <Link to={"/"} style={{ textDecoration: "none" }}>
-                    <img className="header__logo" src={Logo} alt="" />
-                </Link>
-                {/* adds hamburger menu for mobile */}
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                {/* Navbar Start */}
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto">
-                        {/* Navbar Links */}
-                        {/* Home */}
-                        <Nav.Link
-                            as={Link}
-                            to={"/"}
-                            className="header__navLink"
-                        >
-                            Home
-                        </Nav.Link>
-                        {/* New Quote */}
-                        <Nav.Link
-                            as={Link}
-                            to={"/NewQuote"}
-                            className="header__navLink"
-                        >
-                            New Quote
-                        </Nav.Link>
-                        {/* Finalize Quote */}
-                        <Nav.Link
-                            as={Link}
-                            to={"/FinalizeQuote"}
-                            className="header__navLink"
-                        >
-                            Finalize Quote
-                        </Nav.Link>
-                        {/* Sanction Quote */}
-                        <Nav.Link
-                            as={Link}
-                            to={"/SanctionQuote"}
-                            className="header__navLink"
-                        >
-                            Sanction Quote
-                        </Nav.Link>
-                        {/* Administration */}
-                        <Nav.Link
-                            as={Link}
-                            to={"/Administration"}
-                            className="header__navLink"
-                        >
-                            Administration
-                        </Nav.Link>
-                        {/* Quotes */}
-                        <Nav.Link
-                            as={Link}
-                            to={"/Quotes"}
-                            className="header__navLink"
-                        >
-                            Quotes
-                        </Nav.Link>
-                    </Nav>
-                    <div className="header__flex">
-                        <img
-                            className="header__profilePic"
-                            id="profile"
-                            src={profileUrl}
-                            alt="profile"
-                        />
-                        <div className="header__flexDown">
-                            <div className="header__helloText">
-                                Hello {user ? name : "Guest"}
-                            </div>
-                            {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
-                            <div className="header__linkFlex">
-                                <Link
-                                    className="header__link"
-                                    to={!user && "/login"}
-                                >
-                                    <div
-                                        onClick={handleAuth}
-                                        className="header__signIn"
+        <>
+            <Navbar sticky="top" bg="dark" expand="lg" variant="dark">
+                <Container>
+                    {/* Logo or Title Here */}
+                    <Link to={"/"} style={{ textDecoration: "none" }}>
+                        <img className="header__logo" src={Logo} alt="" />
+                    </Link>
+                    {/* adds hamburger menu for mobile */}
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    {/* Navbar Start */}
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="me-auto">
+                            {/* Navbar Links */}
+                            {/* Home */}
+                            <Nav.Link
+                                as={Link}
+                                to={"/"}
+                                className="header__navLink"
+                            >
+                                Home
+                            </Nav.Link>
+                            {/* New Quote */}
+                            <Nav.Link
+                                as={Link}
+                                to={"/NewQuote"}
+                                className="header__navLink"
+                            >
+                                New Quote
+                            </Nav.Link>
+                            {/* Finalize Quote */}
+                            <Nav.Link
+                                as={Link}
+                                to={"/FinalizeQuote"}
+                                className="header__navLink"
+                            >
+                                Finalize Quote
+                            </Nav.Link>
+                            {/* Sanction Quote */}
+                            <Nav.Link
+                                as={Link}
+                                to={"/SanctionQuote"}
+                                className="header__navLink"
+                            >
+                                Sanction Quote
+                            </Nav.Link>
+                            {/* Administration */}
+                            <Nav.Link
+                                as={Link}
+                                to={"/Administration"}
+                                className="header__navLink"
+                            >
+                                Administration
+                            </Nav.Link>
+                            {/* Quotes */}
+                            <Nav.Link
+                                as={Link}
+                                to={"/Quotes"}
+                                className="header__navLink"
+                            >
+                                Quotes
+                            </Nav.Link>
+                        </Nav>
+                        <div className="header__flex">
+                            <img
+                                className="header__profilePic"
+                                id="profile"
+                                src={profileUrl}
+                                alt="profile"
+                            />
+                            <div className="header__flexDown">
+                                <div className="header__helloText">
+                                    Hello {user ? name : "Guest"}
+                                </div>
+                                {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
+                                <div className="header__linkFlex">
+                                    <Link
+                                        className="header__link"
+                                        to={!user && "/login"}
                                     >
-                                        {user ? "Sign Out" : "Sign In"}
-                                    </div>
-                                </Link>
+                                        <div
+                                            onClick={handleAuth}
+                                            className="header__signIn"
+                                        >
+                                            {user ? "Sign Out" : "Sign In"}
+                                        </div>
+                                    </Link>
+                                </div>
                             </div>
+                            <img
+                                className="header__profilePic"
+                                id="profile1"
+                                src={profileUrl}
+                                alt="profile"
+                            />
                         </div>
-                        <img
-                            className="header__profilePic"
-                            id="profile1"
-                            src={profileUrl}
-                            alt="profile"
-                        />
-                    </div>
-                </Navbar.Collapse>
-            </Container>
-        </Navbar>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
+            <Outlet />
+        </>
     );
 }
 
