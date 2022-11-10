@@ -7,15 +7,16 @@ function NewQuote()  {
     const [customers, setCustomers] = useState([]);
     useEffect(() => {
         getCustomers();
-    },[]);
-    function getCustomers(){
-        axios.get('https://students.cs.niu.edu/~z1860207/legacy.php').then(function(response){
+    }, []);
+    function getCustomers() {
+        axios.get('https://students.cs.niu.edu/~z1860207/legacy.php')
+        .then(function(response) {
             console.log(response.data);
             setCustomers(response.data);
-        });
+        }).catch((error) => {console.error(error)});
     }
 
-    return <div classname= "app-container">
+    return ( <div classname= "app-container">
         <table> 
             <thead> 
                 <tr>
@@ -27,8 +28,8 @@ function NewQuote()  {
                 </tr>
             </thead>
             <tbody>
-                {customers.map((customer, key) =>
-                            <tr key={key}>
+                {customers.map((customer) => (
+                            <tr>
                                 <td>{customer.id}</td>
                                 <td>{customer.name}</td>
                                 <td>{customer.city}</td>
@@ -38,11 +39,10 @@ function NewQuote()  {
                                     <button>submit button??</button>
                                 </td>
                             </tr>
-                        )}
-
+                        ))}
             </tbody>
         </table>
-    </div>;
+    </div> )
 }
 /* //PRE- axios table body:
                 <tr>
