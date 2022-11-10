@@ -7,8 +7,8 @@ function NewQuote()  {
     const [customers, setCustomers] = useState();
 
     return <div classname= "app-container">
-        <table>
-            <thead> Customers
+        <table> <h1> Customers</h1>
+            <thead> 
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
