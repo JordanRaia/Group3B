@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import "./NewQuote.css";
 
-function NewQuote() {
+function NewQuote()  {
+    const [customers, setCustomers] = useState();
     //return <div className="new">NewQuote</div>;
 
     return <div classname= "app-container">
