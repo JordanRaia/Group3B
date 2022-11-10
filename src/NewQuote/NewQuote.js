@@ -25,6 +25,7 @@ function NewQuote()  {
                     <th>City</th>
                     <th>Street</th>
                     <th>Contact</th>
+                    <th>Update</th>
                 </tr>
             </thead>
             <tbody>
