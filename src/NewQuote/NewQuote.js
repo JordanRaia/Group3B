@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./NewQuote.css";
 import axios from "axios";
 
@@ -11,7 +11,7 @@ function NewQuote()  {
     function getCustomers(){
         axios.get('https://students.cs.niu.edu/~z1860207/legacy.php').then(function(response){
             console.log(response.data);
-            setCustomers(resonse.data);
+            setCustomers(response.data);
         });
     }
 
