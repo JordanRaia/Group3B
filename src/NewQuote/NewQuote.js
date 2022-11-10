@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import "./NewQuote.css";
 
 function NewQuote()  {
-    const [customers, setCustomers] = useState();
     //return <div className="new">NewQuote</div>;
+    const [customers, setCustomers] = useState();
 
     return <div classname= "app-container">
         <table>
