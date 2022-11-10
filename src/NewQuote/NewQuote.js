@@ -3,7 +3,6 @@ import "./NewQuote.css";
 import axios from "axios";
 
 function NewQuote()  {
-    //return <div className="new">NewQuote</div>;
     const [customers, setCustomers] = useState([]);
     useEffect(() => {
         getCustomers();
