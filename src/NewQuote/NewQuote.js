@@ -8,7 +8,7 @@ function NewQuote()  {
 
     return <div classname= "app-container">
         <table>
-            <thead>
+            <thead> Customers
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
