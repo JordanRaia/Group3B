@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
 import "./NewQuote.css";
 import axios from "axios";
 
@@ -14,7 +15,7 @@ function NewQuote()  {
             setCustomers(response.data);
         }).catch((error) => {console.error(error)});
     }
-
+    
     return ( <div classname= "app-container">
         <table> 
             <thead> 
@@ -36,7 +37,12 @@ function NewQuote()  {
                                 <td>{customer.street}</td>
                                 <td>{customer.contact}</td>
                                 <td>
-                                    <button>submit button??</button>
+                                    <Link to = {{ 
+                                        pathname: "/Quotes",
+                                        state: {id: "customer.id", name: "customer.name", city: "customer.city", street: "customer.street", contact: "customer.contact"}
+                                        }}>
+                                            <button class="button-49">Edit</button>
+                                        </Link>
                                 </td>
                             </tr>
                         ))}
