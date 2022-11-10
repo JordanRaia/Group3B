@@ -35,8 +35,7 @@ function NewQuote()  {
                                 <td>{customer.street}</td>
                                 <td>{customer.contact}</td>
                                 <td>
-                                    <Link to={`customer/${customer.id}/edit`} style={{marginRight: "10px"}}>Edit</Link>
-                                    <button>Delete</button>
+                                    <button>submit button??</button>
                                 </td>
                             </tr>
                         )}
