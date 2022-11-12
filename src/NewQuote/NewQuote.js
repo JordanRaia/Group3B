@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 import NewQuotePopup from "./NewQuotePopup";
 import "./NewQuote.css";
 import axios from "axios";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
 
 function NewQuote() {
     const [customers, setCustomers] = useState([]);
     const [popup, setPopup] = useState(false);
+    const [user, setUser] = useState({});
     useEffect(() => {
         getCustomers();
     }, []);
@@ -22,7 +25,13 @@ function NewQuote() {
             });
     }
 
-    return (
+    //set user to current user if logged in
+    onAuthStateChanged(auth, (currentUser) => {
+        setUser(currentUser);
+    });
+
+    return user ? (
+        // user is logged in
         <div className="new">
             <h2 className="new__headerText">Create New Quote:</h2>
             <div className="new__customerSelect">
@@ -64,6 +73,11 @@ function NewQuote() {
                 </Link>
             </div>
             <h2>Current Quotes:</h2>
+        </div>
+    ) : (
+        // user is not logged in
+        <div className="new">
+            <h1>Please login to access this page.</h1>
         </div>
     );
 }
