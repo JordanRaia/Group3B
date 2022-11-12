@@ -12,6 +12,7 @@ function NewQuote() {
     const [user, setUser] = useState({});
     useEffect(() => {
         getCustomers();
+        authState();
     }, []);
     function getCustomers() {
         axios
@@ -26,9 +27,11 @@ function NewQuote() {
     }
 
     //set user to current user if logged in
-    onAuthStateChanged(auth, (currentUser) => {
-        setUser(currentUser);
-    });
+    function authState() {
+        onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+        });
+    }
 
     return user ? (
         // user is logged in
@@ -73,6 +76,7 @@ function NewQuote() {
                 </Link>
             </div>
             <h2>Current Quotes:</h2>
+            <div className="new__quoteContainer"></div>
         </div>
     ) : (
         // user is not logged in

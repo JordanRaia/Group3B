@@ -88,6 +88,10 @@
     color: rgb(161, 72, 72);
 }
 
+.new__quoteContainer {
+    display: flex;
+}
+
 /* CSS */
 .button-49,
 .button-49:after {
