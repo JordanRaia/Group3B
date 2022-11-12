@@ -1,92 +1,155 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 /* Responsive width, matches with default bootstrap navbar */
-.new {
+.customers {
     max-width: 1300px;
     margin-left: auto;
     margin-right: auto;
 }
 
 @media screen and (max-width: 1400px) {
-    .new {
+    .customers {
         max-width: 1120px;
     }
 }
 
 @media screen and (max-width: 1200px) {
-    .new {
+    .customers {
         max-width: 940px;
     }
 }
 
 @media screen and (max-width: 992px) {
-    .new {
+    .customers {
         max-width: 700px;
     }
 }
 
 @media screen and (max-width: 768px) {
-    .new {
+    .customers {
         max-width: 520px;
     }
 }
 
 @media screen and (max-width: 768px) {
-    .new {
+    .customers {
         max-width: 520px;
     }
 }
 
 @media screen and (max-width: 576px) {
-    .new {
+    .customers {
         max-width: 96.5%;
     }
 }
 
-.new__customerSelect {
-    display: flex;
-    white-space: pre-wrap;
-}
-
-@media screen and (max-width: 768px) {
-    .new__customerSelect {
-        flex-direction: column;
-    }
-}
-
-.new__flex {
-    display: flex;
-    white-space: pre-wrap;
-}
-
-.new__button {
+.customers__button {
     background-color: rgb(172, 217, 255);
 }
 
-.new__dropdown {
-    height: 2.5rem;
+.customers__table {
+    border-collapse: collapse;
+    width: 100%;
 }
 
-.new__headerText {
-    font-family: Poppins;
-    font-weight: 700;
+.customers__th,
+.customers__td {
+    border: 3px solid #ffffff;
+    text-align: left;
+    padding: 8px;
+    font-size: 32px;
 }
 
-.new__text {
-    font-family: Poppins;
-    font-weight: 600;
+.customers__th {
+    background-color: rgb(117, 201, 250);
 }
 
-.new__bulletText {
-    font-family: Poppins;
-    font-weight: 400;
+.customers__td {
+    background-color: rgb(205, 235, 253);
 }
 
-.new__bulletLink {
-    font-family: Poppins;
-    font-weight: 400;
-    color: rgb(161, 72, 72);
+.customers__form {
+    display: flex;
+    gap: 5px;
 }
+
+.customers__form td:last-child {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.customers__form * {
+    font-size: 28px;
+}
+
+/* Courtesy: https://getcssscan.com/css-buttons-examples */
+/*
+.button-85 {
+    padding: 0.6em 2em;
+    border: none;
+    outline: none;
+    color: rgb(255, 255, 255);
+    background: #111;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 10px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.button-85:before {
+    content: "";
+    background: linear-gradient(
+        45deg,
+        #ff0000,
+        #ff7300,
+        #fffb00,
+        #48ff00,
+        #00ffd5,
+        #002bff,
+        #7a00ff,
+        #ff00c8,
+        #ff0000
+    );
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing-button-85 20s linear infinite;
+    transition: opacity 0.3s ease-in-out;
+    border-radius: 10px;
+}
+
+@keyframes glowing-button-85 {
+    0% {
+        background-position: 0 0;
+    }
+    50% {
+        background-position: 400% 0;
+    }
+    100% {
+        background-position: 0 0;
+    }
+}
+
+.button-85:after {
+    z-index: -1;
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #222;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}*/
 
 /* CSS */
 .button-49,

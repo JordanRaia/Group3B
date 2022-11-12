@@ -1,62 +1,71 @@
 import React, { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import NewQuotePopup from "./NewQuotePopup";
 import "./NewQuote.css";
 import axios from "axios";
 
-function NewQuote()  {
+function NewQuote() {
     const [customers, setCustomers] = useState([]);
+    const [popup, setPopup] = useState(false);
     useEffect(() => {
         getCustomers();
     }, []);
     function getCustomers() {
-        axios.get('https://students.cs.niu.edu/~z1860207/legacy.php')
-        .then(function(response) {
-            console.log(response.data);
-            setCustomers(response.data);
-        }).catch((error) => {console.error(error)});
+        axios
+            .get("https://students.cs.niu.edu/~z1860207/legacy.php")
+            .then(function (response) {
+                console.log(response.data);
+                setCustomers(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
-    
-    return ( <div classname= "app-container">
-        <table> 
-            <thead> 
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>City</th>
-                    <th>Street</th>
-                    <th>Contact</th>
-                    <th>Update</th>
-                </tr>
-            </thead>
-            <tbody>
-                {customers.map((customer) => (
-                            <tr>
-                                <td>{customer.id}</td>
-                                <td>{customer.name}</td>
-                                <td>{customer.city}</td>
-                                <td>{customer.street}</td>
-                                <td>{customer.contact}</td>
-                                <td>
-                                    <Link to = {{ 
-                                        pathname: "/Quotes",
-                                        state: {id: "customer.id", name: "customer.name", city: "customer.city", street: "customer.street", contact: "customer.contact"}
-                                        }}>
-                                            <button class="button-49">Edit</button>
-                                        </Link>
-                                </td>
-                            </tr>
-                        ))}
-            </tbody>
-        </table>
-    </div> )
+
+    return (
+        <div className="new">
+            <h2 className="new__headerText">Create New Quote:</h2>
+            <div className="new__customerSelect">
+                <h3 className="new__text">select customer: </h3>
+                <select
+                    className="new__dropdown"
+                    name="customerSelect"
+                    id="customerSelect"
+                >
+                    <option className="new__text" value="Please Select">
+                        Please Select
+                    </option>
+                    {customers.map((customer) => (
+                        <option className="new__text" value={customer.id}>
+                            {customer.name}
+                        </option>
+                    ))}
+                </select>
+                <button onClick={() => setPopup(true)} class="button-49">
+                    New Quote
+                </button>
+                <NewQuotePopup trigger={popup} setTrigger={setPopup}>
+                    <h3>My popup</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Laudantium error quas inventore, fugiat necessitatibus
+                        velit provident obcaecati id perspiciatis veritatis!
+                        Minima dicta dignissimos labore assumenda placeat fuga,
+                        quas accusantium molestias.
+                    </p>
+                </NewQuotePopup>
+            </div>
+            <div className="new__flex">
+                <span className="new__bulletText">
+                    • View our Customers here:{" "}
+                </span>
+                <Link to={"/Customers"} style={{ textDecoration: "none" }}>
+                    <span className="new__bulletLink">Customers</span>
+                </Link>
+            </div>
+            <h2>Current Quotes:</h2>
+        </div>
+    );
 }
-/* //PRE- axios table body:
-                <tr>
-                    <td>12</td>
-                    <td>Jay Gordon</td>
-                    <td>San Francisco</td>
-                    <td>cherry blossom st</td>
-                    <td>jgordon12@gmail.com</td>
-                </tr>
-*/
+
 export default NewQuote;

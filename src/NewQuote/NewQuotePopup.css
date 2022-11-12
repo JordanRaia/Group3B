@@ -1,0 +1,34 @@
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup__inner {
+    position: relative;
+    padding: 32px;
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 1300px;
+    background-color: white;
+    box-shadow: #999;
+}
+
+@media screen and (max-width: 1400px)
+{
+    .popup__inner {
+        width: 90%;
+    }
+}
+
+.popup__inner .popup__closeBtn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
