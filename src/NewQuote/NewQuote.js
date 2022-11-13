@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import NewQuotePopup from "./NewQuotePopup";
 import "./NewQuote.css";
 import axios from "axios";
+// firebase
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { onValue, ref as dbRef } from "firebase/database";
+// material ui
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function NewQuote() {
     const [customers, setCustomers] = useState([]);
@@ -14,7 +17,13 @@ function NewQuote() {
     const [quotes, setQuotes] = useState([]);
     const [customerId, setCustomerId] = useState(0); // selected customer in dropdown
     // for creating new quote in database
-    const [customer, setCustomer] = useState("");
+    const [amount, setAmount] = useState(["0"]);
+    const [flatDiscount, setFlatDiscount] = useState([]);
+    const [percentDiscount, setPercentDiscount] = useState([]);
+    const [email, setEmail] = useState("");
+    const [lineItems, setLineItems] = useState([]);
+    const [lineItemAmount, setLineItemAmount] = useState([]);
+    const [secretNotes, setSecretNotes] = useState([]);
 
     useEffect(() => {
         getCustomers();
@@ -81,7 +90,6 @@ function NewQuote() {
     // called after selecting a customer from dropdown
     const handleCustomerSelect = (e) => {
         setCustomerId(e.target.value);
-        setCustomer(customers[e.target.value]["name"]);
     };
 
     // called after clicking New Quote button
@@ -95,12 +103,201 @@ function NewQuote() {
         }
     };
 
+    // handles new line item button
+    const handleLineButton = (e) => {
+        e.preventDefault(); // prevent page refresh
+
+        // two temp arrays
+        var arr = [...lineItems];
+        var arr2 = [...lineItemAmount];
+
+        // push blank values on to both arrays
+        arr.push("");
+        arr2.push("");
+
+        // set useState arrays
+        setLineItems(arr);
+        setLineItemAmount(arr2);
+    };
+
+    //handles when a field is changed in a useState array
+    const handleFieldChangeLineItem = (index) => (e) => {
+        e.preventDefault();
+
+        // update value in temp arr
+        let tempArr = [...lineItems];
+        tempArr[index] = e.target.value;
+
+        // set useState arr
+        setLineItems(tempArr);
+    };
+
+    const handleFieldChangeLineAmount = (index) => (e) => {
+        e.preventDefault();
+
+        // update value in temp arr
+        let tempArr = [...lineItemAmount];
+        tempArr[index] = e.target.value;
+
+        // set useState arr
+        setLineItemAmount(tempArr);
+
+        // calculate sum
+        const sum = tempArr.reduce((accumulator, value) => {
+            return parseInt(accumulator) + parseInt(value);
+        }, 0);
+
+        let sumArr = [];
+        sumArr.push(sum);
+        // set amount
+        setAmount(sumArr);
+    };
+
+    // handles new secret notes button
+    const handleSecretButton = (e) => {
+        e.preventDefault(); // prevent page refresh
+
+        let tempArr = [...secretNotes]; // create temp arr
+        tempArr.push(""); // push a blank note onto temp arr
+        setSecretNotes(tempArr); // set secret notes to temp arr
+    };
+
+    const handleDeleteLineItem = (index) => (e) => {
+        e.preventDefault();
+
+        // create temp arrays
+        var arr = [...lineItems];
+        var arr2 = [...lineItemAmount];
+
+        // remove item at index
+        arr.splice(index, 1);
+        arr2.splice(index, 1);
+
+        // set useState arr
+        setLineItems(arr);
+        setLineItemAmount(arr2);
+
+        // calculate sum
+        const sum = arr2.reduce((accumulator, value) => {
+            return parseInt(accumulator) + parseInt(value);
+        }, 0);
+
+        let sumArr = [];
+        sumArr.push(sum);
+        // set amount
+        setAmount(sumArr);
+    };
+
+    const handleFieldChangeSecretNote = (index) => (e) => {
+        e.preventDefault();
+
+        let tempArr = [...secretNotes];
+        tempArr[index] = e.target.value;
+
+        setSecretNotes(tempArr);
+    };
+
+    const handleDeleteSecretNote = (index) => (e) => {
+        e.preventDefault();
+
+        let tempArr = [...secretNotes];
+        tempArr.splice(index, 1);
+
+        setSecretNotes(tempArr);
+    };
+
+    const handleFlatDiscountButton = (e) => {
+        e.preventDefault();
+
+        let tempArr = [...flatDiscount]; // create temp arr
+        tempArr.push(""); // push a blank note onto temp arr
+        setFlatDiscount(tempArr); // set flat discount to temp arr
+    };
+
+    const handlePercentDiscountButton = (e) => {
+        e.preventDefault();
+
+        let tempArr = [...percentDiscount]; // create temp arr
+        tempArr.push(""); // push a blank note onto temp arr
+        setPercentDiscount(tempArr); // set pecent discount to temp arr
+    };
+
+    const handleFieldChangeFlatDiscount = (index) => (e) => {
+        e.preventDefault();
+
+        let tempArr = [...flatDiscount];
+        tempArr[index] = e.target.value;
+
+        setFlatDiscount(tempArr);
+
+        // add discounted amounts to amounts
+        applyDiscounts(tempArr, percentDiscount);
+    };
+
+    const applyDiscounts = (flat, percent) => {
+        let amountArr = [];
+        amountArr.push(amount[0]);
+        for (var i in flat) {
+            amountArr.push(amountArr[i] - flat[i]);
+        }
+
+        i++; // iterate i once
+
+        for (var j in percent) {
+            let decimalPercent = 1 - percent[j] / 100;
+            // multiply last element in amount by decimal Percent
+            amountArr.push(
+                (amountArr[parseInt(i) + parseInt(j)] * decimalPercent).toFixed(
+                    2
+                )
+            );
+        }
+
+        setAmount(amountArr);
+    };
+
+    const handleFieldChangePercentDiscount = (index) => (e) => {
+        e.preventDefault();
+
+        let tempArr = [...percentDiscount];
+        tempArr[index] = e.target.value;
+
+        setPercentDiscount(tempArr);
+
+        // re-apply new discounts
+        applyDiscounts(flatDiscount, tempArr);
+    };
+
+    const handleDeleteFlatDiscount = (index) => (e) => {
+        e.preventDefault();
+
+        let tempArr = [...flatDiscount];
+        tempArr.splice(index, 1);
+
+        setFlatDiscount(tempArr);
+
+        // re-apply new discounts
+        applyDiscounts(tempArr, percentDiscount);
+    };
+
+    const handleDeletePercentDiscount = (index) => (e) => {
+        e.preventDefault();
+
+        let tempArr = [...percentDiscount];
+        tempArr.splice(index, 1);
+
+        setPercentDiscount(tempArr);
+
+        // re-apply new discounts
+        applyDiscounts(flatDiscount, tempArr);
+    };
+
     return user ? (
         // user is logged in
         <div className="new">
             <h2 className="new__headerText">Create New Quote:</h2>
             <div className="new__customerSelect">
-                <h3 className="new__text">select customer: </h3>
+                <h3 className="new__textSubHeader">select customer: </h3>
                 <select
                     className="new__dropdown"
                     name="customerSelect"
@@ -108,11 +305,11 @@ function NewQuote() {
                     value={customerId}
                     onChange={handleCustomerSelect}
                 >
-                    <option className="new__text" value="0">
+                    <option className="new__textSubHeader" value="0">
                         Please Select
                     </option>
                     {customers.map((customer, id) => (
-                        <option className="new__text" value={id}>
+                        <option className="new__textSubHeader" value={id}>
                             {customer.name}
                         </option>
                     ))}
@@ -120,15 +317,158 @@ function NewQuote() {
                 <button onClick={handleQuoteButton} class="button-49">
                     New Quote
                 </button>
+                {/* Popup Window */}
                 <NewQuotePopup trigger={popup} setTrigger={setPopup}>
-                    <h3>Quote for: {customer}</h3>
-                    <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Laudantium error quas inventore, fugiat necessitatibus
-                        velit provident obcaecati id perspiciatis veritatis!
-                        Minima dicta dignissimos labore assumenda placeat fuga,
-                        quas accusantium molestias.
-                    </p>
+                    <div className="new__popup">
+                        <h3>
+                            Quote for:{" "}
+                            {customerId !== 0 && customers[customerId]["name"]}
+                        </h3>
+                        <div className="new__customerInfo">
+                            <span className="new__text">
+                                {customerId !== 0 &&
+                                    customers[customerId]["street"]}
+                            </span>
+                            <span className="new__text">
+                                {customerId !== 0 &&
+                                    customers[customerId]["city"]}
+                            </span>
+                            <span className="new__text">
+                                {customerId !== 0 &&
+                                    customers[customerId]["contact"]}
+                            </span>
+                        </div>
+                        <form>
+                            <div className="new__flex">
+                                <label
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={email}
+                                    htmlFor="email"
+                                >
+                                    Email:{" "}
+                                </label>
+                                <input type="text" id="email" name="email" />
+                            </div>
+                            <div className="new__flex">
+                                <h4>Line Items: </h4>
+                                <button onClick={handleLineButton}>
+                                    New Item
+                                </button>
+                            </div>
+                            {lineItems.map((item, i) => (
+                                <div>
+                                    <label htmlFor={`item`}>item: </label>
+                                    <input
+                                        type="text"
+                                        value={lineItems[i]}
+                                        onChange={handleFieldChangeLineItem(i)}
+                                    ></input>
+                                    <label htmlFor={`amount`}> amount: </label>
+                                    <input
+                                        type="number"
+                                        min={0}
+                                        value={lineItemAmount[i]}
+                                        onChange={handleFieldChangeLineAmount(
+                                            i
+                                        )}
+                                    ></input>
+                                    <button
+                                        className="new__delete"
+                                        onClick={handleDeleteLineItem(i)}
+                                    >
+                                        <DeleteIcon />
+                                    </button>
+                                </div>
+                            ))}
+                            <div className="new__flex">
+                                <h4>Secret Notes: </h4>
+                                <button onClick={handleSecretButton}>
+                                    New Note
+                                </button>
+                            </div>
+                            {secretNotes.map((note, i) => (
+                                <div>
+                                    <label htmlFor={`note`}>note: </label>
+                                    <input
+                                        type="text"
+                                        value={secretNotes[i]}
+                                        onChange={handleFieldChangeSecretNote(
+                                            i
+                                        )}
+                                    ></input>
+                                    <button
+                                        className="new__delete"
+                                        onClick={handleDeleteSecretNote(i)}
+                                    >
+                                        <DeleteIcon />
+                                    </button>
+                                </div>
+                            ))}
+                            <div className="new__flex">
+                                <h4>Flat Discounts: </h4>
+                                <button onClick={handleFlatDiscountButton}>
+                                    New Discount
+                                </button>
+                            </div>
+                            {flatDiscount.map((discount, i) => (
+                                <div key={i}>
+                                    <label htmlFor={`item`}>discount: </label>
+                                    <input
+                                        type="number"
+                                        min={0}
+                                        max={amount}
+                                        placeholder={`$0-$${amount[0]}`}
+                                        value={flatDiscount[i]}
+                                        onChange={handleFieldChangeFlatDiscount(
+                                            i
+                                        )}
+                                    ></input>
+                                    <button
+                                        className="new__delete"
+                                        onClick={handleDeleteFlatDiscount(i)}
+                                    >
+                                        <DeleteIcon />
+                                    </button>
+                                </div>
+                            ))}
+                            <div className="new__flex">
+                                <h4>Percent Discounts: </h4>
+                                <button onClick={handlePercentDiscountButton}>
+                                    New Discount
+                                </button>
+                            </div>
+                            {percentDiscount.map((discount, i) => (
+                                <div key={i}>
+                                    <label htmlFor={`item`}>discount: </label>
+                                    <input
+                                        type="number"
+                                        min={0}
+                                        max={100}
+                                        placeholder={`0%-100%`}
+                                        value={percentDiscount[i]}
+                                        onChange={handleFieldChangePercentDiscount(
+                                            i
+                                        )}
+                                    ></input>
+                                    <button
+                                        className="new__delete"
+                                        onClick={handleDeletePercentDiscount(i)}
+                                    >
+                                        <DeleteIcon />
+                                    </button>
+                                </div>
+                            ))}
+                            <div className="new__flex">
+                                <p>Amount: </p>
+                                <div className="new__discountFlex">
+                                    {amount.map((amt) => (
+                                        <p className="new__discount">${amt}</p>
+                                    ))}
+                                </div>
+                            </div>
+                            <input type="submit" />
+                        </form>
+                    </div>
                 </NewQuotePopup>
             </div>
             <div className="new__flex">
