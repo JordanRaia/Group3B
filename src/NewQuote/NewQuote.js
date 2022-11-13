@@ -340,14 +340,14 @@ function NewQuote() {
                         </div>
                         <form>
                             <div className="new__flex">
-                                <label
+                                <label htmlFor="email">Email: </label>
+                                <input
                                     onChange={(e) => setEmail(e.target.value)}
                                     value={email}
-                                    htmlFor="email"
-                                >
-                                    Email:{" "}
-                                </label>
-                                <input type="text" id="email" name="email" />
+                                    type="text"
+                                    id="email"
+                                    name="email"
+                                />
                             </div>
                             <div className="new__flex">
                                 <h4>Line Items: </h4>
