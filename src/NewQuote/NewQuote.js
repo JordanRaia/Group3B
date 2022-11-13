@@ -30,6 +30,7 @@ function NewQuote() {
         authState();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     function getCustomers() {
         axios
             .get("https://students.cs.niu.edu/~z1860207/legacy.php")
@@ -39,6 +40,17 @@ function NewQuote() {
             .catch((error) => {
                 console.error(error);
             });
+    }
+
+    function closePopup() {
+        setPopup(false);
+        setAmount(["0"]);
+        setFlatDiscount([]);
+        setPercentDiscount([]);
+        setEmail("");
+        setLineItems([]);
+        setLineItemAmount([]);
+        setSecretNotes([]);
     }
 
     //set user to current user if logged in
@@ -318,7 +330,7 @@ function NewQuote() {
                     New Quote
                 </button>
                 {/* Popup Window */}
-                <NewQuotePopup trigger={popup} setTrigger={setPopup}>
+                <NewQuotePopup trigger={popup} setTrigger={closePopup}>
                     <div className="new__popup">
                         <h3>
                             Quote for:{" "}
