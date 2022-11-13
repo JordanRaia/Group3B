@@ -122,8 +122,9 @@ function NewQuote() {
             }
         }
 
+        console.log(amount);
         //round to 2 decimal places
-        amount = amount.toFixed(2);
+        amount = parseInt(amount).toFixed(2);
 
         return amount;
     }
