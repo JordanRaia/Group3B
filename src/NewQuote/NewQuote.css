@@ -89,7 +89,46 @@
 }
 
 .new__quoteContainer {
+    border: 1px solid #999;
+    background-color: beige;
+    height: auto;
+}
+
+.new__quote {
     display: flex;
+    justify-content: space-between;
+    white-space: pre-wrap;
+    font-family: Poppins;
+    font-weight: 400;
+}
+
+@media screen and (max-width: 768px) {
+    .new__quote {
+        flex-direction: column;
+        border: 1px solid black;
+    }
+}
+
+.new__quoteCustomerInfo {
+    display: flex;
+}
+
+@media screen and (max-width: 768px) {
+    .new__quoteCustomerInfo {
+        flex-direction: column;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.new__quoteCustomer, .new__quoteId, .new__quoteAmount {
+    display: flex;
+    margin: auto;
+    font-size: 1.5rem;
+}
+
+.new__quoteButton {
+    border: 1px solid #999;
 }
 
 /* CSS */
@@ -97,7 +136,6 @@
 .button-49:after {
     width: 100%;
     height: 2.5rem;
-    /* line-height: 5rem; */
     font-size: 1.6rem;
     font-family: 'Bebas Neue', sans-serif;
     background: linear-gradient(45deg, transparent 5%, #FF013C 5%);

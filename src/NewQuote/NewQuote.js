@@ -4,12 +4,15 @@ import NewQuotePopup from "./NewQuotePopup";
 import "./NewQuote.css";
 import axios from "axios";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { onValue, ref as dbRef } from "firebase/database";
 
 function NewQuote() {
     const [customers, setCustomers] = useState([]);
     const [popup, setPopup] = useState(false);
     const [user, setUser] = useState({});
+    const [quotes, setQuotes] = useState([]);
+
     useEffect(() => {
         getCustomers();
         authState();
@@ -18,7 +21,7 @@ function NewQuote() {
         axios
             .get("https://students.cs.niu.edu/~z1860207/legacy.php")
             .then(function (response) {
-                console.log(response.data);
+                // console.log(response.data);
                 setCustomers(response.data);
             })
             .catch((error) => {
@@ -30,7 +33,46 @@ function NewQuote() {
     function authState() {
         onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
+
+            if (user) {
+                const quotesRef = dbRef(db, `quotes/current quotes/`);
+
+                onValue(quotesRef, (snapshot) => {
+                    const data = snapshot.val();
+                    setQuotes(data);
+                });
+            }
         });
+    }
+
+    //calculate the cost of the quote with discounts
+    function calculateQuoteAmount(index) {
+        let amount = 0; //total cost
+        //get cost of each item and add to amount
+        for (var item in quotes[index.id]["line items"]) {
+            //add the cost of item to amount
+            amount += quotes[index.id]["line items"][item]["amount"];
+        }
+
+        //get flat discounts and remove from total amount
+        for (var flatDiscount in quotes[index.id]["discount"]["amount"])
+        {
+            //subtract flat discount from amount
+            amount -= quotes[index.id]["discount"]["amount"][flatDiscount];
+        }
+
+        //get precent discounts and remove from amount
+        for (var percentDiscount in quotes[index.id]["discount"]["percent"])
+        {
+            //get the value to multiply by to get new total amount
+            let decimalPercent = 1 - (quotes[index.id]["discount"]["percent"][percentDiscount] / 100)
+            amount *= decimalPercent;
+        }
+
+        //round to 2 decimal places
+        amount = amount.toFixed(2);
+
+        return amount;
     }
 
     return user ? (
@@ -76,7 +118,19 @@ function NewQuote() {
                 </Link>
             </div>
             <h2>Current Quotes:</h2>
-            <div className="new__quoteContainer"></div>
+            {quotes.map((quote, id) => (
+                <div className="new__quoteContainer">
+                    <div className="new__quote">
+                        <div className="new__quoteCustomerInfo">
+                            <p className="new__quoteId">{id}: </p>
+                            <p className="new__quoteCustomer">{quote.customer}</p>
+                        </div>
+                        <p className="new__quoteAmount">${calculateQuoteAmount({id})}</p>
+                        <button className="new__quoteButton">Edit Quote</button>
+                    </div>
+                </div>
+            ))}
+            <h3>1 quote found</h3>
         </div>
     ) : (
         // user is not logged in
