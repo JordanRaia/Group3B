@@ -12,6 +12,9 @@ function NewQuote() {
     const [popup, setPopup] = useState(false);
     const [user, setUser] = useState({});
     const [quotes, setQuotes] = useState([]);
+    const [customerId, setCustomerId] = useState(0); // selected customer in dropdown
+    // for creating new quote in database
+
 
     useEffect(() => {
         getCustomers();
@@ -56,17 +59,17 @@ function NewQuote() {
         }
 
         //get flat discounts and remove from total amount
-        for (var flatDiscount in quotes[index.id]["discount"]["amount"])
-        {
+        for (var flatDiscount in quotes[index.id]["discount"]["amount"]) {
             //subtract flat discount from amount
             amount -= quotes[index.id]["discount"]["amount"][flatDiscount];
         }
 
         //get precent discounts and remove from amount
-        for (var percentDiscount in quotes[index.id]["discount"]["percent"])
-        {
+        for (var percentDiscount in quotes[index.id]["discount"]["percent"]) {
             //get the value to multiply by to get new total amount
-            let decimalPercent = 1 - (quotes[index.id]["discount"]["percent"][percentDiscount] / 100)
+            let decimalPercent =
+                1 -
+                quotes[index.id]["discount"]["percent"][percentDiscount] / 100;
             amount *= decimalPercent;
         }
 
@@ -75,6 +78,11 @@ function NewQuote() {
 
         return amount;
     }
+
+    // called after selecting a customer from dropdown
+    const handleCustomerSelect = (e) => {
+        setCustomerId(e.target.value);
+    };
 
     return user ? (
         // user is logged in
@@ -86,8 +94,10 @@ function NewQuote() {
                     className="new__dropdown"
                     name="customerSelect"
                     id="customerSelect"
+                    value={customerId}
+                    onChange={handleCustomerSelect}
                 >
-                    <option className="new__text" value="Please Select">
+                    <option className="new__text" value="0">
                         Please Select
                     </option>
                     {customers.map((customer) => (
@@ -124,9 +134,13 @@ function NewQuote() {
                     <div className="new__quote">
                         <div className="new__quoteCustomerInfo">
                             <p className="new__quoteId">{id}: </p>
-                            <p className="new__quoteCustomer">{quote.customer}</p>
+                            <p className="new__quoteCustomer">
+                                {quote.customer}
+                            </p>
                         </div>
-                        <p className="new__quoteAmount">${calculateQuoteAmount({id})}</p>
+                        <p className="new__quoteAmount">
+                            ${calculateQuoteAmount({ id })}
+                        </p>
                         <button className="new__quoteButton">Edit Quote</button>
                     </div>
                 </div>
