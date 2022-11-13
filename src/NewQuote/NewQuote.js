@@ -15,7 +15,9 @@ function NewQuote()  {
             setCustomers(response.data);
         }).catch((error) => {console.error(error)});
     }
-    
+
+    //var id, name, city, street, contact;
+
     return ( <div classname= "app-container">
         <table> 
             <thead> 
@@ -39,7 +41,7 @@ function NewQuote()  {
                                 <td>
                                     <Link to = {{ 
                                         pathname: "/Quotes",
-                                        state: {id: "customer.id", name: "customer.name", city: "customer.city", street: "customer.street", contact: "customer.contact"}
+                                        state: {id: "customer.id", name: "customer.name", city: "customer.city", street: "customer.street", contact: "customer.contact"}                                       
                                         }}>
                                             <button class="button-49">Edit</button>
                                         </Link>
