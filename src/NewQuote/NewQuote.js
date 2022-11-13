@@ -16,6 +16,7 @@ function NewQuote() {
     useEffect(() => {
         getCustomers();
         authState();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     function getCustomers() {
         axios
