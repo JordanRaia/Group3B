@@ -80,7 +80,7 @@ function NewQuote() {
     function calculateQuoteAmount(index) {
         let amount = 0; //total cost
         //get cost of each item and add to amount
-        if (typeof quotes[index.quote]["line items"] !== undefined) {
+        if (typeof quotes[index.quote]["line items"] != "undefined") {
             for (var item in quotes[index.quote]["line items"]) {
                 //add the cost of item to amount
                 amount += quotes[index.quote]["line items"][item]["amount"];
