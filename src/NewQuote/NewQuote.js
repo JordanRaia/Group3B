@@ -14,6 +14,7 @@ function NewQuote() {
     const [quotes, setQuotes] = useState([]);
     const [customerId, setCustomerId] = useState(0); // selected customer in dropdown
     // for creating new quote in database
+    const [customer, setCustomer] = useState("");
 
     useEffect(() => {
         getCustomers();
@@ -24,7 +25,6 @@ function NewQuote() {
         axios
             .get("https://students.cs.niu.edu/~z1860207/legacy.php")
             .then(function (response) {
-                // console.log(response.data);
                 setCustomers(response.data);
             })
             .catch((error) => {
@@ -81,6 +81,7 @@ function NewQuote() {
     // called after selecting a customer from dropdown
     const handleCustomerSelect = (e) => {
         setCustomerId(e.target.value);
+        setCustomer(customers[e.target.value]["name"]);
     };
 
     // called after clicking New Quote button
@@ -110,8 +111,8 @@ function NewQuote() {
                     <option className="new__text" value="0">
                         Please Select
                     </option>
-                    {customers.map((customer) => (
-                        <option className="new__text" value={customer.id}>
+                    {customers.map((customer, id) => (
+                        <option className="new__text" value={id}>
                             {customer.name}
                         </option>
                     ))}
@@ -120,7 +121,7 @@ function NewQuote() {
                     New Quote
                 </button>
                 <NewQuotePopup trigger={popup} setTrigger={setPopup}>
-                    <h3>My popup</h3>
+                    <h3>Quote for: {customer}</h3>
                     <p>
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
                         Laudantium error quas inventore, fugiat necessitatibus
