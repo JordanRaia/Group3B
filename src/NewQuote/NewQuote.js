@@ -6,7 +6,14 @@ import axios from "axios";
 // firebase
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { onValue, ref as dbRef } from "firebase/database";
+import {
+    onValue,
+    ref as dbRef,
+    child,
+    push,
+    update,
+    set,
+} from "firebase/database";
 // material ui
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -73,30 +80,122 @@ function NewQuote() {
     function calculateQuoteAmount(index) {
         let amount = 0; //total cost
         //get cost of each item and add to amount
-        for (var item in quotes[index.id]["line items"]) {
-            //add the cost of item to amount
-            amount += quotes[index.id]["line items"][item]["amount"];
+        if (typeof quotes[index.quote]["line items"] !== undefined) {
+            for (var item in quotes[index.quote]["line items"]) {
+                //add the cost of item to amount
+                amount += quotes[index.quote]["line items"][item]["amount"];
+            }
         }
 
         //get flat discounts and remove from total amount
-        for (var flatDiscount in quotes[index.id]["discount"]["amount"]) {
-            //subtract flat discount from amount
-            amount -= quotes[index.id]["discount"]["amount"][flatDiscount];
+        if (typeof quotes[index.quote]["discount"] != "undefined") {
+            for (var flatDiscount in quotes[index.quote]["discount"][
+                "amount"
+            ]) {
+                //subtract flat discount from amount
+                amount -=
+                    quotes[index.quote]["discount"]["amount"][flatDiscount];
+
+                if (amount < 0) {
+                    amount = 0;
+                }
+            }
         }
 
         //get precent discounts and remove from amount
-        for (var percentDiscount in quotes[index.id]["discount"]["percent"]) {
-            //get the value to multiply by to get new total amount
-            let decimalPercent =
-                1 -
-                quotes[index.id]["discount"]["percent"][percentDiscount] / 100;
-            amount *= decimalPercent;
+        if (typeof quotes[index.quote]["discount"] != "undefined") {
+            for (var percentDiscount in quotes[index.quote]["discount"][
+                "percent"
+            ]) {
+                //get the value to multiply by to get new total amount
+                let decimalPercent =
+                    1 -
+                    quotes[index.quote]["discount"]["percent"][
+                        percentDiscount
+                    ] /
+                        100;
+                amount *= decimalPercent;
+
+                if (amount < 0) {
+                    amount = 0;
+                }
+            }
         }
 
         //round to 2 decimal places
         amount = amount.toFixed(2);
 
         return amount;
+    }
+
+    const handleQuoteSubmit = async (e) => {
+        e.preventDefault(); // prevent page refresh
+
+        if (email === "") {
+            alert("must enter email");
+        } else if (checkForMissing(lineItems)) {
+            alert("must enter line item");
+        } else if (checkForMissing(lineItemAmount)) {
+            alert("must enter line item amount");
+        } else if (checkForMissing(secretNotes, false)) {
+            alert("must enter secret note or remove");
+        } else if (checkForMissing(flatDiscount, false)) {
+            alert("must enter flat discount or remove");
+        } else if (checkForMissing(percentDiscount, false)) {
+            alert("must enter percent discount or remove");
+        } else {
+            // submit to database
+            // quote entry
+            const quoteData = {
+                customer: customers[customerId]["name"],
+                "customer id": customerId,
+                email: email,
+                "secret notes": secretNotes,
+            };
+
+            // get a key for a new quote
+            const newQuoteKey = push(child(dbRef(db), "quotes")).key;
+
+            const updates = {};
+            updates["/quotes/current quotes/" + newQuoteKey] = quoteData;
+
+            await update(dbRef(db), updates);
+            await set(
+                dbRef(db, `/quotes/current quotes/${newQuoteKey}/discount`),
+                {
+                    amount: flatDiscount,
+                    percent: percentDiscount,
+                }
+            );
+            for (var i in lineItems) {
+                await set(
+                    dbRef(
+                        db,
+                        `/quotes/current quotes/${newQuoteKey}/line items/${lineItems[i]}`
+                    ),
+                    {
+                        amount: lineItemAmount[i],
+                    }
+                );
+            }
+            closePopup();
+        }
+    };
+
+    function checkForMissing(arr, checkExistFlag = true) {
+        if (arr === []) {
+            if (checkExistFlag) {
+                return true;
+            }
+        } else {
+            for (var i in arr) {
+                if (arr[i] === "") {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     // called after selecting a customer from dropdown
@@ -155,15 +254,24 @@ function NewQuote() {
         setLineItemAmount(tempArr);
 
         // calculate sum
-        const sum = tempArr.reduce((accumulator, value) => {
+        let sum = calculateSum(tempArr);
+
+        applyDiscounts(flatDiscount, percentDiscount, sum);
+    };
+
+    function calculateSum(arr) {
+        // calculate sum
+        const sum = arr.reduce((accumulator, value) => {
             return parseInt(accumulator) + parseInt(value);
         }, 0);
 
         let sumArr = [];
         sumArr.push(sum);
         // set amount
-        setAmount(sumArr);
-    };
+        setAmount(sumArr)
+
+        return sum;
+    }
 
     // handles new secret notes button
     const handleSecretButton = (e) => {
@@ -190,14 +298,7 @@ function NewQuote() {
         setLineItemAmount(arr2);
 
         // calculate sum
-        const sum = arr2.reduce((accumulator, value) => {
-            return parseInt(accumulator) + parseInt(value);
-        }, 0);
-
-        let sumArr = [];
-        sumArr.push(sum);
-        // set amount
-        setAmount(sumArr);
+        calculateSum(arr2);
     };
 
     const handleFieldChangeSecretNote = (index) => (e) => {
@@ -243,17 +344,21 @@ function NewQuote() {
         setFlatDiscount(tempArr);
 
         // add discounted amounts to amounts
-        applyDiscounts(tempArr, percentDiscount);
+        applyDiscounts(tempArr, percentDiscount, amount[0]);
     };
 
-    const applyDiscounts = (flat, percent) => {
+    const applyDiscounts = (flat, percent, initialAmount) => {
         let amountArr = [];
-        amountArr.push(amount[0]);
+        amountArr.push(initialAmount);
         for (var i in flat) {
             amountArr.push(amountArr[i] - flat[i]);
         }
 
-        i++; // iterate i once
+        if (i === undefined) {
+            i = 0;
+        } else {
+            i++;
+        }
 
         for (var j in percent) {
             let decimalPercent = 1 - percent[j] / 100;
@@ -277,7 +382,7 @@ function NewQuote() {
         setPercentDiscount(tempArr);
 
         // re-apply new discounts
-        applyDiscounts(flatDiscount, tempArr);
+        applyDiscounts(flatDiscount, tempArr, amount[0]);
     };
 
     const handleDeleteFlatDiscount = (index) => (e) => {
@@ -289,7 +394,7 @@ function NewQuote() {
         setFlatDiscount(tempArr);
 
         // re-apply new discounts
-        applyDiscounts(tempArr, percentDiscount);
+        applyDiscounts(tempArr, percentDiscount, amount[0]);
     };
 
     const handleDeletePercentDiscount = (index) => (e) => {
@@ -301,7 +406,7 @@ function NewQuote() {
         setPercentDiscount(tempArr);
 
         // re-apply new discounts
-        applyDiscounts(flatDiscount, tempArr);
+        applyDiscounts(flatDiscount, tempArr, amount[0]);
     };
 
     return user ? (
@@ -326,7 +431,7 @@ function NewQuote() {
                         </option>
                     ))}
                 </select>
-                <button onClick={handleQuoteButton} class="button-49">
+                <button onClick={handleQuoteButton} className="button-49">
                     New Quote
                 </button>
                 {/* Popup Window */}
@@ -478,7 +583,7 @@ function NewQuote() {
                                     ))}
                                 </div>
                             </div>
-                            <input type="submit" />
+                            <input onClick={handleQuoteSubmit} type="submit" />
                         </form>
                     </div>
                 </NewQuotePopup>
@@ -492,22 +597,42 @@ function NewQuote() {
                 </Link>
             </div>
             <h2>Current Quotes:</h2>
-            {quotes.map((quote, id) => (
+            {Object.keys(quotes).map((quote, id) => {
+                return (
+                    <div key={id} className="new__quoteContainer">
+                        <div className="new__quote">
+                            <div className="new__quoteCustomerInfo">
+                                <p className="new__quoteId">{quote}: </p>
+                                <p className="new__quoteCustomer">
+                                    {quotes[quote]["customer"]}
+                                </p>
+                            </div>
+                            <p className="new__quoteAmount">
+                                ${calculateQuoteAmount({ quote })}
+                            </p>
+                            <button className="new__quoteButton">
+                                Edit Quote
+                            </button>
+                        </div>
+                    </div>
+                );
+            })}
+            {/* {quotes.map((quote, id) => (
                 <div className="new__quoteContainer">
                     <div className="new__quote">
                         <div className="new__quoteCustomerInfo">
-                            <p className="new__quoteId">{id}: </p>
+                            <p className="new__quoteId">{quote.key}: </p>
                             <p className="new__quoteCustomer">
                                 {quote.customer}
                             </p>
                         </div>
                         <p className="new__quoteAmount">
-                            ${calculateQuoteAmount({ id })}
+                            ${calculateQuoteAmount(quote.key)}
                         </p>
                         <button className="new__quoteButton">Edit Quote</button>
                     </div>
                 </div>
-            ))}
+            ))} */}
             <h3>1 quote found</h3>
         </div>
     ) : (
