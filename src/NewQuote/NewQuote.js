@@ -15,7 +15,6 @@ function NewQuote() {
     const [customerId, setCustomerId] = useState(0); // selected customer in dropdown
     // for creating new quote in database
 
-
     useEffect(() => {
         getCustomers();
         authState();
@@ -84,6 +83,17 @@ function NewQuote() {
         setCustomerId(e.target.value);
     };
 
+    // called after clicking New Quote button
+    const handleQuoteButton = () => {
+        if (customerId !== 0) {
+            // "Please Select" is not selected
+            setPopup(true);
+        } else {
+            // "Please Select" is selected
+            alert("Please Select a Customer");
+        }
+    };
+
     return user ? (
         // user is logged in
         <div className="new">
@@ -106,7 +116,7 @@ function NewQuote() {
                         </option>
                     ))}
                 </select>
-                <button onClick={() => setPopup(true)} class="button-49">
+                <button onClick={handleQuoteButton} class="button-49">
                     New Quote
                 </button>
                 <NewQuotePopup trigger={popup} setTrigger={setPopup}>
