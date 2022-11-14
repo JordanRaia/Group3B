@@ -9,6 +9,7 @@ import FinalizeQuote from "./FinalizeQuote/FinalizeQuote";
 import SanctionQuote from "./SanctionQuote/SanctionQuote";
 import Administration from "./Administration/Administration";
 import Quotes from "./Quotes/Quotes";
+import Customers from "./Customers/Customers";
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                     <Route path="SanctionQuote" element={<SanctionQuote />} />
                     <Route path="Administration" element={<Administration />} />
                     <Route path="Quotes" element={<Quotes />} />
+                    <Route path="Customers" element={<Customers />} />
                 </Route>
             </Routes>
         </div>

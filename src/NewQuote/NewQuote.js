@@ -1,23 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import NewQuotePopup from "./NewQuotePopup";
 import "./NewQuote.css";
 import axios from "axios";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "../firebase";
+import { onValue, ref as dbRef } from "firebase/database";
 
-function NewQuote()  {
+function NewQuote() {
     const [customers, setCustomers] = useState([]);
+    const [popup, setPopup] = useState(false);
+    const [user, setUser] = useState({});
+    const [quotes, setQuotes] = useState([]);
+    const [customerId, setCustomerId] = useState(0); // selected customer in dropdown
+    // for creating new quote in database
+    const [customer, setCustomer] = useState("");
+
     useEffect(() => {
         getCustomers();
+        authState();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     function getCustomers() {
-        axios.get('https://students.cs.niu.edu/~z1860207/legacy.php')
-        .then(function(response) {
-            console.log(response.data);
-            setCustomers(response.data);
-        }).catch((error) => {console.error(error)});
+        axios
+            .get("https://students.cs.niu.edu/~z1860207/legacy.php")
+            .then(function (response) {
+                setCustomers(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
-
-    //var id, name, city, street, contact;
-
+    
     return ( <div classname= "app-container">
         <table> 
             <thead> 
@@ -41,7 +55,7 @@ function NewQuote()  {
                                 <td>
                                     <Link to = {{ 
                                         pathname: "/Quotes",
-                                        state: {id: "customer.id", name: "customer.name", city: "customer.city", street: "customer.street", contact: "customer.contact"}                                       
+                                        state: {id: "customer.id", name: "customer.name", city: "customer.city", street: "customer.street", contact: "customer.contact"}
                                         }}>
                                             <button class="button-49">Edit</button>
                                         </Link>
@@ -52,13 +66,5 @@ function NewQuote()  {
         </table>
     </div> )
 }
-/* //PRE- axios table body:
-                <tr>
-                    <td>12</td>
-                    <td>Jay Gordon</td>
-                    <td>San Francisco</td>
-                    <td>cherry blossom st</td>
-                    <td>jgordon12@gmail.com</td>
-                </tr>
-*/
+
 export default NewQuote;
