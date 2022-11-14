@@ -9,7 +9,7 @@ function Page404() {
                 <div className="page404__logoContainer">
                     <img className="page404__logo" src={Logo} alt="logo" />
                 </div>
-                <h1 className="page404__header">ERROR: 404</h1>
+                <h1 className="page404__header">404</h1>
                 <h2 className="page404__subHeader">Page not found</h2>
             </div>
         </div>
