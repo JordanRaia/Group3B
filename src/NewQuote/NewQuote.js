@@ -619,22 +619,6 @@ function NewQuote() {
                     </div>
                 );
             })}
-            {/* {quotes.map((quote, id) => (
-                <div className="new__quoteContainer">
-                    <div className="new__quote">
-                        <div className="new__quoteCustomerInfo">
-                            <p className="new__quoteId">{quote.key}: </p>
-                            <p className="new__quoteCustomer">
-                                {quote.customer}
-                            </p>
-                        </div>
-                        <p className="new__quoteAmount">
-                            ${calculateQuoteAmount(quote.key)}
-                        </p>
-                        <button className="new__quoteButton">Edit Quote</button>
-                    </div>
-                </div>
-            ))} */}
             <h3>1 quote found</h3>
         </div>
     ) : (
