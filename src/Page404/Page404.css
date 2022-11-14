@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* Responsive width, matches with default bootstrap navbar */
+.page404 {
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media screen and (max-width: 1400px) {
+    .page404 {
+        max-width: 1120px;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .page404 {
+        max-width: 940px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .page404 {
+        max-width: 700px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .page404 {
+        max-width: 520px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .page404 {
+        max-width: 520px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .page404 {
+        max-width: 96.5%;
+    }
+}
+
+.page404__header {
+    text-align: center;
+}
+
+.page404__logo {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}
+
+.page404__logoContainer {
+    height: 9.375rem;
+    width: 9.375rem;
+    border: 3px solid black;
+    border-radius: 50%;
+    margin-top: 5rem;
+}
+
+.page404__flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page404__header {
+    margin-top: 5rem;
+    font-family: Poppins;
+    font-weight: 700;
+}
+
+.page404__subHeader {
+    font-family: Poppins;
+    font-weight: 600;
+}
