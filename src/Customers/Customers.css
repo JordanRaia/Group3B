@@ -73,7 +73,7 @@
     gap: 5px;
 }
 
-.customers__form td:last-child {
+.customers__form .customers__td:last-child {
     display: flex;
     justify-content: space-evenly;
 }

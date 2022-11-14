@@ -72,12 +72,13 @@
     font-weight: 700;
 }
 
-.new__text {
+.new__textSubHeader {
     font-family: Poppins;
     font-weight: 600;
 }
 
-.new__bulletText {
+
+.new__text, .new__bulletText {
     font-family: Poppins;
     font-weight: 400;
 }
@@ -100,6 +101,21 @@
     white-space: pre-wrap;
     font-family: Poppins;
     font-weight: 400;
+}
+
+.new__customerInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.new__popup {
+    display: flex;
+    flex-direction: column;
+}
+
+.new__delete {
+    margin-left: .5rem;
+    border: 1px solid black;
 }
 
 @media screen and (max-width: 768px) {
@@ -129,6 +145,19 @@
 
 .new__quoteButton {
     border: 1px solid #999;
+}
+
+.new__discount {
+    text-decoration: line-through;
+}
+
+.new__discount:last-child {
+    text-decoration: none;
+}
+
+.new__discountFlex {
+    display: flex;
+    flex-direction: column;
 }
 
 /* CSS */
