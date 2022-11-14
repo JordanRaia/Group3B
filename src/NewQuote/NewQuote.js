@@ -17,6 +17,7 @@ import {
 // material ui
 import DeleteIcon from "@mui/icons-material/Delete";
 
+// for sales employees to create new quotes and send to finalize quote
 function NewQuote() {
     const [customers, setCustomers] = useState([]);
     const [popup, setPopup] = useState(false);
@@ -269,7 +270,7 @@ function NewQuote() {
         let sumArr = [];
         sumArr.push(sum);
         // set amount
-        setAmount(sumArr)
+        setAmount(sumArr);
 
         return sum;
     }
