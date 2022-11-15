@@ -21,6 +21,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 function NewQuote() {
     const [customers, setCustomers] = useState([]);
     const [popup, setPopup] = useState(false);
+    // const [popup2, setPopup2] = useState(false);
     const [user, setUser] = useState({});
     const [quotes, setQuotes] = useState([]);
     const [customerId, setCustomerId] = useState(0); // selected customer in dropdown
@@ -123,7 +124,6 @@ function NewQuote() {
             }
         }
 
-        console.log(amount);
         //round to 2 decimal places
         amount = parseInt(amount).toFixed(2);
 
@@ -619,7 +619,7 @@ function NewQuote() {
                     </div>
                 );
             })}
-            <h3>1 quote found</h3>
+            <h3>{Object.keys(quotes).length} quote found</h3>
         </div>
     ) : (
         // user is not logged in
