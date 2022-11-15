@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import NewQuotePopup from "./NewQuotePopup";
+import Popup from "reactjs-popup";
 import "./NewQuote.css";
+import "./NewQuotePopup.css";
 import axios from "axios";
 // firebase
 import { onAuthStateChanged } from "firebase/auth";
@@ -612,9 +614,292 @@ function NewQuote() {
                             <p className="new__quoteAmount">
                                 ${calculateQuoteAmount({ quote })}
                             </p>
-                            <button className="new__quoteButton">
-                                Edit Quote
-                            </button>
+                            <Popup
+                                trigger={
+                                    <button className="new__quoteButton">
+                                        Edit Quote
+                                    </button>
+                                }
+                            >
+                                {(close) => (
+                                    <div className="popup">
+                                        <div className="popup__inner">
+                                            <button
+                                                onClick={close}
+                                                className="popup__closeBtn"
+                                            >
+                                                close
+                                            </button>
+                                            <div className="new__popup">
+                                                <h3>Edit quote: {quote}</h3>
+                                                <h3>
+                                                    {quotes[quote]["customer"]}
+                                                </h3>
+                                                <div className="new__customerInfo">
+                                                    <span className="new__text">
+                                                        {quotes[quote][
+                                                            "customer"
+                                                        ] !== 0 &&
+                                                            quotes[quote][
+                                                                "customer id"
+                                                            ] !== undefined &&
+                                                            customers[
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ]
+                                                            ]["street"]}
+                                                    </span>
+                                                    <span className="new__text">
+                                                        {quotes[quote][
+                                                            "customer"
+                                                        ] !== 0 &&
+                                                            quotes[quote][
+                                                                "customer id"
+                                                            ] !== undefined &&
+                                                            customers[
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ]
+                                                            ]["city"]}
+                                                    </span>
+                                                    <span className="new__text">
+                                                        {quotes[quote][
+                                                            "customer"
+                                                        ] !== 0 &&
+                                                            quotes[quote][
+                                                                "customer id"
+                                                            ] !== undefined &&
+                                                            customers[
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ]
+                                                            ]["contact"]}
+                                                    </span>
+                                                </div>
+                                                <form>
+                                                    <div className="new__flex">
+                                                        <label htmlFor="email">
+                                                            Email:{" "}
+                                                        </label>
+                                                        <input
+                                                            onChange={(e) =>
+                                                                setEmail(
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                            value={email}
+                                                            type="text"
+                                                            id="email"
+                                                            name="email"
+                                                        />
+                                                    </div>
+                                                    <div className="new__flex">
+                                                        <h4>Line Items: </h4>
+                                                        <button
+                                                            onClick={
+                                                                handleLineButton
+                                                            }
+                                                        >
+                                                            New Item
+                                                        </button>
+                                                    </div>
+                                                    {lineItems.map(
+                                                        (item, i) => (
+                                                            <div>
+                                                                <label
+                                                                    htmlFor={`item`}
+                                                                >
+                                                                    item:{" "}
+                                                                </label>
+                                                                <input
+                                                                    type="text"
+                                                                    value={
+                                                                        lineItems[
+                                                                            i
+                                                                        ]
+                                                                    }
+                                                                    onChange={handleFieldChangeLineItem(
+                                                                        i
+                                                                    )}
+                                                                ></input>
+                                                                <label
+                                                                    htmlFor={`amount`}
+                                                                >
+                                                                    {" "}
+                                                                    amount:{" "}
+                                                                </label>
+                                                                <input
+                                                                    type="number"
+                                                                    min={0}
+                                                                    value={
+                                                                        lineItemAmount[
+                                                                            i
+                                                                        ]
+                                                                    }
+                                                                    onChange={handleFieldChangeLineAmount(
+                                                                        i
+                                                                    )}
+                                                                ></input>
+                                                                <button
+                                                                    className="new__delete"
+                                                                    onClick={handleDeleteLineItem(
+                                                                        i
+                                                                    )}
+                                                                >
+                                                                    <DeleteIcon />
+                                                                </button>
+                                                            </div>
+                                                        )
+                                                    )}
+                                                    <div className="new__flex">
+                                                        <h4>Secret Notes: </h4>
+                                                        <button
+                                                            onClick={
+                                                                handleSecretButton
+                                                            }
+                                                        >
+                                                            New Note
+                                                        </button>
+                                                    </div>
+                                                    {secretNotes.map(
+                                                        (note, i) => (
+                                                            <div>
+                                                                <label
+                                                                    htmlFor={`note`}
+                                                                >
+                                                                    note:{" "}
+                                                                </label>
+                                                                <input
+                                                                    type="text"
+                                                                    value={
+                                                                        secretNotes[
+                                                                            i
+                                                                        ]
+                                                                    }
+                                                                    onChange={handleFieldChangeSecretNote(
+                                                                        i
+                                                                    )}
+                                                                ></input>
+                                                                <button
+                                                                    className="new__delete"
+                                                                    onClick={handleDeleteSecretNote(
+                                                                        i
+                                                                    )}
+                                                                >
+                                                                    <DeleteIcon />
+                                                                </button>
+                                                            </div>
+                                                        )
+                                                    )}
+                                                    <div className="new__flex">
+                                                        <h4>
+                                                            Flat Discounts:{" "}
+                                                        </h4>
+                                                        <button
+                                                            onClick={
+                                                                handleFlatDiscountButton
+                                                            }
+                                                        >
+                                                            New Discount
+                                                        </button>
+                                                    </div>
+                                                    {flatDiscount.map(
+                                                        (discount, i) => (
+                                                            <div key={i}>
+                                                                <label
+                                                                    htmlFor={`item`}
+                                                                >
+                                                                    discount:{" "}
+                                                                </label>
+                                                                <input
+                                                                    type="number"
+                                                                    min={0}
+                                                                    max={amount}
+                                                                    placeholder={`$0-$${amount[0]}`}
+                                                                    value={
+                                                                        flatDiscount[
+                                                                            i
+                                                                        ]
+                                                                    }
+                                                                    onChange={handleFieldChangeFlatDiscount(
+                                                                        i
+                                                                    )}
+                                                                ></input>
+                                                                <button
+                                                                    className="new__delete"
+                                                                    onClick={handleDeleteFlatDiscount(
+                                                                        i
+                                                                    )}
+                                                                >
+                                                                    <DeleteIcon />
+                                                                </button>
+                                                            </div>
+                                                        )
+                                                    )}
+                                                    <div className="new__flex">
+                                                        <h4>
+                                                            Percent Discounts:{" "}
+                                                        </h4>
+                                                        <button
+                                                            onClick={
+                                                                handlePercentDiscountButton
+                                                            }
+                                                        >
+                                                            New Discount
+                                                        </button>
+                                                    </div>
+                                                    {percentDiscount.map(
+                                                        (discount, i) => (
+                                                            <div key={i}>
+                                                                <label
+                                                                    htmlFor={`item`}
+                                                                >
+                                                                    discount:{" "}
+                                                                </label>
+                                                                <input
+                                                                    type="number"
+                                                                    min={0}
+                                                                    max={100}
+                                                                    placeholder={`0%-100%`}
+                                                                    value={
+                                                                        percentDiscount[
+                                                                            i
+                                                                        ]
+                                                                    }
+                                                                    onChange={handleFieldChangePercentDiscount(
+                                                                        i
+                                                                    )}
+                                                                ></input>
+                                                                <button
+                                                                    className="new__delete"
+                                                                    onClick={handleDeletePercentDiscount(
+                                                                        i
+                                                                    )}
+                                                                >
+                                                                    <DeleteIcon />
+                                                                </button>
+                                                            </div>
+                                                        )
+                                                    )}
+                                                    <div className="new__flex">
+                                                        <p>Amount: </p>
+                                                        <div className="new__discountFlex">
+                                                            {amount.map(
+                                                                (amt) => (
+                                                                    <p className="new__discount">
+                                                                        ${amt}
+                                                                    </p>
+                                                                )
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </Popup>
                         </div>
                     </div>
                 );
