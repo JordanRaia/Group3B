@@ -21,7 +21,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 function NewQuote() {
     const [customers, setCustomers] = useState([]);
     const [popup, setPopup] = useState(false);
-    const [popup2, setPopup2] = useState([]);
     const [user, setUser] = useState({});
     const [quotes, setQuotes] = useState([]);
     const [customerId, setCustomerId] = useState(0); // selected customer in dropdown
