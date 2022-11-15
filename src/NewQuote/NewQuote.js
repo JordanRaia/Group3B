@@ -619,7 +619,7 @@ function NewQuote() {
                     </div>
                 );
             })}
-            <h3>{Object.keys(quotes).length} quote found</h3>
+            <h3>{Object.keys(quotes).length} quote{Object.keys(quotes).length !== 1 && "s"} found</h3>
         </div>
     ) : (
         // user is not logged in
