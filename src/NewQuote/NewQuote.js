@@ -25,7 +25,7 @@ function NewQuote() {
     const [popup, setPopup] = useState(false);
     const [user, setUser] = useState({});
     const [quotes, setQuotes] = useState([]);
-    const [customerId, setCustomerId] = useState(0); // selected customer in dropdown
+    const [customerId, setCustomerId] = useState(-1); // selected customer in dropdown
     // for creating new quote in database
     const [amount, setAmount] = useState(["0"]);
     const [flatDiscount, setFlatDiscount] = useState([]);
@@ -203,13 +203,16 @@ function NewQuote() {
 
     // called after selecting a customer from dropdown
     const handleCustomerSelect = (e) => {
+        e.preventDefault();
+        console.log(e.target.value);
         setCustomerId(e.target.value);
     };
 
     // called after clicking New Quote button
     const handleQuoteButton = (e) => {
         e.preventDefault();
-        if (customerId !== 0) {
+        // console.log(customerId);
+        if (parseInt(customerId) !== -1) {
             // "Please Select" is not selected
             setPopup(true);
         } else {
@@ -413,6 +416,14 @@ function NewQuote() {
         applyDiscounts(flatDiscount, tempArr, amount[0]);
     };
 
+    const checkIfDefined = (object) => {
+        if (typeof object != "undefined") {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
     return user ? (
         // user is logged in
         <div className="new">
@@ -426,7 +437,7 @@ function NewQuote() {
                     value={customerId}
                     onChange={handleCustomerSelect}
                 >
-                    <option className="new__textSubHeader" value="0">
+                    <option className="new__textSubHeader" value="-1">
                         Please Select
                     </option>
                     {customers.map((customer, id) => (
@@ -443,19 +454,28 @@ function NewQuote() {
                     <div className="new__popup">
                         <h3>
                             Quote for:{" "}
-                            {customerId !== 0 && customers[customerId]["name"]}
+                            {customers &&
+                                customers[customerId] &&
+                                customers[customerId]["name"] &&
+                                customers[customerId]["name"]}
                         </h3>
                         <div className="new__customerInfo">
                             <span className="new__text">
-                                {customerId !== 0 &&
+                                {customers &&
+                                    customers[customerId] &&
+                                    customers[customerId]["street"] &&
                                     customers[customerId]["street"]}
                             </span>
                             <span className="new__text">
-                                {customerId !== 0 &&
+                                {customers &&
+                                    customers[customerId] &&
+                                    customers[customerId]["city"] &&
                                     customers[customerId]["city"]}
                             </span>
                             <span className="new__text">
-                                {customerId !== 0 &&
+                                {customers &&
+                                    customers[customerId] &&
+                                    customers[customerId]["contact"] &&
                                     customers[customerId]["contact"]}
                             </span>
                         </div>
@@ -636,13 +656,22 @@ function NewQuote() {
                                                     {quotes[quote]["customer"]}
                                                 </h3>
                                                 <div className="new__customerInfo">
-                                                    {/* <span className="new__text">
-                                                        {customers[
+                                                    <span className="new__text">
+                                                        {quotes &&
+                                                            quotes[quote] &&
                                                             quotes[quote][
                                                                 "customer id"
-                                                            ]
-                                                        ]["street"] !==
-                                                            undefined &&
+                                                            ] &&
+                                                            customers[
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ]
+                                                            ] &&
+                                                            customers[
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ]
+                                                            ]["street"] &&
                                                             customers[
                                                                 quotes[quote][
                                                                     "customer id"
@@ -650,12 +679,21 @@ function NewQuote() {
                                                             ]["street"]}
                                                     </span>
                                                     <span className="new__text">
-                                                        {quotes[quote][
-                                                            "customer"
-                                                        ] !== 0 &&
+                                                        {quotes &&
+                                                            quotes[quote] &&
                                                             quotes[quote][
                                                                 "customer id"
-                                                            ] !== undefined &&
+                                                            ] &&
+                                                            customers[
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ]
+                                                            ] &&
+                                                            customers[
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ]
+                                                            ]["city"] &&
                                                             customers[
                                                                 quotes[quote][
                                                                     "customer id"
@@ -663,18 +701,27 @@ function NewQuote() {
                                                             ]["city"]}
                                                     </span>
                                                     <span className="new__text">
-                                                        {quotes[quote][
-                                                            "customer"
-                                                        ] !== 0 &&
+                                                        {quotes &&
+                                                            quotes[quote] &&
                                                             quotes[quote][
                                                                 "customer id"
-                                                            ] !== undefined &&
+                                                            ] &&
+                                                            customers[
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ]
+                                                            ] &&
+                                                            customers[
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ]
+                                                            ]["contact"] &&
                                                             customers[
                                                                 quotes[quote][
                                                                     "customer id"
                                                                 ]
                                                             ]["contact"]}
-                                                    </span> */}
+                                                    </span>
                                                 </div>
                                                 <form>
                                                     <div className="new__flex">
