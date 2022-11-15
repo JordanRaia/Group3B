@@ -416,14 +416,6 @@ function NewQuote() {
         applyDiscounts(flatDiscount, tempArr, amount[0]);
     };
 
-    const checkIfDefined = (object) => {
-        if (typeof object != "undefined") {
-            return true;
-        } else {
-            return false;
-        }
-    };
-
     return user ? (
         // user is logged in
         <div className="new">
