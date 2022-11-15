@@ -636,13 +636,13 @@ function NewQuote() {
                                                     {quotes[quote]["customer"]}
                                                 </h3>
                                                 <div className="new__customerInfo">
-                                                    <span className="new__text">
-                                                        {quotes[quote][
-                                                            "customer"
-                                                        ] !== 0 &&
+                                                    {/* <span className="new__text">
+                                                        {customers[
                                                             quotes[quote][
                                                                 "customer id"
-                                                            ] !== undefined &&
+                                                            ]
+                                                        ]["street"] !==
+                                                            undefined &&
                                                             customers[
                                                                 quotes[quote][
                                                                     "customer id"
@@ -674,7 +674,7 @@ function NewQuote() {
                                                                     "customer id"
                                                                 ]
                                                             ]["contact"]}
-                                                    </span>
+                                                    </span> */}
                                                 </div>
                                                 <form>
                                                     <div className="new__flex">
