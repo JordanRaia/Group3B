@@ -21,7 +21,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 function NewQuote() {
     const [customers, setCustomers] = useState([]);
     const [popup, setPopup] = useState(false);
-    // const [popup2, setPopup2] = useState(false);
+    const [popup2, setPopup2] = useState([]);
     const [user, setUser] = useState({});
     const [quotes, setQuotes] = useState([]);
     const [customerId, setCustomerId] = useState(0); // selected customer in dropdown
@@ -206,7 +206,8 @@ function NewQuote() {
     };
 
     // called after clicking New Quote button
-    const handleQuoteButton = () => {
+    const handleQuoteButton = (e) => {
+        e.preventDefault();
         if (customerId !== 0) {
             // "Please Select" is not selected
             setPopup(true);
@@ -599,9 +600,9 @@ function NewQuote() {
                 </Link>
             </div>
             <h2>Current Quotes:</h2>
-            {Object.keys(quotes).map((quote, id) => {
+            {Object.keys(quotes).map((quote, i) => {
                 return (
-                    <div key={id} className="new__quoteContainer">
+                    <div key={i} className="new__quoteContainer">
                         <div className="new__quote">
                             <div className="new__quoteCustomerInfo">
                                 <p className="new__quoteId">{quote}: </p>
@@ -619,7 +620,10 @@ function NewQuote() {
                     </div>
                 );
             })}
-            <h3>{Object.keys(quotes).length} quote{Object.keys(quotes).length !== 1 && "s"} found</h3>
+            <h3>
+                {Object.keys(quotes).length} quote
+                {Object.keys(quotes).length !== 1 && "s"} found
+            </h3>
         </div>
     ) : (
         // user is not logged in
