@@ -5,6 +5,7 @@ import Popup from "reactjs-popup";
 import "./NewQuote.css";
 import "./NewQuotePopup.css";
 import axios from "axios";
+import CurrencyFormat from "react-currency-format";
 // firebase
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
@@ -86,7 +87,7 @@ function NewQuote() {
         if (typeof quotes[index.quote]["line items"] != "undefined") {
             for (var item in quotes[index.quote]["line items"]) {
                 //add the cost of item to amount
-                amount += quotes[index.quote]["line items"][item]["amount"];
+                amount += parseCurrency(quotes[index.quote]["line items"][item]["amount"]);
             }
         }
 
@@ -97,7 +98,7 @@ function NewQuote() {
             ]) {
                 //subtract flat discount from amount
                 amount -=
-                    quotes[index.quote]["discount"]["amount"][flatDiscount];
+                    parseCurrency(quotes[index.quote]["discount"]["amount"][flatDiscount]);
 
                 if (amount < 0) {
                     amount = 0;
@@ -204,14 +205,13 @@ function NewQuote() {
     // called after selecting a customer from dropdown
     const handleCustomerSelect = (e) => {
         e.preventDefault();
-        console.log(e.target.value);
+
         setCustomerId(e.target.value);
     };
 
     // called after clicking New Quote button
     const handleQuoteButton = (e) => {
         e.preventDefault();
-        // console.log(customerId);
         if (parseInt(customerId) !== -1) {
             // "Please Select" is not selected
             setPopup(true);
@@ -269,7 +269,7 @@ function NewQuote() {
     function calculateSum(arr) {
         // calculate sum
         const sum = arr.reduce((accumulator, value) => {
-            return parseInt(accumulator) + parseInt(value);
+            return parseFloat(accumulator) + parseCurrency(value);
         }, 0);
 
         let sumArr = [];
@@ -278,6 +278,15 @@ function NewQuote() {
         setAmount(sumArr);
 
         return sum;
+    }
+
+    function parseCurrency(value) {
+        if (value) {
+            let str = value.split("$").join(""); // remove $
+            str = str.split(",").join(""); // remove ,
+            let float = parseFloat(str); // create float
+            return float; // return the float
+        }
     }
 
     // handles new secret notes button
@@ -358,7 +367,7 @@ function NewQuote() {
         let amountArr = [];
         amountArr.push(initialAmount);
         for (var i in flat) {
-            amountArr.push(amountArr[i] - flat[i]);
+            amountArr.push(amountArr[i] - parseCurrency(flat[i]));
         }
 
         if (i === undefined) {
@@ -497,14 +506,17 @@ function NewQuote() {
                                         onChange={handleFieldChangeLineItem(i)}
                                     ></input>
                                     <label htmlFor={`amount`}> amount: </label>
-                                    <input
-                                        type="number"
-                                        min={0}
-                                        value={lineItemAmount[i]}
+                                    <CurrencyFormat
                                         onChange={handleFieldChangeLineAmount(
                                             i
                                         )}
-                                    ></input>
+                                        value={lineItemAmount[i]}
+                                        allowNegative={false}
+                                        thousandSeparator={true}
+                                        decimalScale={2}
+                                        fixedDecimalScale={true}
+                                        prefix="$"
+                                    />
                                     <button
                                         className="new__delete"
                                         onClick={handleDeleteLineItem(i)}
@@ -546,7 +558,19 @@ function NewQuote() {
                             {flatDiscount.map((discount, i) => (
                                 <div key={i}>
                                     <label htmlFor={`item`}>discount: </label>
-                                    <input
+                                    <CurrencyFormat
+                                        onChange={handleFieldChangeFlatDiscount(
+                                            i
+                                        )}
+                                        value={flatDiscount[i]}
+                                        allowNegative={false}
+                                        thousandSeparator={true}
+                                        decimalScale={2}
+                                        fixedDecimalScale={true}
+                                        max={amount[amount.length - 1]}
+                                        prefix="$"
+                                    />
+                                    {/* <input
                                         type="number"
                                         min={0}
                                         max={amount}
@@ -555,7 +579,7 @@ function NewQuote() {
                                         onChange={handleFieldChangeFlatDiscount(
                                             i
                                         )}
-                                    ></input>
+                                    ></input> */}
                                     <button
                                         className="new__delete"
                                         onClick={handleDeleteFlatDiscount(i)}
@@ -582,7 +606,7 @@ function NewQuote() {
                                         onChange={handleFieldChangePercentDiscount(
                                             i
                                         )}
-                                    ></input>
+                                    />
                                     <button
                                         className="new__delete"
                                         onClick={handleDeletePercentDiscount(i)}
@@ -595,7 +619,15 @@ function NewQuote() {
                                 <p>Amount: </p>
                                 <div className="new__discountFlex">
                                     {amount.map((amt) => (
-                                        <p className="new__discount">${amt}</p>
+                                        <p className="new__discount">
+                                            <CurrencyFormat
+                                                displayType="text"
+                                                value={amt}
+                                                decimalScale={2}
+                                                fixedDecimalScale={true}
+                                                prefix="$"
+                                            />
+                                        </p>
                                     ))}
                                 </div>
                             </div>
