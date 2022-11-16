@@ -87,7 +87,9 @@ function NewQuote() {
         if (typeof quotes[index.quote]["line items"] != "undefined") {
             for (var item in quotes[index.quote]["line items"]) {
                 //add the cost of item to amount
-                amount += parseCurrency(quotes[index.quote]["line items"][item]["amount"]);
+                amount += parseCurrency(
+                    quotes[index.quote]["line items"][item]["amount"]
+                );
             }
         }
 
@@ -97,8 +99,9 @@ function NewQuote() {
                 "amount"
             ]) {
                 //subtract flat discount from amount
-                amount -=
-                    parseCurrency(quotes[index.quote]["discount"]["amount"][flatDiscount]);
+                amount -= parseCurrency(
+                    quotes[index.quote]["discount"]["amount"][flatDiscount]
+                );
 
                 if (amount < 0) {
                     amount = 0;
@@ -570,16 +573,6 @@ function NewQuote() {
                                         max={amount[amount.length - 1]}
                                         prefix="$"
                                     />
-                                    {/* <input
-                                        type="number"
-                                        min={0}
-                                        max={amount}
-                                        placeholder={`$0-$${amount[0]}`}
-                                        value={flatDiscount[i]}
-                                        onChange={handleFieldChangeFlatDiscount(
-                                            i
-                                        )}
-                                    ></input> */}
                                     <button
                                         className="new__delete"
                                         onClick={handleDeleteFlatDiscount(i)}
@@ -800,18 +793,29 @@ function NewQuote() {
                                                                     {" "}
                                                                     amount:{" "}
                                                                 </label>
-                                                                <input
-                                                                    type="number"
-                                                                    min={0}
+                                                                <CurrencyFormat
+                                                                    onChange={handleFieldChangeLineAmount(
+                                                                        i
+                                                                    )}
                                                                     value={
                                                                         lineItemAmount[
                                                                             i
                                                                         ]
                                                                     }
-                                                                    onChange={handleFieldChangeLineAmount(
-                                                                        i
-                                                                    )}
-                                                                ></input>
+                                                                    allowNegative={
+                                                                        false
+                                                                    }
+                                                                    thousandSeparator={
+                                                                        true
+                                                                    }
+                                                                    decimalScale={
+                                                                        2
+                                                                    }
+                                                                    fixedDecimalScale={
+                                                                        true
+                                                                    }
+                                                                    prefix="$"
+                                                                />
                                                                 <button
                                                                     className="new__delete"
                                                                     onClick={handleDeleteLineItem(
@@ -883,20 +887,35 @@ function NewQuote() {
                                                                 >
                                                                     discount:{" "}
                                                                 </label>
-                                                                <input
-                                                                    type="number"
-                                                                    min={0}
-                                                                    max={amount}
-                                                                    placeholder={`$0-$${amount[0]}`}
+                                                                <CurrencyFormat
+                                                                    onChange={handleFieldChangeFlatDiscount(
+                                                                        i
+                                                                    )}
                                                                     value={
                                                                         flatDiscount[
                                                                             i
                                                                         ]
                                                                     }
-                                                                    onChange={handleFieldChangeFlatDiscount(
-                                                                        i
-                                                                    )}
-                                                                ></input>
+                                                                    allowNegative={
+                                                                        false
+                                                                    }
+                                                                    thousandSeparator={
+                                                                        true
+                                                                    }
+                                                                    decimalScale={
+                                                                        2
+                                                                    }
+                                                                    fixedDecimalScale={
+                                                                        true
+                                                                    }
+                                                                    max={
+                                                                        amount[
+                                                                            amount.length -
+                                                                                1
+                                                                        ]
+                                                                    }
+                                                                    prefix="$"
+                                                                />
                                                                 <button
                                                                     className="new__delete"
                                                                     onClick={handleDeleteFlatDiscount(
@@ -959,7 +978,19 @@ function NewQuote() {
                                                             {amount.map(
                                                                 (amt) => (
                                                                     <p className="new__discount">
-                                                                        ${amt}
+                                                                        <CurrencyFormat
+                                                                            displayType="text"
+                                                                            value={
+                                                                                amt
+                                                                            }
+                                                                            decimalScale={
+                                                                                2
+                                                                            }
+                                                                            fixedDecimalScale={
+                                                                                true
+                                                                            }
+                                                                            prefix="$"
+                                                                        />
                                                                     </p>
                                                                 )
                                                             )}
