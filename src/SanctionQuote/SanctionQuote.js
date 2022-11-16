@@ -11,11 +11,11 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
 import {
     onValue,
-    ref as dbRef,
+    ref as dbRef /*,
     child,
     push,
     update,
-    set,
+    set,*/
 } from "firebase/database";
 
 // final stage for a quote to be sent to payment processing system by in house employee two

@@ -11,11 +11,11 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
 import {
     onValue,
-    ref as dbRef,
+    ref as dbRef /*,
     child,
     push,
     update,
-    set,
+    set,*/
 } from "firebase/database";
 // for sales employees to create new quotes and send to finalize quote
 function FinalizeQuote() {
