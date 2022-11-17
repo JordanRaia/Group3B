@@ -11,7 +11,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
 import {
     onValue,
-    ref as dbRef /*,
+    ref as dbRef/*,
     child,
     push,
     update,
@@ -28,7 +28,6 @@ function FinalizeQuote() {
     const [amount, setAmount] = useState(["0"]);
     const [flatDiscount, setFlatDiscount] = useState([]);
     const [percentDiscount, setPercentDiscount] = useState([]);
-    const [email, setEmail] = useState("");
     const [lineItems, setLineItems] = useState([]);
     const [lineItemAmount, setLineItemAmount] = useState([]);
     const [secretNotes, setSecretNotes] = useState([]);
@@ -358,13 +357,14 @@ function FinalizeQuote() {
                             <Popup
                                 trigger={
                                     <button className="new__quoteButton">
-                                        Edit Quote
+                                        Edit Quote                                       
                                     </button>
                                 }
                             >
                                 {(close) => (
                                     <div className="popup">
                                         <div className="popup__inner">
+                                            
                                             <button
                                                 onClick={close}
                                                 className="popup__closeBtn"
@@ -443,25 +443,41 @@ function FinalizeQuote() {
                                                                 ]
                                                             ]["contact"]}
                                                     </span>
+                                                    <span className="new__text">
+                                                        email:{" "} 
+                                                            {quotes &&
+                                                            quotes[quote] &&
+                                                            quotes[quote][
+                                                                "discount"
+                                                            ] && quotes[quote]["email"]}
+                                                    </span>                                                    
+                                                    <span className="new__text">
+                                                        discount percent amount:{" "} 
+                                                            {quotes &&
+                                                            quotes[quote] &&
+                                                            quotes[quote][
+                                                                "discount"
+                                                            ] && quotes[quote]["discount"]["percent"]}%
+                                                    </span>
+                                                    <span className="new__text">
+                                                        discount cash amount:{" "} 
+                                                            {quotes &&
+                                                            quotes[quote] &&
+                                                            quotes[quote][
+                                                                "discount"
+                                                            ] && quotes[quote]["discount"]["amount"]}
+                                                    </span>
+                                                    <span className="new__text">
+                                                    line items:{" "} 
+                                                            { //for i in lineitems
+                                                            quotes &&
+                                                            quotes[quote] &&
+                                                            quotes[quote][
+                                                                "discount"
+                                                            ] && quotes[quote]["line items"]/*[i]*/["amount"]}
+                                                    </span>
                                                 </div>
                                                 <form>
-                                                    <div className="new__flex">
-                                                        <label htmlFor="email">
-                                                            Email:{" "}
-                                                        </label>
-                                                        <input
-                                                            onChange={(e) =>
-                                                                setEmail(
-                                                                    e.target
-                                                                        .value
-                                                                )
-                                                            }
-                                                            value={email}
-                                                            type="text"
-                                                            id="email"
-                                                            name="email"
-                                                        />
-                                                    </div>
                                                     <div className="new__flex">
                                                         <h4>Line Items: </h4>
                                                         <button
@@ -483,13 +499,9 @@ function FinalizeQuote() {
                                                                 <input
                                                                     type="text"
                                                                     value={
-                                                                        lineItems[
-                                                                            i
-                                                                        ]
+                                                                        lineItems[i]
                                                                     }
-                                                                    onChange={handleFieldChangeLineItem(
-                                                                        i
-                                                                    )}
+                                                                    onChange={handleFieldChangeLineItem(i)}
                                                                 ></input>
                                                                 <label
                                                                     htmlFor={`amount`}
@@ -700,6 +712,7 @@ function FinalizeQuote() {
                                                             )}
                                                         </div>
                                                     </div>
+                                                    <input type="submit" />
                                                 </form>
                                             </div>
                                         </div>
