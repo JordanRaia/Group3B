@@ -40,3 +40,33 @@
         max-width: 96.5%;
     }
 }
+
+.adminTitle {
+    font-size: 60px;
+}
+
+.associateNode {
+    display: flex;
+    gap: 20px;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: black;
+}
+
+.associateList {
+    margin: 10px 0;
+}
+
+.newUser {
+    margin: 10px 0;
+    display: flex;
+    gap: 20px;
+}
+
+.newUser .field {
+    display: flex;
+    gap: 5px;
+}
