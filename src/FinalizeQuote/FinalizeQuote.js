@@ -64,9 +64,19 @@ function FinalizeQuote() {
             commission: "8%",
             timestamp: Date().toLocaleString()
         });
-        const result = axios.post('https://blitz.cs.niu.edu/PurchaseOrder/', json);
-        console.log(result.data.headers['Content-Type']); // 'application/x-www-form-urlencoded
-        console.log(result.data.data);
+        axios.post('https://blitz.cs.niu.edu/PurchaseOrder/', json, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          })
+        .then((response) => {
+            console.log(response);
+          }, (error) => {
+            console.log(error);
+          })
+        .catch((error) => {
+            console.error(error);
+        });
     }
 
     function closePopup() {
