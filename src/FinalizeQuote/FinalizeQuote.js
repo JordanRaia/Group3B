@@ -64,7 +64,7 @@ function FinalizeQuote() {
             commission: "8%",
             timestamp: Date().toLocaleString()
         });
-        axios.post('https://blitz.cs.niu.edu/PurchaseOrder/', json, {
+        axios.post('http://blitz.cs.niu.edu/PurchaseOrder/', json, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -411,8 +411,10 @@ function FinalizeQuote() {
     };
 
     return user ? (
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
         // user is logged in
         <div className="new">
+            
             <div className="new__flex">
                 <span className="new__bulletText">
                     • View our Customers here:{" "}
@@ -824,6 +826,7 @@ function FinalizeQuote() {
                 {Object.keys(quotes).length !== 1 && "s"} found
             </h3>
         </div>
+        </meta>
     ) : (
         // user is not logged in
         <div className="new">
