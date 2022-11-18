@@ -36,7 +36,7 @@ function NewQuote() {
     const [lineItemAmount, setLineItemAmount] = useState([]);
     const [secretNotes, setSecretNotes] = useState([]);
     // for editing quotes
-    const [called, setCalled] = useState(false);
+    const [editPopup, setEditPopup] = useState([]);
 
     useEffect(() => {
         getCustomers();
@@ -54,6 +54,50 @@ function NewQuote() {
                 console.error(error);
             });
     }
+
+    const handleEditButton = (quote, i) => (e) => {
+        e.preventDefault();
+
+        let tempArr = Array(Object.keys(quotes).length).fill(false); //fill temp Arr with false for every quote
+        tempArr[i] = true;
+        setEditPopup(tempArr);
+
+        //email
+        setEmail(quotes[quote]["email"]);
+
+        //line items
+        setLineItems(Object.keys(quotes[quote]["line items"]));
+
+        //get all line item amounts
+        tempArr = [];
+        Object.keys(quotes[quote]["line items"]).forEach((element, i) => {
+            tempArr.push(quotes[quote]["line items"][element]["amount"]);
+        });
+        setLineItemAmount(tempArr);
+
+        //secret notes
+        if (typeof quotes[quote]["secret notes"] != "undefined") {
+            setSecretNotes(quotes[quote]["secret notes"]);
+        }
+
+        var flat;
+        var percent;
+
+        //flat discount
+        if (typeof quotes[quote]["discount"]["amount"] != "undefined") {
+            setFlatDiscount(quotes[quote]["discount"]["amount"]);
+            flat = quotes[quote]["discount"]["amount"];
+        }
+
+        //percent discount
+        if (typeof quotes[quote]["discount"]["percent"] != "undefined") {
+            setPercentDiscount(quotes[quote]["discount"]["percent"]);
+            percent = quotes[quote]["discount"]["percent"];
+        }
+        let sum = calculateSum(tempArr);
+
+        applyDiscounts(flat, percent, sum);
+    };
 
     function closePopup() {
         setPopup(false);
@@ -447,7 +491,7 @@ function NewQuote() {
                         Please Select
                     </option>
                     {customers.map((customer, id) => (
-                        <option className="new__textSubHeader" value={id}>
+                        <option key={id} className="new__textSubHeader" value={id}>
                             {customer.name}
                         </option>
                     ))}
@@ -614,7 +658,7 @@ function NewQuote() {
                                 <p>Amount: </p>
                                 <div className="new__discountFlex">
                                     {amount.map((amt) => (
-                                        <p className="new__discount">
+                                        <p key={amt} className="new__discount">
                                             <CurrencyFormat
                                                 displayType="text"
                                                 value={amt}
@@ -653,24 +697,22 @@ function NewQuote() {
                             <p className="new__quoteAmount">
                                 ${calculateQuoteAmount({ quote })}
                             </p>
-                            <Popup
-                                trigger={
-                                    <button className="new__quoteButton">
-                                        Edit Quote
-                                    </button>
-                                }
+                            <button
+                                onClick={handleEditButton(quote, i)}
+                                className="new__quoteButton"
                             >
+                                Edit Quote
+                            </button>
+                            <Popup open={editPopup[i]}>
                                 {(close) => {
-                                    if (called !== true)
-                                    {
-                                        setCalled(true);
-                                        setEmail(quotes[quote]["email"]);
-                                    }
                                     return (
                                         <div className="popup">
                                             <div className="popup__inner">
                                                 <button
-                                                    onClick={close}
+                                                    onClick={() => {
+                                                        close();
+                                                        closePopup();
+                                                    }}
                                                     className="popup__closeBtn"
                                                 >
                                                     close
@@ -1014,7 +1056,7 @@ function NewQuote() {
                                                             <div className="new__discountFlex">
                                                                 {amount.map(
                                                                     (amt) => (
-                                                                        <p className="new__discount">
+                                                                        <p key={amt} className="new__discount">
                                                                             <CurrencyFormat
                                                                                 displayType="text"
                                                                                 value={
