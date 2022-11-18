@@ -148,11 +148,13 @@ function Login() {
                                     label="Full Name"
                                     variant="standard"
                                     sx={{ mb: "30px" }}
+                                    className="register__textfield"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                 />
                                 <TextField
                                     label="Email"
+                                    className="register__textfield"
                                     variant="standard"
                                     sx={{ mb: "30px" }}
                                     value={email}
@@ -160,6 +162,7 @@ function Login() {
                                 />
                                 <TextField
                                     label="Password"
+                                    className="register__textfield"
                                     variant="standard"
                                     type="password"
                                     sx={{ mb: "30px" }}
@@ -170,6 +173,7 @@ function Login() {
                                 />
                                 <TextField
                                     label="Confirm Password"
+                                    className="register__textfield"
                                     variant="standard"
                                     type="password"
                                     sx={{ mb: "50px" }}
@@ -189,7 +193,7 @@ function Login() {
                                     </div>
                                 </button>
                                 <div>
-                                    <div className="login__register">
+                                    <div className="register__register">
                                         <span className="login__registerText">
                                             • Already have an account?{" "}
                                         </span>
