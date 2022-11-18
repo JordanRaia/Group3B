@@ -803,7 +803,7 @@ function FinalizeQuote() {
                                                     </form>
                                                     <div>
                                                         <button onClick={() => {
-                                                            send(quotes[quote],user.email,quotes[quote]["customer id"], calculateQuoteAmount({ quote })); close(); closePopup();
+                                                            send(quote,user.email,quotes[quote]["customer id"], calculateQuoteAmount({ quote })); close(); closePopup();
                                                             }} className="popup__closeBtn2">
                                                             Finalize
                                                             </button>
