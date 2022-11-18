@@ -5,6 +5,7 @@
     display: flex;
     justify-content: center;
     height: 100vh;
+    background: linear-gradient(120deg, rgb(182, 244, 146), rgb(51, 139, 147));
 }
 
 .login__center {
@@ -24,6 +25,10 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 20px;
+    background: white;
+    box-shadow: 10px 10px 5px black;
+    border-radius: 10px;
 }
 
 /* header */
@@ -31,6 +36,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 20px;
 }
 
 .login__headerText {
