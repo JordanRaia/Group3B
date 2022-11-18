@@ -59,7 +59,7 @@ function FinalizeQuote() {
             custid: custidNum,
             amount: finalAmount
         });
-        const result = axios.post('http://blitz.cs.niu.edu/PurchaseOrder/', json);
+        const result = axios.post('http://blitz.cs.niu.edu/PurchaseOrder', json);
         console.log(result.data.headers['Content-Type']); // 'application/x-www-form-urlencoded
         console.log(result.data.data);
     }
