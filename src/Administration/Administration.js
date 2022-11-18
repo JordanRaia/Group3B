@@ -1,7 +1,12 @@
 import React, {useState, useEffect} from "react";
 import "./Administration.css";
 import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
+import { 
+    onAuthStateChanged,
+    createUserWithEmailAndPassword,
+    deleteUser,
+    getAuth
+} from "firebase/auth";
 import { auth, db } from "../firebase";
 import {
     orderByChild,
@@ -9,11 +14,10 @@ import {
     ref as dbRef,
     query,
     equalTo,
-    set
+    set,
 } from "firebase/database";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 
 // page for administrator to view all users of the site and be able to change their permissions,
 // ie. user, sales associate, in house employee, in house employee 2, and administrator
@@ -32,14 +36,20 @@ const Administration = () => {
                 const usersRef = query(dbRef(db, `users`), orderByChild("rank"), equalTo("salesAssociate"))
                 onValue(usersRef, (snapshot) => {
                     const data = snapshot.val();
+                    console.log(data);
                     const cleanedData = Object.values(data)
+                    // const cleanedData = Object.keys(data).map((key) => {
+                    //     console.log(data[key]);
+                    //     return (data[key]);
+                    // })
                     setUsers(cleanedData);
                 });
             }
         });
     }
-    const writeUserData = (userId, name, email, imageUrl, rank) => {
+    function writeUserData(userId, name, email, imageUrl, rank) {
         set(dbRef(db, "users/" + userId), {
+            userIdNo: userId,
             fullname: name,
             email: email,
             profile_picture: imageUrl,
@@ -76,6 +86,21 @@ const Administration = () => {
         setEmail("");
         setPassword("");
     }
+    const checkUser = (id) => {
+        const userRef = query(dbRef(db, `users`), orderByChild("userIdNo"), equalTo(id));
+        //getAuth().
+
+        onValue(userRef, (snapshot) => {
+            const data = snapshot.val();
+            deleteUser(data.userIdNo).then(() => {
+                console.log("Successfully deleted.");
+            }).catch((error) => {
+                console.log(error);
+            })
+            console.log(data);
+        });
+    }
+    console.log(users);
     return (
         <div className="admin">
             <div className="adminTitle">Administrator</div>
@@ -93,20 +118,12 @@ const Administration = () => {
                                     <div className="commissionAmt">$500.50</div>
                                     <div className="userRank">Associate</div>
                                     <button className="editButton">Edit</button>
-                                    <button className="deleteButton">Delete</button>
+                                    <button className="deleteButton" onClick={() => {checkUser(item.userIdNo)}}>Check</button>
                                 </div>
                                 )
                             })
                         }
-                    {/* <div className="associateNode">
-                        <div className="salesAssociates">Gerald Ellsworth</div>
-                        <div className="commission">Commission: </div>
-                        <div className="commissionAmt">$500.50</div>
-                        <div className="userRank">Associate</div>
-                        <button className="editButton">Edit</button>
-                        <button className="deleteButton">Delete</button>
-                    </div> */}
-                </div>
+                    </div>
                 ) : (
                     <div> Loading... </div>
                 )
@@ -123,7 +140,6 @@ const Administration = () => {
                     />
                 </div>
                 <div className="eMail field">
-                    {/* <div className="inputTitle">email:</div> */}
                     <TextField
                         label="Email"
                         variant="standard"

@@ -33,6 +33,7 @@ function Login() {
 
     function writeUserData(userId, name, email, imageUrl, rank) {
         set(dbRef(db, "users/" + userId), {
+            userIdNo: userId,
             fullname: name,
             email: email,
             profile_picture: imageUrl,
