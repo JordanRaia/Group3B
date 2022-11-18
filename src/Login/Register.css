@@ -68,7 +68,7 @@
 
 @media screen and (max-height: 775px) {
     .login__headerText {
-        margin-bottom: 0rem;
+        margin-bottom: .5rem;
     }
 
     .login__centerLogo {
