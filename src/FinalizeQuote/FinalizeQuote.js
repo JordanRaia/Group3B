@@ -414,6 +414,7 @@ function FinalizeQuote() {
         // user is logged in
         <div className="new">
             <div className="new__flex">
+                <head><meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/></head>
                 <span className="new__bulletText">
                     • View our Customers here:{" "}
                 </span>
