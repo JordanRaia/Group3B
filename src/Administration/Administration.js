@@ -84,76 +84,78 @@ const Administration = () => {
         setPassword("");
     };
     return (
-        <div className="admin">
-            <div className="adminTitle">Administrator</div>
-            <div className="divider" />
-            {users ? (
-                <div className="associateList">
-                    {users.map((item) => {
-                        console.log(item.fullname);
-                        return (
-                            <div className="associateNode">
-                                <div className="salesAssociates">
-                                    {item.fullname}
+        <div className= "admin_background">
+            <div className="admin">
+                <div className="adminTitle">Administrator</div>
+                <div className="divider" />
+                {users ? (
+                    <div className="associateList">
+                        {users.map((item) => {
+                            console.log(item.fullname);
+                            return (
+                                <div className="associateNode">
+                                    <div className="salesAssociates">
+                                        {item.fullname}
+                                    </div>
+                                    <div className="commission">Commission: </div>
+                                    <div className="commissionAmt">$500.50</div>
+                                    <div className="userRank">Associate</div>
+                                    <button className="editButton">Edit</button>
+                                    <button className="deleteButton">Delete</button>
                                 </div>
-                                <div className="commission">Commission: </div>
-                                <div className="commissionAmt">$500.50</div>
-                                <div className="userRank">Associate</div>
-                                <button className="editButton">Edit</button>
-                                <button className="deleteButton">Delete</button>
-                            </div>
-                        );
-                    })}
-                    {/* <div className="associateNode">
-                        <div className="salesAssociates">Gerald Ellsworth</div>
-                        <div className="commission">Commission: </div>
-                        <div className="commissionAmt">$500.50</div>
-                        <div className="userRank">Associate</div>
-                        <button className="editButton">Edit</button>
-                        <button className="deleteButton">Delete</button>
-                    </div> */}
-                </div>
-            ) : (
-                <div> Loading... </div>
-            )}
-            <div className="divider" />
-            <div className="newUser">
-                <div className="name field">
-                    <TextField
-                        label="Name"
-                        variant="standard"
-                        sx={{ mb: "30px" }}
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                </div>
-                <div className="eMail field">
-                    {/* <div className="inputTitle">email:</div> */}
-                    <TextField
-                        label="Email"
-                        variant="standard"
-                        sx={{ mb: "30px" }}
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
-                <div className="password field">
-                    <TextField
-                        label="Password"
-                        variant="standard"
-                        type="password"
-                        sx={{ mb: "30px" }}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <button className="login__button" onClick={register}>
-                    <div className="login__buttonContainer">
-                        <div className="login__buttonText">
-                            Create Sales Associate
-                        </div>
+                            );
+                        })}
+                        {/* <div className="associateNode">
+                            <div className="salesAssociates">Gerald Ellsworth</div>
+                            <div className="commission">Commission: </div>
+                            <div className="commissionAmt">$500.50</div>
+                            <div className="userRank">Associate</div>
+                            <button className="editButton">Edit</button>
+                            <button className="deleteButton">Delete</button>
+                        </div> */}
                     </div>
-                </button>
+                ) : (
+                    <div> Loading... </div>
+                )}
+                <div className="divider" />
+                <div className="newUser">
+                    <div className="name field">
+                        <TextField
+                            label="Name"
+                            variant="standard"
+                            sx={{ mb: "30px" }}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
+                    <div className="eMail field">
+                        {/* <div className="inputTitle">email:</div> */}
+                        <TextField
+                            label="Email"
+                            variant="standard"
+                            sx={{ mb: "30px" }}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <div className="password field">
+                        <TextField
+                            label="Password"
+                            variant="standard"
+                            type="password"
+                            sx={{ mb: "30px" }}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+                    <button className="admin_login__button" onClick={register}>
+                        <div className="admin_login__buttonContainer">
+                            <div className="admin_login__buttonText">
+                                Create Sales Associate
+                            </div>
+                        </div>
+                    </button>
+                </div>
             </div>
         </div>
     );

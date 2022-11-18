@@ -5,6 +5,47 @@
     margin-right: auto;
 }
 
+.admin_background {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: linear-gradient(120deg, rgb(182, 244, 146), rgb(51, 139, 147));
+    overflow: hidden;
+}
+
+.admin_login__button {
+    all: unset;
+}
+
+.admin_login__buttonContainer {
+    display: inline-block;
+    text-align: center;
+    border-radius: 25px;
+    background-color: #3abb20;
+    box-shadow: 0px 4px 8px #3abb20;
+    transition: 500ms;
+    margin: 4px 2px;
+    height: 4rem;
+    width: 10rem;
+}
+
+.admin_login__buttonContainer:hover {
+    background-color: rgb(61, 60, 60);
+    transition: 500ms;
+    box-shadow: 0px 8px 15px rgb(61, 60, 60);
+}
+
+.admin_login__buttonText {
+    display: inline-block;
+    text-align: center;
+    color: white;
+    text-transform: uppercase;
+    font-family: Poppins;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 14px 28px;
+}
+
 @media screen and (max-width: 1400px) {
     .admin {
         max-width: 1120px;
@@ -70,3 +111,4 @@
     display: flex;
     gap: 5px;
 }
+
