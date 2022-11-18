@@ -806,7 +806,6 @@ function FinalizeQuote() {
                                                             send(quotes[quote],user.email,quotes[quote]["customer id"], calculateQuoteAmount({ quote })); close(); closePopup();
                                                             }} className="popup__closeBtn2">
                                                             Finalize
-                                                            {console.log(quotes[quote],user.email,quotes[quote]["customer id"], calculateQuoteAmount({ quote }))}
                                                             </button>
                                                     </div>
                                                 </div>
