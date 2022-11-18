@@ -47,6 +47,16 @@
     margin-bottom: 3.125rem;
 }
 
+@media screen and (max-height: 750px) {
+    .login__headerText {
+        margin-bottom: 1rem;
+    }
+
+    .login__centerLogo {
+        margin-bottom: 1rem;
+    }
+}
+
 .login__logoContainer {
     height: 9.375rem;
     width: 9.375rem;
@@ -101,6 +111,18 @@
 
 .login__register:first-child {
     margin-top: 10rem;
+}
+
+@media screen and (max-height: 750px) {
+    .login__register:first-child {
+        margin-top: 3rem;
+    }
+}
+
+@media screen and (max-height: 580px) {
+    .login__register:first-child {
+        margin-top: 1rem;
+    }
 }
 
 /* register */
