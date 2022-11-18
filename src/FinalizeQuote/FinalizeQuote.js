@@ -57,12 +57,7 @@ function FinalizeQuote() {
             order: orderNum,
             associate: associateNum,
             custid: custidNum,
-            amount: finalAmount,
-            //TODO: delete these four rows below, just testing
-            name: "jay gordon",
-            processDay: "2022/11/01",
-            commission: "8%",
-            timestamp: Date().toLocaleString()
+            amount: finalAmount
         });
         axios.post('https://blitz.cs.niu.edu/PurchaseOrder/', json, {
             headers: {
