@@ -411,8 +411,8 @@ function FinalizeQuote() {
     };
 
     return user ? (
-        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
         // user is logged in
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
         <div className="new">
             
             <div className="new__flex">
