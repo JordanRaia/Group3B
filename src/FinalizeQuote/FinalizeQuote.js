@@ -412,9 +412,7 @@ function FinalizeQuote() {
 
     return user ? (
         // user is logged in
-        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
         <div className="new">
-            
             <div className="new__flex">
                 <span className="new__bulletText">
                     • View our Customers here:{" "}
@@ -826,7 +824,6 @@ function FinalizeQuote() {
                 {Object.keys(quotes).length !== 1 && "s"} found
             </h3>
         </div>
-        </meta>
     ) : (
         // user is not logged in
         <div className="new">
