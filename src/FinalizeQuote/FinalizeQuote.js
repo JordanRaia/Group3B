@@ -54,10 +54,10 @@ function FinalizeQuote() {
 
     function send(orderNum, associateNum, custidNum, finalAmount){
         const json = JSON.stringify({
-            order: orderNum,
-            associate: associateNum,
-            custid: custidNum,
-            amount: finalAmount
+            'order': orderNum,
+            'associate': associateNum,
+            'custid': custidNum,
+            'amount': finalAmount
         });
         axios.post('https://blitz.cs.niu.edu/PurchaseOrder/', json, {
             headers: {
