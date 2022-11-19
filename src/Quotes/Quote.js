@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CurrencyFormat from "react-currency-format";
 import Popup from "reactjs-popup";
 
-function Quote({quotes}, customers) {
+function Quote({ quotes }, customers) {
     // for creating new quote in database
     const [amount, setAmount] = useState(["0"]);
     const [flatDiscount, setFlatDiscount] = useState([]);
@@ -117,15 +117,19 @@ function Quote({quotes}, customers) {
         var percent;
 
         //flat discount
-        if (typeof quotes[quote]["discount"]["amount"] != "undefined") {
-            setFlatDiscount(quotes[quote]["discount"]["amount"]);
-            flat = quotes[quote]["discount"]["amount"];
+        if (typeof quotes[quote]["discount"] != "undefined") {
+            if (typeof quotes[quote]["discount"]["percent"] != "undefined") {
+                setFlatDiscount(quotes[quote]["discount"]["amount"]);
+                flat = quotes[quote]["discount"]["amount"];
+            }
         }
 
         //percent discount
-        if (typeof quotes[quote]["discount"]["percent"] != "undefined") {
-            setPercentDiscount(quotes[quote]["discount"]["percent"]);
-            percent = quotes[quote]["discount"]["percent"];
+        if (typeof quotes[quote]["discount"] != "undefined") {
+            if (typeof quotes[quote]["discount"]["percent"] != "undefined") {
+                setPercentDiscount(quotes[quote]["discount"]["percent"]);
+                percent = quotes[quote]["discount"]["percent"];
+            }
         }
         let sum = calculateSum(tempArr);
 
