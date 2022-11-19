@@ -16,6 +16,7 @@ import {
     push,
     update,
     set,
+    remove,
 } from "firebase/database";
 // material ui
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -182,7 +183,7 @@ function NewQuote() {
         return amount;
     }
 
-    const handleQuoteSubmit = async (e) => {
+    const handleQuoteSubmit = (custId, quoteKey) => async (e) => {
         e.preventDefault(); // prevent page refresh
 
         if (email === "") {
@@ -201,14 +202,20 @@ function NewQuote() {
             // submit to database
             // quote entry
             const quoteData = {
-                customer: customers[customerId]["name"],
-                "customer id": customerId,
+                customer: customers[custId]["name"],
+                "customer id": custId,
                 email: email,
                 "secret notes": secretNotes,
             };
 
+            let newQuoteKey = "";
+
             // get a key for a new quote
-            const newQuoteKey = push(child(dbRef(db), "quotes")).key;
+            if (!quoteKey) {
+                newQuoteKey = push(child(dbRef(db), "quotes")).key;
+            } else {
+                newQuoteKey = quoteKey;
+            }
 
             const updates = {};
             updates["/quotes/current quotes/" + newQuoteKey] = quoteData;
@@ -226,6 +233,70 @@ function NewQuote() {
                     dbRef(
                         db,
                         `/quotes/current quotes/${newQuoteKey}/line items/${lineItems[i]}`
+                    ),
+                    {
+                        amount: lineItemAmount[i],
+                    }
+                );
+            }
+            closePopup();
+
+            return newQuoteKey;
+        }
+    };
+
+    const handleFinalize = (custId, quoteKey) => async (e) => {
+        e.preventDefault();
+
+        if (email === "") {
+            alert("must enter email");
+        } else if (checkForMissing(lineItems)) {
+            alert("must enter line item");
+        } else if (checkForMissing(lineItemAmount)) {
+            alert("must enter line item amount");
+        } else if (checkForMissing(secretNotes, false)) {
+            alert("must enter secret note or remove");
+        } else if (checkForMissing(flatDiscount, false)) {
+            alert("must enter flat discount or remove");
+        } else if (checkForMissing(percentDiscount, false)) {
+            alert("must enter percent discount or remove");
+        } else {
+            // submit to database
+            // quote entry
+            const quoteData = {
+                customer: customers[custId]["name"],
+                "customer id": custId,
+                email: email,
+                "secret notes": secretNotes,
+            };
+
+            let newQuoteKey = "";
+
+            if (!quoteKey) {
+                newQuoteKey = push(child(dbRef(db), "quotes")).key;
+            } else {
+                newQuoteKey = quoteKey;
+                // remove quote from current quotes
+                await remove(dbRef(db, `/quotes/current quotes/${quoteKey}`));
+            }
+            // get a key for a new quote
+
+            const updates = {};
+            updates["/quotes/finalized quotes/" + newQuoteKey] = quoteData;
+
+            await update(dbRef(db), updates);
+            await set(
+                dbRef(db, `/quotes/finalized quotes/${newQuoteKey}/discount`),
+                {
+                    amount: flatDiscount,
+                    percent: percentDiscount,
+                }
+            );
+            for (var i in lineItems) {
+                await set(
+                    dbRef(
+                        db,
+                        `/quotes/finalized quotes/${newQuoteKey}/line items/${lineItems[i]}`
                     ),
                     {
                         amount: lineItemAmount[i],
@@ -492,7 +563,11 @@ function NewQuote() {
                         Please Select
                     </option>
                     {customers.map((customer, id) => (
-                        <option key={id} className="new__textSubHeader" value={id}>
+                        <option
+                            key={id}
+                            className="new__textSubHeader"
+                            value={id}
+                        >
                             {customer.name}
                         </option>
                     ))}
@@ -671,7 +746,17 @@ function NewQuote() {
                                     ))}
                                 </div>
                             </div>
-                            <input onClick={handleQuoteSubmit} type="submit" />
+                            <label htmlFor="save">Save for Later: </label>
+                            <input
+                                onClick={handleQuoteSubmit(customerId)}
+                                type="submit"
+                                value="Save"
+                            />
+                            <label htmlFor="submit">
+                                {" "}
+                                Submit to be finalized:{" "}
+                            </label>
+                            <button onClick={handleFinalize(customerId)}>Finalize</button>
                         </form>
                     </div>
                 </NewQuotePopup>
@@ -1057,7 +1142,12 @@ function NewQuote() {
                                                             <div className="new__discountFlex">
                                                                 {amount.map(
                                                                     (amt) => (
-                                                                        <p key={amt} className="new__discount">
+                                                                        <p
+                                                                            key={
+                                                                                amt
+                                                                            }
+                                                                            className="new__discount"
+                                                                        >
                                                                             <CurrencyFormat
                                                                                 displayType="text"
                                                                                 value={
@@ -1076,6 +1166,26 @@ function NewQuote() {
                                                                 )}
                                                             </div>
                                                         </div>
+                                                        <button
+                                                            onClick={handleQuoteSubmit(
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ],
+                                                                quote
+                                                            )}
+                                                        >
+                                                            Save
+                                                        </button>
+                                                        <button
+                                                            onClick={handleFinalize(
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ],
+                                                                quote
+                                                            )}
+                                                        >
+                                                            Finalize
+                                                        </button>
                                                     </form>
                                                 </div>
                                             </div>
