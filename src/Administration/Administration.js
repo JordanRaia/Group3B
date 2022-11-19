@@ -3,12 +3,7 @@ import "./Administration.css";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db, storage } from "../firebase";
-import {
-    onValue,
-    ref as dbRef,
-    query,
-    set,
-} from "firebase/database";
+import { onValue, ref as dbRef, query, set } from "firebase/database";
 import TextField from "@mui/material/TextField";
 // import Button from "@mui/material/Button";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -23,10 +18,12 @@ const Administration = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
     useEffect(() => {
         authState();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     const authState = () => {
         onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
@@ -39,6 +36,7 @@ const Administration = () => {
             }
         });
     };
+
     const writeUserData = (userId, name, email, imageUrl, rank) => {
         set(dbRef(db, "users/" + userId), {
             fullname: name,
@@ -47,6 +45,7 @@ const Administration = () => {
             rank: rank,
         });
     };
+
     const register = async (e) => {
         e.preventDefault(); //prevent page from refreshing
 
@@ -72,11 +71,13 @@ const Administration = () => {
             //creating an account was unsuccessful and alerting user with error message
             .catch((error) => alert(error.message));
     };
+
     const resetFields = () => {
         setName("");
         setEmail("");
         setPassword("");
     };
+
     return (
         <div className="admin_background">
             <div className="admin">
@@ -91,12 +92,18 @@ const Administration = () => {
                                     users[account]["profile_picture"]
                                 )
                             ).then((url) => {
-                                const profileImg = document.getElementById(`${account}_picture`);
-                                profileImg.setAttribute('src', url)
+                                const profileImg = document.getElementById(
+                                    `${account}_picture`
+                                );
+                                profileImg.setAttribute("src", url);
                             });
                             return (
                                 <div key={account} className="associateNode">
-                                    <img alt="profilePic" id={`${account}_picture`} className="admin__profilePic"></img>
+                                    <img
+                                        alt="profilePic"
+                                        id={`${account}_picture`}
+                                        className="admin__profilePic"
+                                    ></img>
                                     <div className="salesAssociates">
                                         {users[account]["fullname"]}
                                     </div>
