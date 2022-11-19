@@ -82,6 +82,14 @@
     }
 }
 
+.admin__profilePic {
+    height: 3rem;
+    width: 3rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid black;
+}
+
 .adminTitle {
     font-size: 60px;
 }

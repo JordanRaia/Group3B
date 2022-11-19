@@ -2,18 +2,17 @@ import React, { useState, useEffect } from "react";
 import "./Administration.css";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import {
-    orderByChild,
     onValue,
     ref as dbRef,
     query,
-    equalTo,
     set,
 } from "firebase/database";
 import TextField from "@mui/material/TextField";
 // import Button from "@mui/material/Button";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { getDownloadURL, ref as stoRef } from "firebase/storage";
 
 // page for administrator to view all users of the site and be able to change their permissions,
 // ie. user, sales associate, in house employee, in house employee 2, and administrator
@@ -32,15 +31,10 @@ const Administration = () => {
         onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             if (user) {
-                const usersRef = query(
-                    dbRef(db, `users`),
-                    orderByChild("rank"),
-                    equalTo("salesAssociate")
-                );
+                const usersRef = query(dbRef(db, `users`));
                 onValue(usersRef, (snapshot) => {
                     const data = snapshot.val();
-                    const cleanedData = Object.values(data);
-                    setUsers(cleanedData);
+                    setUsers(data);
                 });
             }
         });
@@ -84,24 +78,39 @@ const Administration = () => {
         setPassword("");
     };
     return (
-        <div className= "admin_background">
+        <div className="admin_background">
             <div className="admin">
                 <div className="adminTitle">Administrator</div>
                 <div className="divider" />
                 {users ? (
                     <div className="associateList">
-                        {users.map((item) => {
-                            console.log(item.fullname);
+                        {Object.keys(users).map((account) => {
+                            getDownloadURL(
+                                stoRef(
+                                    storage,
+                                    users[account]["profile_picture"]
+                                )
+                            ).then((url) => {
+                                const profileImg = document.getElementById(`${account}_picture`);
+                                profileImg.setAttribute('src', url)
+                            });
                             return (
-                                <div className="associateNode">
+                                <div key={account} className="associateNode">
+                                    <img id={`${account}_picture`} className="admin__profilePic"></img>
                                     <div className="salesAssociates">
-                                        {item.fullname}
+                                        {users[account]["fullname"]}
                                     </div>
-                                    <div className="commission">Commission: </div>
+                                    <div className="commission">
+                                        Commission:{" "}
+                                    </div>
                                     <div className="commissionAmt">$500.50</div>
-                                    <div className="userRank">Associate</div>
+                                    <div className="userRank">
+                                        {users[account]["rank"]}
+                                    </div>
                                     <button className="editButton">Edit</button>
-                                    <button className="deleteButton">Delete</button>
+                                    <button className="deleteButton">
+                                        Delete
+                                    </button>
                                 </div>
                             );
                         })}
