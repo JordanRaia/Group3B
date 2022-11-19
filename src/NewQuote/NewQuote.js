@@ -684,7 +684,7 @@ function NewQuote() {
                                     New Discount
                                 </button>
                             </div>
-                            {flatDiscount.map((discount, i) => (
+                            {flatDiscount && flatDiscount.map((discount, i) => (
                                 <div key={i}>
                                     <label htmlFor={`item`}>discount: </label>
                                     <CurrencyFormat
@@ -713,7 +713,7 @@ function NewQuote() {
                                     New Discount
                                 </button>
                             </div>
-                            {percentDiscount.map((discount, i) => (
+                            {percentDiscount && percentDiscount.map((discount, i) => (
                                 <div key={i}>
                                     <label htmlFor={`item`}>discount: </label>
                                     <input

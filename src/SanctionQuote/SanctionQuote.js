@@ -711,7 +711,7 @@ function SanctionQuote() {
                                                                 New Discount
                                                             </button>
                                                         </div>
-                                                        {flatDiscount.map(
+                                                        {flatDiscount && flatDiscount.map(
                                                             (discount, i) => (
                                                                 <div key={i}>
                                                                     <label
@@ -772,7 +772,7 @@ function SanctionQuote() {
                                                                 New Discount
                                                             </button>
                                                         </div>
-                                                        {percentDiscount.map(
+                                                        {percentDiscount && percentDiscount.map(
                                                             (discount, i) => (
                                                                 <div key={i}>
                                                                     <label

@@ -400,7 +400,7 @@ function Quote({ quotes }, customers) {
                                                                 Flat Discounts:{" "}
                                                             </h4>
                                                         </div>
-                                                        {flatDiscount.map(
+                                                        {flatDiscount && flatDiscount.map(
                                                             (discount, i) => (
                                                                 <div key={i}>
                                                                     <label
@@ -444,7 +444,7 @@ function Quote({ quotes }, customers) {
                                                                 Discounts:{" "}
                                                             </h4>
                                                         </div>
-                                                        {percentDiscount.map(
+                                                        {percentDiscount && percentDiscount.map(
                                                             (discount, i) => (
                                                                 <div key={i}>
                                                                     <label
