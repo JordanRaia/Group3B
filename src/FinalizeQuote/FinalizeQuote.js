@@ -52,14 +52,14 @@ function FinalizeQuote() {
             });
     }
 
-    /*function send(orderNum, associateNum, custidNum, finalAmount){
-        const json = JSON.stringify({
+    function send(orderNum, associateNum, custidNum, finalAmount){
+        
+        axios.post('https://blitz.cs.niu.edu/PurchaseOrder/', {
             'order': orderNum,
             'associate': associateNum,
             'custid': custidNum,
             'amount': finalAmount
-        });
-        axios.post('https://blitz.cs.niu.edu/PurchaseOrder/', json, {
+        }, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -72,7 +72,7 @@ function FinalizeQuote() {
         .catch((error) => {
             console.error(error);
         });
-    }*/
+    }
 
     function closePopup() {
         //setPopup(false);
@@ -798,26 +798,7 @@ function FinalizeQuote() {
                                                     </form>
                                                     <div>
                                                         <button onClick={() => {
-                                                            const json = JSON.stringify({
-                                                                'order': quote,
-                                                                'associate': user.email,
-                                                                'custid': quotes[quote]["customer id"],
-                                                                'amount': calculateQuoteAmount({ quote })
-                                                            });
-                                                            axios.post('https://blitz.cs.niu.edu/PurchaseOrder/', json, {
-                                                                headers: {
-                                                                  'Content-Type': 'application/x-www-form-urlencoded'
-                                                                }
-                                                              })
-                                                            .then((response) => {
-                                                                console.log(response);
-                                                              }, (error) => {
-                                                                console.log(error);
-                                                              })
-                                                            .catch((error) => {
-                                                                console.error(error);
-                                                            });
-                                                            //send(quote,user.email,quotes[quote]["customer id"], calculateQuoteAmount({ quote })); close(); closePopup();
+                                                            send(quote,user.email,quotes[quote]["customer id"], calculateQuoteAmount({ quote })); close(); closePopup();
                                                             }} className="popup__closeBtn2">
                                                             Finalize
                                                             </button>
