@@ -76,6 +76,7 @@ function FinalizeQuote() {
 
     function closePopup() {
         //setPopup(false);
+        setEditPopup(new Array(Object.keys(quotes).length).fill(false));
         setAmount(["0"]);
         setFlatDiscount([]);
         setPercentDiscount([]);
