@@ -96,7 +96,7 @@ const Administration = () => {
                             });
                             return (
                                 <div key={account} className="associateNode">
-                                    <img id={`${account}_picture`} className="admin__profilePic"></img>
+                                    <img alt="profilePic" id={`${account}_picture`} className="admin__profilePic"></img>
                                     <div className="salesAssociates">
                                         {users[account]["fullname"]}
                                     </div>
