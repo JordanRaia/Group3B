@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./FinalizeQuote.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -11,11 +11,12 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
 import {
     onValue,
-    ref as dbRef/*,
+    ref as dbRef,
     child,
     push,
     update,
-    set,*/
+    set,
+    remove,
 } from "firebase/database";
 // for sales employees to create new quotes and send to finalize quote
 function FinalizeQuote() {
@@ -52,27 +53,34 @@ function FinalizeQuote() {
             });
     }
 
-    function send(orderNum, associateNum, custidNum, finalAmount){
-        
-        axios.post('https://blitz.cs.niu.edu/PurchaseOrder/', {
-            'order': orderNum,
-            'associate': associateNum,
-            'custid': custidNum,
-            'amount': finalAmount
-        }, {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }
-          })
-        .then((response) => {
-            console.log(response);
-          }, (error) => {
-            console.log(error);
-          })
-        .catch((error) => {
-            console.error(error);
-        });
-    }
+    // function send(orderNum, associateNum, custidNum, finalAmount) {
+    //     axios
+    //         .post(
+    //             "https://blitz.cs.niu.edu/PurchaseOrder/",
+    //             {
+    //                 order: orderNum,
+    //                 associate: associateNum,
+    //                 custid: custidNum,
+    //                 amount: finalAmount,
+    //             },
+    //             {
+    //                 headers: {
+    //                     "Content-Type": "application/x-www-form-urlencoded",
+    //                 },
+    //             }
+    //         )
+    //         .then(
+    //             (response) => {
+    //                 console.log(response);
+    //             },
+    //             (error) => {
+    //                 console.log(error);
+    //             }
+    //         )
+    //         .catch((error) => {
+    //             console.error(error);
+    //         });
+    // }
 
     function closePopup() {
         //setPopup(false);
@@ -404,6 +412,146 @@ function FinalizeQuote() {
 
         // re-apply new discounts
         applyDiscounts(flatDiscount, tempArr, amount[0]);
+    };
+
+    function checkForMissing(arr, checkExistFlag = true) {
+        if (arr === []) {
+            if (checkExistFlag) {
+                return true;
+            }
+        } else {
+            for (var i in arr) {
+                if (arr[i] === "") {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    const handleQuoteSave = (custId, quoteKey) => async (e) => {
+        e.preventDefault(); // prevent page refresh
+
+        if (email === "") {
+            alert("must enter email");
+        } else if (checkForMissing(lineItems)) {
+            alert("must enter line item");
+        } else if (checkForMissing(lineItemAmount)) {
+            alert("must enter line item amount");
+        } else if (checkForMissing(secretNotes, false)) {
+            alert("must enter secret note or remove");
+        } else if (checkForMissing(flatDiscount, false)) {
+            alert("must enter flat discount or remove");
+        } else if (checkForMissing(percentDiscount, false)) {
+            alert("must enter percent discount or remove");
+        } else {
+            // submit to database
+            // quote entry
+            const quoteData = {
+                customer: customers[custId]["name"],
+                "customer id": custId,
+                email: email,
+                "secret notes": secretNotes,
+            };
+
+            let newQuoteKey = "";
+
+            // get a key for a new quote
+            if (!quoteKey) {
+                newQuoteKey = push(child(dbRef(db), "quotes")).key;
+            } else {
+                newQuoteKey = quoteKey;
+            }
+
+            const updates = {};
+            updates["/quotes/finalized quotes/" + newQuoteKey] = quoteData;
+
+            await update(dbRef(db), updates);
+            await set(
+                dbRef(db, `/quotes/finalized quotes/${newQuoteKey}/discount`),
+                {
+                    amount: flatDiscount,
+                    percent: percentDiscount,
+                }
+            );
+            for (var i in lineItems) {
+                await set(
+                    dbRef(
+                        db,
+                        `/quotes/finalized quotes/${newQuoteKey}/line items/${lineItems[i]}`
+                    ),
+                    {
+                        amount: lineItemAmount[i],
+                    }
+                );
+            }
+            closePopup();
+
+            return newQuoteKey;
+        }
+    };
+
+    const handleSanction = (custId, quoteKey) => async (e) => {
+        e.preventDefault();
+
+        if (email === "") {
+            alert("must enter email");
+        } else if (checkForMissing(lineItems)) {
+            alert("must enter line item");
+        } else if (checkForMissing(lineItemAmount)) {
+            alert("must enter line item amount");
+        } else if (checkForMissing(secretNotes, false)) {
+            alert("must enter secret note or remove");
+        } else if (checkForMissing(flatDiscount, false)) {
+            alert("must enter flat discount or remove");
+        } else if (checkForMissing(percentDiscount, false)) {
+            alert("must enter percent discount or remove");
+        } else {
+            // submit to database
+            // quote entry
+            const quoteData = {
+                customer: customers[custId]["name"],
+                "customer id": custId,
+                email: email,
+                "secret notes": secretNotes,
+            };
+
+            let newQuoteKey = "";
+
+            if (!quoteKey) {
+                newQuoteKey = push(child(dbRef(db), "quotes")).key;
+            } else {
+                newQuoteKey = quoteKey;
+                // remove quote from current quotes
+                await remove(dbRef(db, `/quotes/finalized quotes/${quoteKey}`));
+            }
+            // get a key for a new quote
+
+            const updates = {};
+            updates["/quotes/sanctioned quotes/" + newQuoteKey] = quoteData;
+
+            await update(dbRef(db), updates);
+            await set(
+                dbRef(db, `/quotes/sanctioned quotes/${newQuoteKey}/discount`),
+                {
+                    amount: flatDiscount,
+                    percent: percentDiscount,
+                }
+            );
+            for (var i in lineItems) {
+                await set(
+                    dbRef(
+                        db,
+                        `/quotes/sanctioned quotes/${newQuoteKey}/line items/${lineItems[i]}`
+                    ),
+                    {
+                        amount: lineItemAmount[i],
+                    }
+                );
+            }
+            closePopup();
+        }
     };
 
     return user ? (
@@ -750,9 +898,15 @@ function FinalizeQuote() {
                                                                     <input
                                                                         type="number"
                                                                         min={0}
-                                                                        max={100}
+                                                                        max={
+                                                                            100
+                                                                        }
                                                                         placeholder={`0%-100%`}
-                                                                        value={percentDiscount[i]}
+                                                                        value={
+                                                                            percentDiscount[
+                                                                                i
+                                                                            ]
+                                                                        }
                                                                         onChange={handleFieldChangePercentDiscount(
                                                                             i
                                                                         )}
@@ -773,13 +927,25 @@ function FinalizeQuote() {
                                                             <div className="new__discountFlex">
                                                                 {amount.map(
                                                                     (amt) => (
-                                                                        <p key={amt} className="new__discount">
+                                                                        <p
+                                                                            key={
+                                                                                amt
+                                                                            }
+                                                                            className="new__discount"
+                                                                        >
                                                                             <CurrencyFormat
                                                                                 displayType="text"
-                                                                                value={amt}
-                                                                                decimalScale={2}
-                                                                                fixedDecimalScale={true}
-                                                                                prefix="$"/>
+                                                                                value={
+                                                                                    amt
+                                                                                }
+                                                                                decimalScale={
+                                                                                    2
+                                                                                }
+                                                                                fixedDecimalScale={
+                                                                                    true
+                                                                                }
+                                                                                prefix="$"
+                                                                            />
                                                                         </p>
                                                                     )
                                                                 )}
@@ -787,15 +953,49 @@ function FinalizeQuote() {
                                                         </div>
                                                     </form>
                                                     <div>
-                                                        <button onClick={() => {
-                                                            send(quote,user.email,quotes[quote]["customer id"], calculateQuoteAmount({ quote })); close(); closePopup();
-                                                            }} className="popup__closeBtn2">
+                                                        <button
+                                                            onClick={handleQuoteSave(
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ],
+                                                                quote
+                                                            )}
+                                                        >
+                                                            Save
+                                                        </button>
+                                                        <button
+                                                            // onClick={() => {
+                                                            //     send(
+                                                            //         quote,
+                                                            //         user.email,
+                                                            //         quotes[
+                                                            //             quote
+                                                            //         ][
+                                                            //             "customer id"
+                                                            //         ],
+                                                            //         calculateQuoteAmount(
+                                                            //             {
+                                                            //                 quote,
+                                                            //             }
+                                                            //         )
+                                                            //     );
+                                                            //     close();
+                                                            //     closePopup();
+                                                            // }}
+                                                            onClick={handleSanction(
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ],
+                                                                quote
+                                                            )}
+                                                            className="popup__closeBtn2"
+                                                        >
                                                             Sanction Quote
-                                                            </button>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>                                       
+                                        </div>
                                     );
                                 }}
                             </Popup>
