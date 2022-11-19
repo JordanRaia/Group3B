@@ -136,7 +136,7 @@ function FinalizeQuote() {
             setUser(currentUser);
 
             if (user) {
-                const quotesRef = dbRef(db, `quotes/current quotes/`);
+                const quotesRef = dbRef(db, `quotes/finalized quotes/`);
 
                 onValue(quotesRef, (snapshot) => {
                     const data = snapshot.val();
@@ -416,7 +416,7 @@ function FinalizeQuote() {
                     <span className="new__bulletLink">Customers</span>
                 </Link>
             </div>
-            <h2>Current Quotes:</h2>
+            <h2>Finalized Quotes:</h2>
             {Object.keys(quotes).map((quote, i) => {
                 return (
                     <div key={i} className="new__quoteContainer">
@@ -434,7 +434,7 @@ function FinalizeQuote() {
                                 onClick={handleEditButton(quote, i)}
                                 className="new__quoteButton"
                             >
-                                Edit Quote
+                                Sanction Quote
                             </button>
                             <Popup open={editPopup[i]}>
                                 {(close) => {
@@ -550,18 +550,7 @@ function FinalizeQuote() {
                                                             <label htmlFor="email">
                                                                 Email:{" "}
                                                             </label>
-                                                            <input
-                                                                onChange={(e) =>
-                                                                    setEmail(
-                                                                        e.target
-                                                                            .value
-                                                                    )
-                                                                }
-                                                                value={email}
-                                                                type="text"
-                                                                id="email"
-                                                                name="email"
-                                                            />
+                                                            <p>{email}</p>
                                                         </div>
                                                         <div className="new__flex">
                                                             <h4>
@@ -800,7 +789,7 @@ function FinalizeQuote() {
                                                         <button onClick={() => {
                                                             send(quote,user.email,quotes[quote]["customer id"], calculateQuoteAmount({ quote })); close(); closePopup();
                                                             }} className="popup__closeBtn2">
-                                                            Finalize
+                                                            Sanction Quote
                                                             </button>
                                                     </div>
                                                 </div>
