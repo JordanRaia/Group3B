@@ -53,35 +53,6 @@ function FinalizeQuote() {
             });
     }
 
-    // function send(orderNum, associateNum, custidNum, finalAmount) {
-    //     axios
-    //         .post(
-    //             "https://blitz.cs.niu.edu/PurchaseOrder/",
-    //             {
-    //                 order: orderNum,
-    //                 associate: associateNum,
-    //                 custid: custidNum,
-    //                 amount: finalAmount,
-    //             },
-    //             {
-    //                 headers: {
-    //                     "Content-Type": "application/x-www-form-urlencoded",
-    //                 },
-    //             }
-    //         )
-    //         .then(
-    //             (response) => {
-    //                 console.log(response);
-    //             },
-    //             (error) => {
-    //                 console.log(error);
-    //             }
-    //         )
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // }
-
     function closePopup() {
         //setPopup(false);
         setEditPopup(new Array(Object.keys(quotes).length).fill(false));
@@ -699,7 +670,11 @@ function FinalizeQuote() {
                                                             <label htmlFor="email">
                                                                 Email:{" "}
                                                             </label>
-                                                            <p>{email}</p>
+                                                            <input
+                                                                disabled
+                                                                type="text"
+                                                                value={email}
+                                                            />
                                                         </div>
                                                         <div className="new__flex">
                                                             <h4>
@@ -964,24 +939,6 @@ function FinalizeQuote() {
                                                             Save
                                                         </button>
                                                         <button
-                                                            // onClick={() => {
-                                                            //     send(
-                                                            //         quote,
-                                                            //         user.email,
-                                                            //         quotes[
-                                                            //             quote
-                                                            //         ][
-                                                            //             "customer id"
-                                                            //         ],
-                                                            //         calculateQuoteAmount(
-                                                            //             {
-                                                            //                 quote,
-                                                            //             }
-                                                            //         )
-                                                            //     );
-                                                            //     close();
-                                                            //     closePopup();
-                                                            // }}
                                                             onClick={handleSanction(
                                                                 quotes[quote][
                                                                     "customer id"

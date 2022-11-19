@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./SanctionQuote.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -11,20 +11,20 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
 import {
     onValue,
-    ref as dbRef /*,
+    ref as dbRef,
     child,
     push,
     update,
-    set,*/
+    set,
+    remove,
 } from "firebase/database";
 
 // final stage for a quote to be sent to payment processing system by in house employee two
 function SanctionQuote() {
-
     const [customers, setCustomers] = useState([]);
+    //const [popup, setPopup] = useState(false);
     const [user, setUser] = useState({});
     const [quotes, setQuotes] = useState([]);
-
     // for creating new quote in database
     const [amount, setAmount] = useState(["0"]);
     const [flatDiscount, setFlatDiscount] = useState([]);
@@ -33,6 +33,8 @@ function SanctionQuote() {
     const [lineItems, setLineItems] = useState([]);
     const [lineItemAmount, setLineItemAmount] = useState([]);
     const [secretNotes, setSecretNotes] = useState([]);
+    // for editing quotes
+    const [editPopup, setEditPopup] = useState([]);
 
     useEffect(() => {
         getCustomers();
@@ -51,13 +53,99 @@ function SanctionQuote() {
             });
     }
 
+    // function send(orderNum, associateNum, custidNum, finalAmount) {
+    //     axios
+    //         .post(
+    //             "https://blitz.cs.niu.edu/PurchaseOrder/",
+    //             {
+    //                 order: orderNum,
+    //                 associate: associateNum,
+    //                 custid: custidNum,
+    //                 amount: finalAmount,
+    //             },
+    //             {
+    //                 headers: {
+    //                     "Content-Type": "application/x-www-form-urlencoded",
+    //                 },
+    //             }
+    //         )
+    //         .then(
+    //             (response) => {
+    //                 console.log(response);
+    //             },
+    //             (error) => {
+    //                 console.log(error);
+    //             }
+    //         )
+    //         .catch((error) => {
+    //             console.error(error);
+    //         });
+    // }
+
+    function closePopup() {
+        //setPopup(false);
+        setEditPopup(new Array(Object.keys(quotes).length).fill(false));
+        setAmount(["0"]);
+        setFlatDiscount([]);
+        setPercentDiscount([]);
+        setEmail("");
+        setLineItems([]);
+        setLineItemAmount([]);
+        setSecretNotes([]);
+        //set_did_send(false);
+    }
+
+    const handleEditButton = (quote, i) => (e) => {
+        e.preventDefault();
+
+        let tempArr = Array(Object.keys(quotes).length).fill(false); //fill temp Arr with false for every quote
+        tempArr[i] = true;
+        setEditPopup(tempArr);
+
+        //email
+        setEmail(quotes[quote]["email"]);
+
+        //line items
+        setLineItems(Object.keys(quotes[quote]["line items"]));
+
+        //get all line item amounts
+        tempArr = [];
+        Object.keys(quotes[quote]["line items"]).forEach((element, i) => {
+            tempArr.push(quotes[quote]["line items"][element]["amount"]);
+        });
+        setLineItemAmount(tempArr);
+
+        //secret notes
+        if (typeof quotes[quote]["secret notes"] != "undefined") {
+            setSecretNotes(quotes[quote]["secret notes"]);
+        }
+
+        var flat;
+        var percent;
+
+        //flat discount
+        if (typeof quotes[quote]["discount"]["amount"] != "undefined") {
+            setFlatDiscount(quotes[quote]["discount"]["amount"]);
+            flat = quotes[quote]["discount"]["amount"];
+        }
+
+        //percent discount
+        if (typeof quotes[quote]["discount"]["percent"] != "undefined") {
+            setPercentDiscount(quotes[quote]["discount"]["percent"]);
+            percent = quotes[quote]["discount"]["percent"];
+        }
+        let sum = calculateSum(tempArr);
+
+        applyDiscounts(flat, percent, sum);
+    };
+
     //set user to current user if logged in
     function authState() {
         onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
 
             if (user) {
-                const quotesRef = dbRef(db, `quotes/current quotes/`);
+                const quotesRef = dbRef(db, `quotes/sanctioned quotes/`);
 
                 onValue(quotesRef, (snapshot) => {
                     const data = snapshot.val();
@@ -67,11 +155,6 @@ function SanctionQuote() {
         });
     }
 
-    /********************************************************************************
-     *                                                                              *
-     *                           Customer data processing                           *
-     *                                                                              * 
-     ********************************************************************************/
     //calculate the cost of the quote with discounts
     function calculateQuoteAmount(index) {
         let amount = 0; //total cost
@@ -127,51 +210,6 @@ function SanctionQuote() {
         return amount;
     }
 
-    // handles new line item button
-    const handleLineButton = (e) => {
-        e.preventDefault(); // prevent page refresh
-
-        // two temp arrays
-        var arr = [...lineItems];
-        var arr2 = [...lineItemAmount];
-
-        // push blank values on to both arrays
-        arr.push("");
-        arr2.push("");
-
-        // set useState arrays
-        setLineItems(arr);
-        setLineItemAmount(arr2);
-    };
-
-    //handles when a field is changed in a useState array
-    const handleFieldChangeLineItem = (index) => (e) => {
-        e.preventDefault();
-
-        // update value in temp arr
-        let tempArr = [...lineItems];
-        tempArr[index] = e.target.value;
-
-        // set useState arr
-        setLineItems(tempArr);
-    };
-
-    const handleFieldChangeLineAmount = (index) => (e) => {
-        e.preventDefault();
-
-        // update value in temp arr
-        let tempArr = [...lineItemAmount];
-        tempArr[index] = e.target.value;
-
-        // set useState arr
-        setLineItemAmount(tempArr);
-
-        // calculate sum
-        let sum = calculateSum(tempArr);
-
-        applyDiscounts(flatDiscount, percentDiscount, sum);
-    };
-
     function calculateSum(arr) {
         // calculate sum
         const sum = arr.reduce((accumulator, value) => {
@@ -194,52 +232,6 @@ function SanctionQuote() {
             return float; // return the float
         }
     }
-
-    // handles new secret notes button
-    const handleSecretButton = (e) => {
-        e.preventDefault(); // prevent page refresh
-
-        let tempArr = [...secretNotes]; // create temp arr
-        tempArr.push(""); // push a blank note onto temp arr
-        setSecretNotes(tempArr); // set secret notes to temp arr
-    };
-
-    const handleDeleteLineItem = (index) => (e) => {
-        e.preventDefault();
-
-        // create temp arrays
-        var arr = [...lineItems];
-        var arr2 = [...lineItemAmount];
-
-        // remove item at index
-        arr.splice(index, 1);
-        arr2.splice(index, 1);
-
-        // set useState arr
-        setLineItems(arr);
-        setLineItemAmount(arr2);
-
-        // calculate sum
-        calculateSum(arr2);
-    };
-
-    const handleFieldChangeSecretNote = (index) => (e) => {
-        e.preventDefault();
-
-        let tempArr = [...secretNotes];
-        tempArr[index] = e.target.value;
-
-        setSecretNotes(tempArr);
-    };
-
-    const handleDeleteSecretNote = (index) => (e) => {
-        e.preventDefault();
-
-        let tempArr = [...secretNotes];
-        tempArr.splice(index, 1);
-
-        setSecretNotes(tempArr);
-    };
 
     const handleFlatDiscountButton = (e) => {
         e.preventDefault();
@@ -331,9 +323,151 @@ function SanctionQuote() {
         applyDiscounts(flatDiscount, tempArr, amount[0]);
     };
 
+    function checkForMissing(arr, checkExistFlag = true) {
+        if (arr === []) {
+            if (checkExistFlag) {
+                return true;
+            }
+        } else {
+            for (var i in arr) {
+                if (arr[i] === "") {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    const handleQuoteSave = (custId, quoteKey) => async (e) => {
+        e.preventDefault(); // prevent page refresh
+
+        if (email === "") {
+            alert("must enter email");
+        } else if (checkForMissing(lineItems)) {
+            alert("must enter line item");
+        } else if (checkForMissing(lineItemAmount)) {
+            alert("must enter line item amount");
+        } else if (checkForMissing(secretNotes, false)) {
+            alert("must enter secret note or remove");
+        } else if (checkForMissing(flatDiscount, false)) {
+            alert("must enter flat discount or remove");
+        } else if (checkForMissing(percentDiscount, false)) {
+            alert("must enter percent discount or remove");
+        } else {
+            // submit to database
+            // quote entry
+            const quoteData = {
+                customer: customers[custId]["name"],
+                "customer id": custId,
+                email: email,
+                "secret notes": secretNotes,
+            };
+
+            let newQuoteKey = "";
+
+            // get a key for a new quote
+            if (!quoteKey) {
+                newQuoteKey = push(child(dbRef(db), "quotes")).key;
+            } else {
+                newQuoteKey = quoteKey;
+            }
+
+            const updates = {};
+            updates["/quotes/sanctioned quotes/" + newQuoteKey] = quoteData;
+
+            await update(dbRef(db), updates);
+            await set(
+                dbRef(db, `/quotes/sanctioned quotes/${newQuoteKey}/discount`),
+                {
+                    amount: flatDiscount,
+                    percent: percentDiscount,
+                }
+            );
+            for (var i in lineItems) {
+                await set(
+                    dbRef(
+                        db,
+                        `/quotes/sanctioned quotes/${newQuoteKey}/line items/${lineItems[i]}`
+                    ),
+                    {
+                        amount: lineItemAmount[i],
+                    }
+                );
+            }
+            closePopup();
+
+            return newQuoteKey;
+        }
+    };
+
+    const handleProcessOrder = (custId, quoteKey) => async (e) => {
+        e.preventDefault();
+
+        if (email === "") {
+            alert("must enter email");
+        } else if (checkForMissing(lineItems)) {
+            alert("must enter line item");
+        } else if (checkForMissing(lineItemAmount)) {
+            alert("must enter line item amount");
+        } else if (checkForMissing(secretNotes, false)) {
+            alert("must enter secret note or remove");
+        } else if (checkForMissing(flatDiscount, false)) {
+            alert("must enter flat discount or remove");
+        } else if (checkForMissing(percentDiscount, false)) {
+            alert("must enter percent discount or remove");
+        } else {
+            // submit to database
+            // quote entry
+            const quoteData = {
+                customer: customers[custId]["name"],
+                "customer id": custId,
+                email: email,
+                "secret notes": secretNotes,
+            };
+
+            let newQuoteKey = "";
+
+            if (!quoteKey) {
+                newQuoteKey = push(child(dbRef(db), "quotes")).key;
+            } else {
+                newQuoteKey = quoteKey;
+                // remove quote from current quotes
+                await remove(
+                    dbRef(db, `/quotes/sanctioned quotes/${quoteKey}`)
+                );
+            }
+            // get a key for a new quote
+
+            const updates = {};
+            updates["/quotes/completed quotes/" + newQuoteKey] = quoteData;
+
+            await update(dbRef(db), updates);
+            await set(
+                dbRef(db, `/quotes/completed quotes/${newQuoteKey}/discount`),
+                {
+                    amount: flatDiscount,
+                    percent: percentDiscount,
+                }
+            );
+            for (var i in lineItems) {
+                await set(
+                    dbRef(
+                        db,
+                        `/quotes/completed quotes/${newQuoteKey}/line items/${lineItems[i]}`
+                    ),
+                    {
+                        amount: lineItemAmount[i],
+                    }
+                );
+            }
+            closePopup();
+        }
+    };
+
     return user ? (
         // user is logged in
-        <div className="new">   
+        <div className="new">
             <div className="new__flex">
                 <span className="new__bulletText">
                     • View our Customers here:{" "}
@@ -342,7 +476,7 @@ function SanctionQuote() {
                     <span className="new__bulletLink">Customers</span>
                 </Link>
             </div>
-            <h2>Current Quotes:</h2>
+            <h2>Sanctioned Quotes:</h2>
             {Object.keys(quotes).map((quote, i) => {
                 return (
                     <div key={i} className="new__quoteContainer">
@@ -356,356 +490,395 @@ function SanctionQuote() {
                             <p className="new__quoteAmount">
                                 ${calculateQuoteAmount({ quote })}
                             </p>
-                            <Popup
-                                trigger={
-                                    <button className="new__quoteButton">
-                                        Edit Quote
-                                    </button>
-                                }
+                            <button
+                                onClick={handleEditButton(quote, i)}
+                                className="new__quoteButton"
                             >
-                                {(close) => (
-                                    <div className="popup">
-                                        <div className="popup__inner">
-                                            <button
-                                                onClick={close}
-                                                className="popup__closeBtn"
-                                            >
-                                                close
-                                            </button>
-                                            <div className="new__popup">
-                                                <h3>Edit quote: {quote}</h3>
-                                                <h3>
-                                                    {quotes[quote]["customer"]}
-                                                </h3>
-                                                <div className="new__customerInfo">
-                                                    <span className="new__text">
-                                                        {quotes &&
-                                                            quotes[quote] &&
+                                Process Order
+                            </button>
+                            <Popup open={editPopup[i]}>
+                                {(close) => {
+                                    return (
+                                        <div className="popup">
+                                            <div className="popup__inner">
+                                                <button
+                                                    onClick={() => {
+                                                        close();
+                                                        closePopup();
+                                                    }}
+                                                    className="popup__closeBtn"
+                                                >
+                                                    close
+                                                </button>
+                                                <div className="new__popup">
+                                                    <h3>Edit quote: {quote}</h3>
+                                                    <h3>
+                                                        {
                                                             quotes[quote][
-                                                                "customer id"
-                                                            ] &&
-                                                            customers[
+                                                                "customer"
+                                                            ]
+                                                        }
+                                                    </h3>
+                                                    <div className="new__customerInfo">
+                                                        <span className="new__text">
+                                                            {quotes &&
+                                                                quotes[quote] &&
                                                                 quotes[quote][
                                                                     "customer id"
-                                                                ]
-                                                            ] &&
-                                                            customers[
+                                                                ] &&
+                                                                customers[
+                                                                    quotes[
+                                                                        quote
+                                                                    ][
+                                                                        "customer id"
+                                                                    ]
+                                                                ] &&
+                                                                customers[
+                                                                    quotes[
+                                                                        quote
+                                                                    ][
+                                                                        "customer id"
+                                                                    ]
+                                                                ]["street"] &&
+                                                                customers[
+                                                                    quotes[
+                                                                        quote
+                                                                    ][
+                                                                        "customer id"
+                                                                    ]
+                                                                ]["street"]}
+                                                        </span>
+                                                        <span className="new__text">
+                                                            {quotes &&
+                                                                quotes[quote] &&
                                                                 quotes[quote][
                                                                     "customer id"
-                                                                ]
-                                                            ]["street"] &&
-                                                            customers[
+                                                                ] &&
+                                                                customers[
+                                                                    quotes[
+                                                                        quote
+                                                                    ][
+                                                                        "customer id"
+                                                                    ]
+                                                                ] &&
+                                                                customers[
+                                                                    quotes[
+                                                                        quote
+                                                                    ][
+                                                                        "customer id"
+                                                                    ]
+                                                                ]["city"] &&
+                                                                customers[
+                                                                    quotes[
+                                                                        quote
+                                                                    ][
+                                                                        "customer id"
+                                                                    ]
+                                                                ]["city"]}
+                                                        </span>
+                                                        <span className="new__text">
+                                                            {quotes &&
+                                                                quotes[quote] &&
                                                                 quotes[quote][
                                                                     "customer id"
-                                                                ]
-                                                            ]["street"]}
-                                                    </span>
-                                                    <span className="new__text">
-                                                        {quotes &&
-                                                            quotes[quote] &&
-                                                            quotes[quote][
-                                                                "customer id"
-                                                            ] &&
-                                                            customers[
-                                                                quotes[quote][
-                                                                    "customer id"
-                                                                ]
-                                                            ] &&
-                                                            customers[
-                                                                quotes[quote][
-                                                                    "customer id"
-                                                                ]
-                                                            ]["city"] &&
-                                                            customers[
-                                                                quotes[quote][
-                                                                    "customer id"
-                                                                ]
-                                                            ]["city"]}
-                                                    </span>
-                                                    <span className="new__text">
-                                                        {quotes &&
-                                                            quotes[quote] &&
-                                                            quotes[quote][
-                                                                "customer id"
-                                                            ] &&
-                                                            customers[
-                                                                quotes[quote][
-                                                                    "customer id"
-                                                                ]
-                                                            ] &&
-                                                            customers[
-                                                                quotes[quote][
-                                                                    "customer id"
-                                                                ]
-                                                            ]["contact"] &&
-                                                            customers[
-                                                                quotes[quote][
-                                                                    "customer id"
-                                                                ]
-                                                            ]["contact"]}
-                                                    </span>
-                                                </div>
-                                                <form>
-                                                    <div className="new__flex">
-                                                        <label htmlFor="email">
-                                                            Email:{" "}
-                                                        </label>
-                                                        <input
-                                                            onChange={(e) =>
-                                                                setEmail(
-                                                                    e.target
-                                                                        .value
-                                                                )
-                                                            }
-                                                            value={email}
-                                                            type="text"
-                                                            id="email"
-                                                            name="email"
-                                                        />
+                                                                ] &&
+                                                                customers[
+                                                                    quotes[
+                                                                        quote
+                                                                    ][
+                                                                        "customer id"
+                                                                    ]
+                                                                ] &&
+                                                                customers[
+                                                                    quotes[
+                                                                        quote
+                                                                    ][
+                                                                        "customer id"
+                                                                    ]
+                                                                ]["contact"] &&
+                                                                customers[
+                                                                    quotes[
+                                                                        quote
+                                                                    ][
+                                                                        "customer id"
+                                                                    ]
+                                                                ]["contact"]}
+                                                        </span>
                                                     </div>
-                                                    <div className="new__flex">
-                                                        <h4>Line Items: </h4>
-                                                        <button
-                                                            onClick={
-                                                                handleLineButton
-                                                            }
-                                                        >
-                                                            New Item
-                                                        </button>
-                                                    </div>
-                                                    {lineItems.map(
-                                                        (item, i) => (
-                                                            <div>
-                                                                <label
-                                                                    htmlFor={`item`}
-                                                                >
-                                                                    item:{" "}
-                                                                </label>
-                                                                <input
-                                                                    type="text"
-                                                                    value={
-                                                                        lineItems[
+                                                    <form>
+                                                        <div className="new__flex">
+                                                            <label htmlFor="email">
+                                                                Email:{" "}
+                                                            </label>
+                                                            <input
+                                                                value={email}
+                                                                type="text"
+                                                                disabled
+                                                            />
+                                                        </div>
+                                                        <div className="new__flex">
+                                                            <h4>
+                                                                Line Items:{" "}
+                                                            </h4>
+                                                        </div>
+                                                        {lineItems.map(
+                                                            (item, i) => (
+                                                                <div>
+                                                                    <label
+                                                                        htmlFor={`item`}
+                                                                    >
+                                                                        item:{" "}
+                                                                    </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        disabled
+                                                                        value={
+                                                                            lineItems[
+                                                                                i
+                                                                            ]
+                                                                        }
+                                                                    ></input>
+                                                                    <label
+                                                                        htmlFor={`amount`}
+                                                                    >
+                                                                        {" "}
+                                                                        amount:{" "}
+                                                                    </label>
+                                                                    <CurrencyFormat
+                                                                        disabled={
+                                                                            true
+                                                                        }
+                                                                        value={
+                                                                            lineItemAmount[
+                                                                                i
+                                                                            ]
+                                                                        }
+                                                                        allowNegative={
+                                                                            false
+                                                                        }
+                                                                        thousandSeparator={
+                                                                            true
+                                                                        }
+                                                                        decimalScale={
+                                                                            2
+                                                                        }
+                                                                        fixedDecimalScale={
+                                                                            true
+                                                                        }
+                                                                        prefix="$"
+                                                                    />
+                                                                </div>
+                                                            )
+                                                        )}
+                                                        <div className="new__flex">
+                                                            <h4>
+                                                                Secret Notes:{" "}
+                                                            </h4>
+                                                        </div>
+                                                        {secretNotes.map(
+                                                            (note, i) => (
+                                                                <div>
+                                                                    <label
+                                                                        htmlFor={`note`}
+                                                                    >
+                                                                        note:{" "}
+                                                                    </label>
+                                                                    <input
+                                                                        disabled
+                                                                        type="text"
+                                                                        value={
+                                                                            secretNotes[
+                                                                                i
+                                                                            ]
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                            )
+                                                        )}
+                                                        <div className="new__flex">
+                                                            <h4>
+                                                                Flat Discounts:{" "}
+                                                            </h4>
+                                                            <button
+                                                                onClick={
+                                                                    handleFlatDiscountButton
+                                                                }
+                                                            >
+                                                                New Discount
+                                                            </button>
+                                                        </div>
+                                                        {flatDiscount.map(
+                                                            (discount, i) => (
+                                                                <div key={i}>
+                                                                    <label
+                                                                        htmlFor={`item`}
+                                                                    >
+                                                                        discount:{" "}
+                                                                    </label>
+                                                                    <CurrencyFormat
+                                                                        onChange={handleFieldChangeFlatDiscount(
                                                                             i
-                                                                        ]
-                                                                    }
-                                                                    onChange={handleFieldChangeLineItem(
-                                                                        i
-                                                                    )}
-                                                                ></input>
-                                                                <label
-                                                                    htmlFor={`amount`}
-                                                                >
-                                                                    {" "}
-                                                                    amount:{" "}
-                                                                </label>
-                                                                <CurrencyFormat
-                                                                    onChange={handleFieldChangeLineAmount(
-                                                                        i
-                                                                    )}
-                                                                    value={
-                                                                        lineItemAmount[
+                                                                        )}
+                                                                        value={
+                                                                            flatDiscount[
+                                                                                i
+                                                                            ]
+                                                                        }
+                                                                        allowNegative={
+                                                                            false
+                                                                        }
+                                                                        thousandSeparator={
+                                                                            true
+                                                                        }
+                                                                        decimalScale={
+                                                                            2
+                                                                        }
+                                                                        fixedDecimalScale={
+                                                                            true
+                                                                        }
+                                                                        max={
+                                                                            amount[
+                                                                                amount.length -
+                                                                                    1
+                                                                            ]
+                                                                        }
+                                                                        prefix="$"
+                                                                    />
+                                                                    <button
+                                                                        className="new__delete"
+                                                                        onClick={handleDeleteFlatDiscount(
                                                                             i
-                                                                        ]
-                                                                    }
-                                                                    allowNegative={
-                                                                        false
-                                                                    }
-                                                                    thousandSeparator={
-                                                                        true
-                                                                    }
-                                                                    decimalScale={
-                                                                        2
-                                                                    }
-                                                                    fixedDecimalScale={
-                                                                        true
-                                                                    }
-                                                                    prefix="$"
-                                                                />
-                                                                <button
-                                                                    className="new__delete"
-                                                                    onClick={handleDeleteLineItem(
-                                                                        i
-                                                                    )}
-                                                                >
-                                                                    <DeleteIcon />
-                                                                </button>
-                                                            </div>
-                                                        )
-                                                    )}
-                                                    <div className="new__flex">
-                                                        <h4>Secret Notes: </h4>
-                                                        <button
-                                                            onClick={
-                                                                handleSecretButton
-                                                            }
-                                                        >
-                                                            New Note
-                                                        </button>
-                                                    </div>
-                                                    {secretNotes.map(
-                                                        (note, i) => (
-                                                            <div>
-                                                                <label
-                                                                    htmlFor={`note`}
-                                                                >
-                                                                    note:{" "}
-                                                                </label>
-                                                                <input
-                                                                    type="text"
-                                                                    value={
-                                                                        secretNotes[
+                                                                        )}
+                                                                    >
+                                                                        <DeleteIcon />
+                                                                    </button>
+                                                                </div>
+                                                            )
+                                                        )}
+                                                        <div className="new__flex">
+                                                            <h4>
+                                                                Percent
+                                                                Discounts:{" "}
+                                                            </h4>
+                                                            <button
+                                                                onClick={
+                                                                    handlePercentDiscountButton
+                                                                }
+                                                            >
+                                                                New Discount
+                                                            </button>
+                                                        </div>
+                                                        {percentDiscount.map(
+                                                            (discount, i) => (
+                                                                <div key={i}>
+                                                                    <label
+                                                                        htmlFor={`item`}
+                                                                    >
+                                                                        discount:{" "}
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        min={0}
+                                                                        max={
+                                                                            100
+                                                                        }
+                                                                        placeholder={`0%-100%`}
+                                                                        value={
+                                                                            percentDiscount[
+                                                                                i
+                                                                            ]
+                                                                        }
+                                                                        onChange={handleFieldChangePercentDiscount(
                                                                             i
-                                                                        ]
-                                                                    }
-                                                                    onChange={handleFieldChangeSecretNote(
-                                                                        i
-                                                                    )}
-                                                                ></input>
-                                                                <button
-                                                                    className="new__delete"
-                                                                    onClick={handleDeleteSecretNote(
-                                                                        i
-                                                                    )}
-                                                                >
-                                                                    <DeleteIcon />
-                                                                </button>
-                                                            </div>
-                                                        )
-                                                    )}
-                                                    <div className="new__flex">
-                                                        <h4>
-                                                            Flat Discounts:{" "}
-                                                        </h4>
-                                                        <button
-                                                            onClick={
-                                                                handleFlatDiscountButton
-                                                            }
-                                                        >
-                                                            New Discount
-                                                        </button>
-                                                    </div>
-                                                    {flatDiscount.map(
-                                                        (discount, i) => (
-                                                            <div key={i}>
-                                                                <label
-                                                                    htmlFor={`item`}
-                                                                >
-                                                                    discount:{" "}
-                                                                </label>
-                                                                <CurrencyFormat
-                                                                    onChange={handleFieldChangeFlatDiscount(
-                                                                        i
-                                                                    )}
-                                                                    value={
-                                                                        flatDiscount[
+                                                                        )}
+                                                                    ></input>
+                                                                    <button
+                                                                        className="new__delete"
+                                                                        onClick={handleDeletePercentDiscount(
                                                                             i
-                                                                        ]
-                                                                    }
-                                                                    allowNegative={
-                                                                        false
-                                                                    }
-                                                                    thousandSeparator={
-                                                                        true
-                                                                    }
-                                                                    decimalScale={
-                                                                        2
-                                                                    }
-                                                                    fixedDecimalScale={
-                                                                        true
-                                                                    }
-                                                                    max={
-                                                                        amount[
-                                                                            amount.length -
-                                                                                1
-                                                                        ]
-                                                                    }
-                                                                    prefix="$"
-                                                                />
-                                                                <button
-                                                                    className="new__delete"
-                                                                    onClick={handleDeleteFlatDiscount(
-                                                                        i
-                                                                    )}
-                                                                >
-                                                                    <DeleteIcon />
-                                                                </button>
-                                                            </div>
-                                                        )
-                                                    )}
-                                                    <div className="new__flex">
-                                                        <h4>
-                                                            Percent Discounts:{" "}
-                                                        </h4>
-                                                        <button
-                                                            onClick={
-                                                                handlePercentDiscountButton
-                                                            }
-                                                        >
-                                                            New Discount
-                                                        </button>
-                                                    </div>
-                                                    {percentDiscount.map(
-                                                        (discount, i) => (
-                                                            <div key={i}>
-                                                                <label
-                                                                    htmlFor={`item`}
-                                                                >
-                                                                    discount:{" "}
-                                                                </label>
-                                                                <input
-                                                                    type="number"
-                                                                    min={0}
-                                                                    max={100}
-                                                                    placeholder={`0%-100%`}
-                                                                    value={
-                                                                        percentDiscount[
-                                                                            i
-                                                                        ]
-                                                                    }
-                                                                    onChange={handleFieldChangePercentDiscount(
-                                                                        i
-                                                                    )}
-                                                                ></input>
-                                                                <button
-                                                                    className="new__delete"
-                                                                    onClick={handleDeletePercentDiscount(
-                                                                        i
-                                                                    )}
-                                                                >
-                                                                    <DeleteIcon />
-                                                                </button>
-                                                            </div>
-                                                        )
-                                                    )}
-                                                    <div className="new__flex">
-                                                        <p>Amount: </p>
-                                                        <div className="new__discountFlex">
-                                                            {amount.map(
-                                                                (amt) => (
-                                                                    <p className="new__discount">
-                                                                        <CurrencyFormat
-                                                                            displayType="text"
-                                                                            value={
+                                                                        )}
+                                                                    >
+                                                                        <DeleteIcon />
+                                                                    </button>
+                                                                </div>
+                                                            )
+                                                        )}
+                                                        <div className="new__flex">
+                                                            <p>Amount: </p>
+                                                            <div className="new__discountFlex">
+                                                                {amount.map(
+                                                                    (amt) => (
+                                                                        <p
+                                                                            key={
                                                                                 amt
                                                                             }
-                                                                            decimalScale={
-                                                                                2
-                                                                            }
-                                                                            fixedDecimalScale={
-                                                                                true
-                                                                            }
-                                                                            prefix="$"
-                                                                        />
-                                                                    </p>
-                                                                )
-                                                            )}
+                                                                            className="new__discount"
+                                                                        >
+                                                                            <CurrencyFormat
+                                                                                displayType="text"
+                                                                                value={
+                                                                                    amt
+                                                                                }
+                                                                                decimalScale={
+                                                                                    2
+                                                                                }
+                                                                                fixedDecimalScale={
+                                                                                    true
+                                                                                }
+                                                                                prefix="$"
+                                                                            />
+                                                                        </p>
+                                                                    )
+                                                                )}
+                                                            </div>
                                                         </div>
+                                                    </form>
+                                                    <div>
+                                                        <button
+                                                            onClick={handleQuoteSave(
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ],
+                                                                quote
+                                                            )}
+                                                        >
+                                                            Save
+                                                        </button>
+                                                        <button
+                                                            onClick={
+                                                                handleProcessOrder(
+                                                                    quotes[
+                                                                        quote
+                                                                    ][
+                                                                        "customer id"
+                                                                    ],
+                                                                    quote
+                                                                )
+                                                                // send(
+                                                                //     quote,
+                                                                //     user.email,
+                                                                //     quotes[
+                                                                //         quote
+                                                                //     ][
+                                                                //         "customer id"
+                                                                //     ],
+                                                                //     calculateQuoteAmount(
+                                                                //         {
+                                                                //             quote,
+                                                                //         }
+                                                                //     )
+                                                                // );
+                                                            }
+                                                            className="popup__closeBtn2"
+                                                        >
+                                                            Process Order
+                                                        </button>
                                                     </div>
-                                                </form>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )}
+                                    );
+                                }}
                             </Popup>
                         </div>
                     </div>
