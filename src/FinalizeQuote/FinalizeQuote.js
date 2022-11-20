@@ -180,7 +180,7 @@ function FinalizeQuote() {
         }
 
         //round to 2 decimal places
-        amount = parseInt(amount).toFixed(2);
+        //amount = parseInt(amount).toFixed(2);
 
         return amount;
     }
@@ -552,7 +552,10 @@ function FinalizeQuote() {
                                 </p>
                             </div>
                             <p className="new__quoteAmount">
-                                ${calculateQuoteAmount({ quote })}
+                                ${calculateQuoteAmount({ quote }).toLocaleString('en-US', {
+                                    style: 'currency',
+                                    currency: 'USD',
+                                    }).slice(1)}
                             </p>
                             <button
                                 onClick={handleEditButton(quote, i)}
