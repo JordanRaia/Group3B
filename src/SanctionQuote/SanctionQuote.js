@@ -35,6 +35,7 @@ function SanctionQuote() {
     const [secretNotes, setSecretNotes] = useState([]);
     // for editing quotes
     const [editPopup, setEditPopup] = useState([]);
+    //const [jsonResponse, setJsonResponse] = useState([]);
 
     useEffect(() => {
         getCustomers();
@@ -53,34 +54,25 @@ function SanctionQuote() {
             });
     }
 
-    // function send(orderNum, associateNum, custidNum, finalAmount) {
-    //     axios
-    //         .post(
-    //             "https://blitz.cs.niu.edu/PurchaseOrder/",
-    //             {
-    //                 order: orderNum,
-    //                 associate: associateNum,
-    //                 custid: custidNum,
-    //                 amount: finalAmount,
-    //             },
-    //             {
-    //                 headers: {
-    //                     "Content-Type": "application/x-www-form-urlencoded",
-    //                 },
-    //             }
-    //         )
-    //         .then(
-    //             (response) => {
-    //                 console.log(response);
-    //             },
-    //             (error) => {
-    //                 console.log(error);
-    //             }
-    //         )
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // }
+    /*function send(orderNum, associateNum, custidNum, finalAmount){
+        
+        axios.post('https://blitz.cs.niu.edu/PurchaseOrder/', {
+            'order': orderNum,
+            'associate': associateNum,
+            'custid': custidNum,
+            'amount': finalAmount
+        }, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          })
+        .then(function (response) {
+            setJsonResponse(response.data);
+          })
+        .catch((error) => {
+            console.error(error);
+        });
+    }*/
 
     function closePopup() {
         //setPopup(false);
@@ -92,7 +84,6 @@ function SanctionQuote() {
         setLineItems([]);
         setLineItemAmount([]);
         setSecretNotes([]);
-        //set_did_send(false);
     }
 
     const handleEditButton = (quote, i) => (e) => {
@@ -430,6 +421,13 @@ function SanctionQuote() {
                 "secret notes": secretNotes,
             };
 
+            //send quote
+            /*
+            send(quoteKey,user.email,custId,calculateQuoteAmount(quoteKey).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                }).slice(1));*/
+            
             let newQuoteKey = "";
 
             if (!quoteKey) {
@@ -861,20 +859,6 @@ function SanctionQuote() {
                                                                     ],
                                                                     quote
                                                                 )
-                                                                // send(
-                                                                //     quote,
-                                                                //     user.email,
-                                                                //     quotes[
-                                                                //         quote
-                                                                //     ][
-                                                                //         "customer id"
-                                                                //     ],
-                                                                //     calculateQuoteAmount(
-                                                                //         {
-                                                                //             quote,
-                                                                //         }
-                                                                //     )
-                                                                // );
                                                             }
                                                             className="popup__closeBtn2"
                                                         >
