@@ -23,7 +23,6 @@ function SanctionQuote() {
     const [customers, setCustomers] = useState([]);
     //const [popup, setPopup] = useState(false);
     const [user, setUser] = useState({});
-    const [users, setUsers] = useState([]);
     const [quotes, setQuotes] = useState([]);
     // for creating new quote in database
     const [amount, setAmount] = useState(["0"]);
@@ -151,13 +150,6 @@ function SanctionQuote() {
                 onValue(quotesRef, (snapshot) => {
                     const data = snapshot.val();
                     setQuotes(data);
-                });
-
-                // users
-                const usersRef = dbRef(db, `users`);
-                onValue(usersRef, (snapshot) => {
-                    const data = snapshot.val();
-                    setUsers(data);
                 });
             }
         });
@@ -432,7 +424,7 @@ function SanctionQuote() {
             //send quote
             send(
                 quoteId,
-                users[quotes[quoteId]["employee"]]["fullname"],
+                quotes[quoteId]["employee"],
                 Number(customers[customerId]["id"]),
                 quoteAmt
             );
