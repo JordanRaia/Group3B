@@ -12,12 +12,13 @@ import { getDownloadURL, ref as stoRef } from "firebase/storage";
 
 function Header() {
     const defaultProfileUrl =
-        "https://firebasestorage.googleapis.com/v0/b/group3b-38bd5.appspot.com/o/users%2Fdefault%2Fprofile.png?alt=media&token=ee6e94df-17f3-4ccc-b805-29aef7475798";
+        "https://firebasestorage.googleapis.com/v0/b/group3b-38bd5.appspot.com/o/users%2Fdefault%2Fprofile.jpg?alt=media&token=6d49f5cd-3830-48ea-8cb4-363af2ddf703";
 
     //grab user
     const [user, setUser] = useState({});
     const [name, setName] = useState("");
     //Url to profile picture
+    const [profile, setProfile] = useState("");
     const [profileUrl, setProfileUrl] = useState(defaultProfileUrl);
 
     //set user to current user
@@ -35,12 +36,29 @@ function Header() {
                 setName(data);
             });
 
-            //get the URL for the profile picture
-            getDownloadURL(
-                stoRef(storage, `users/${currentUser.uid}/profile.jpg`)
-            ).then((url) => {
-                setProfileUrl(url);
+            const profileRef = dbRef(
+                db,
+                `users/${currentUser.uid}/profile_picture`
+            );
+
+            onValue(profileRef, (snapshot) => {
+                const data = snapshot.val();
+
+                setProfile(data);
             });
+
+            if (profile !== "users/default/profile.jpg" && profile !== "") {
+                //get the URL for the profile picture
+                getDownloadURL(stoRef(storage, profile))
+                    .then((url) => {
+                        setProfileUrl(url);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            } else {
+                setProfileUrl(defaultProfileUrl);
+            }
         } else {
             //set profile picture to deafult
             setProfileUrl(defaultProfileUrl);
