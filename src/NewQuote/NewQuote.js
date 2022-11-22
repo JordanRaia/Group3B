@@ -260,7 +260,7 @@ function NewQuote() {
         } else if (checkForMissing(lineItemAmount)) {
             alert("must enter line item amount");
         } else if (checkForMissing(secretNotes, false)) {
-            yee: alert("must enter secret note or remove");
+            alert("must enter secret note or remove");
         } else if (checkForMissing(flatDiscount, false)) {
             alert("must enter flat discount or remove");
         } else if (checkForMissing(percentDiscount, false)) {
