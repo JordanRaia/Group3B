@@ -54,7 +54,6 @@ function SanctionQuote() {
     }
 
     function send(orderNum, associateNum, custidNum, finalAmount){
-        console.log(custidNum);
         axios.post('https://blitz.cs.niu.edu/PurchaseOrder/', {
             'order': orderNum,
             'associate': associateNum,
@@ -401,7 +400,7 @@ function SanctionQuote() {
         e.preventDefault();
         
         //send quote              
-        send(custId,user.email,quoteKey,quoteAmt);
+        send(custId,user.email,Number(quoteKey)+1,quoteAmt);
 
         if (email === "") {
             alert("must enter email");
