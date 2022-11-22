@@ -70,6 +70,13 @@
     border-radius: 50%;
 }
 
+@media screen and (max-height: 685px) {
+    .login__logoContainer {
+        height: 6.813rem;
+        width: 6.813rem;
+    }
+}
+
 .login__logo {
     height: 100%;
     width: 100%;
