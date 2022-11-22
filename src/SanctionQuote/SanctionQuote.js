@@ -396,11 +396,11 @@ function SanctionQuote() {
         }
     };
 
-    const handleProcessOrder = (custId, quoteKey, quoteAmt) => async (e) => {
+    const handleProcessOrder = (quoteId, customerId, quoteAmt) => async (e) => {
         e.preventDefault();
         
         //send quote              
-        send(custId,user.email,Number(quoteKey)+1,quoteAmt);
+        send(quoteId,user.email,Number(customerId)+1,quoteAmt);
 
         if (email === "") {
             alert("must enter email");
@@ -414,35 +414,35 @@ function SanctionQuote() {
             alert("must enter flat discount or remove");
         } else if (checkForMissing(percentDiscount, false)) {
             alert("must enter percent discount or remove");
-        } else {
+        } else { 
             // submit to database
             // quote entry
             const quoteData = {
-                customer: customers[custId]["name"],
-                "customer id": custId,
+                customer: customers[Number(customerId)+1]["name"],
+                "customer id": Number(customerId)+1,
                 email: email,
                 "secret notes": secretNotes,
             };
+            console.log("made it here");
+            let newQuoteId = "";
 
-            let newQuoteKey = "";
-
-            if (!quoteKey) {
-                newQuoteKey = push(child(dbRef(db), "quotes")).key;
+            if (!quoteId) {
+                newQuoteId = push(child(dbRef(db), "quotes")).key;
             } else {
-                newQuoteKey = quoteKey;
+                newQuoteId = quoteId;
                 // remove quote from current quotes
                 await remove(
-                    dbRef(db, `/quotes/sanctioned quotes/${quoteKey}`)
+                    dbRef(db, `/quotes/sanctioned quotes/${quoteId}`)
                 );
             }
-
+            
             // get a key for a new quote
             const updates = {};
-            updates["/quotes/completed quotes/" + newQuoteKey] = quoteData;
+            updates["/quotes/completed quotes/" + newQuoteId] = quoteData;
 
             await update(dbRef(db), updates);
             await set(
-                dbRef(db, `/quotes/completed quotes/${newQuoteKey}/discount`),
+                dbRef(db, `/quotes/completed quotes/${newQuoteId}/discount`),
                 {
                     amount: flatDiscount,
                     percent: percentDiscount,
@@ -452,7 +452,7 @@ function SanctionQuote() {
                 await set(
                     dbRef(
                         db,
-                        `/quotes/completed quotes/${newQuoteKey}/line items/${lineItems[i]}`
+                        `/quotes/completed quotes/${newQuoteId}/line items/${lineItems[i]}`
                     ),
                     {
                         amount: lineItemAmount[i],
