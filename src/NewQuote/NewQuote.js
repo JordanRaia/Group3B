@@ -210,6 +210,7 @@ function NewQuote() {
                 "customer id": custId,
                 email: email,
                 "secret notes": secretNotes,
+                employee: user.uid,
             };
 
             let newQuoteKey = "";
@@ -259,7 +260,7 @@ function NewQuote() {
         } else if (checkForMissing(lineItemAmount)) {
             alert("must enter line item amount");
         } else if (checkForMissing(secretNotes, false)) {
-            alert("must enter secret note or remove");
+            yee: alert("must enter secret note or remove");
         } else if (checkForMissing(flatDiscount, false)) {
             alert("must enter flat discount or remove");
         } else if (checkForMissing(percentDiscount, false)) {
@@ -272,6 +273,7 @@ function NewQuote() {
                 "customer id": custId,
                 email: email,
                 "secret notes": secretNotes,
+                employee: user.uid,
             };
 
             let newQuoteKey = "";
@@ -684,56 +686,66 @@ function NewQuote() {
                                     New Discount
                                 </button>
                             </div>
-                            {flatDiscount && flatDiscount.map((discount, i) => (
-                                <div key={i}>
-                                    <label htmlFor={`item`}>discount: </label>
-                                    <CurrencyFormat
-                                        onChange={handleFieldChangeFlatDiscount(
-                                            i
-                                        )}
-                                        value={flatDiscount[i]}
-                                        allowNegative={false}
-                                        thousandSeparator={true}
-                                        decimalScale={2}
-                                        fixedDecimalScale={true}
-                                        max={amount[amount.length - 1]}
-                                        prefix="$"
-                                    />
-                                    <button
-                                        className="new__delete"
-                                        onClick={handleDeleteFlatDiscount(i)}
-                                    >
-                                        <DeleteIcon />
-                                    </button>
-                                </div>
-                            ))}
+                            {flatDiscount &&
+                                flatDiscount.map((discount, i) => (
+                                    <div key={i}>
+                                        <label htmlFor={`item`}>
+                                            discount:{" "}
+                                        </label>
+                                        <CurrencyFormat
+                                            onChange={handleFieldChangeFlatDiscount(
+                                                i
+                                            )}
+                                            value={flatDiscount[i]}
+                                            allowNegative={false}
+                                            thousandSeparator={true}
+                                            decimalScale={2}
+                                            fixedDecimalScale={true}
+                                            max={amount[amount.length - 1]}
+                                            prefix="$"
+                                        />
+                                        <button
+                                            className="new__delete"
+                                            onClick={handleDeleteFlatDiscount(
+                                                i
+                                            )}
+                                        >
+                                            <DeleteIcon />
+                                        </button>
+                                    </div>
+                                ))}
                             <div className="new__flex">
                                 <h4>Percent Discounts: </h4>
                                 <button onClick={handlePercentDiscountButton}>
                                     New Discount
                                 </button>
                             </div>
-                            {percentDiscount && percentDiscount.map((discount, i) => (
-                                <div key={i}>
-                                    <label htmlFor={`item`}>discount: </label>
-                                    <input
-                                        type="number"
-                                        min={0}
-                                        max={100}
-                                        placeholder={`0%-100%`}
-                                        value={percentDiscount[i]}
-                                        onChange={handleFieldChangePercentDiscount(
-                                            i
-                                        )}
-                                    />
-                                    <button
-                                        className="new__delete"
-                                        onClick={handleDeletePercentDiscount(i)}
-                                    >
-                                        <DeleteIcon />
-                                    </button>
-                                </div>
-                            ))}
+                            {percentDiscount &&
+                                percentDiscount.map((discount, i) => (
+                                    <div key={i}>
+                                        <label htmlFor={`item`}>
+                                            discount:{" "}
+                                        </label>
+                                        <input
+                                            type="number"
+                                            min={0}
+                                            max={100}
+                                            placeholder={`0%-100%`}
+                                            value={percentDiscount[i]}
+                                            onChange={handleFieldChangePercentDiscount(
+                                                i
+                                            )}
+                                        />
+                                        <button
+                                            className="new__delete"
+                                            onClick={handleDeletePercentDiscount(
+                                                i
+                                            )}
+                                        >
+                                            <DeleteIcon />
+                                        </button>
+                                    </div>
+                                ))}
                             <div className="new__flex">
                                 <p>Amount: </p>
                                 <div className="new__discountFlex">
@@ -787,10 +799,13 @@ function NewQuote() {
                                 </p>
                             </div>
                             <p className="new__quoteAmount">
-                                ${calculateQuoteAmount({ quote }).toLocaleString('en-US', {
-                                    style: 'currency',
-                                    currency: 'USD',
-                                    }).slice(1)}
+                                $
+                                {calculateQuoteAmount({ quote })
+                                    .toLocaleString("en-US", {
+                                        style: "currency",
+                                        currency: "USD",
+                                    })
+                                    .slice(1)}
                             </p>
                             <button
                                 onClick={handleEditButton(quote, i)}

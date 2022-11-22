@@ -428,6 +428,7 @@ function FinalizeQuote() {
                 "customer id": custId,
                 email: email,
                 "secret notes": secretNotes,
+                employee: quotes[quoteKey]["employee"],
             };
 
             let newQuoteKey = "";
@@ -490,6 +491,7 @@ function FinalizeQuote() {
                 "customer id": custId,
                 email: email,
                 "secret notes": secretNotes,
+                employee: quotes[quoteKey]["employee"],
             };
 
             let newQuoteKey = "";
@@ -552,10 +554,13 @@ function FinalizeQuote() {
                                 </p>
                             </div>
                             <p className="new__quoteAmount">
-                                ${calculateQuoteAmount({ quote }).toLocaleString('en-US', {
-                                    style: 'currency',
-                                    currency: 'USD',
-                                    }).slice(1)}
+                                $
+                                {calculateQuoteAmount({ quote })
+                                    .toLocaleString("en-US", {
+                                        style: "currency",
+                                        currency: "USD",
+                                    })
+                                    .slice(1)}
                             </p>
                             <button
                                 onClick={handleEditButton(quote, i)}
@@ -808,54 +813,60 @@ function FinalizeQuote() {
                                                                 New Discount
                                                             </button>
                                                         </div>
-                                                        {flatDiscount && flatDiscount.map(
-                                                            (discount, i) => (
-                                                                <div key={i}>
-                                                                    <label
-                                                                        htmlFor={`item`}
+                                                        {flatDiscount &&
+                                                            flatDiscount.map(
+                                                                (
+                                                                    discount,
+                                                                    i
+                                                                ) => (
+                                                                    <div
+                                                                        key={i}
                                                                     >
-                                                                        discount:{" "}
-                                                                    </label>
-                                                                    <CurrencyFormat
-                                                                        onChange={handleFieldChangeFlatDiscount(
-                                                                            i
-                                                                        )}
-                                                                        value={
-                                                                            flatDiscount[
+                                                                        <label
+                                                                            htmlFor={`item`}
+                                                                        >
+                                                                            discount:{" "}
+                                                                        </label>
+                                                                        <CurrencyFormat
+                                                                            onChange={handleFieldChangeFlatDiscount(
                                                                                 i
-                                                                            ]
-                                                                        }
-                                                                        allowNegative={
-                                                                            false
-                                                                        }
-                                                                        thousandSeparator={
-                                                                            true
-                                                                        }
-                                                                        decimalScale={
-                                                                            2
-                                                                        }
-                                                                        fixedDecimalScale={
-                                                                            true
-                                                                        }
-                                                                        max={
-                                                                            amount[
-                                                                                amount.length -
-                                                                                    1
-                                                                            ]
-                                                                        }
-                                                                        prefix="$"
-                                                                    />
-                                                                    <button
-                                                                        className="new__delete"
-                                                                        onClick={handleDeleteFlatDiscount(
-                                                                            i
-                                                                        )}
-                                                                    >
-                                                                        <DeleteIcon />
-                                                                    </button>
-                                                                </div>
-                                                            )
-                                                        )}
+                                                                            )}
+                                                                            value={
+                                                                                flatDiscount[
+                                                                                    i
+                                                                                ]
+                                                                            }
+                                                                            allowNegative={
+                                                                                false
+                                                                            }
+                                                                            thousandSeparator={
+                                                                                true
+                                                                            }
+                                                                            decimalScale={
+                                                                                2
+                                                                            }
+                                                                            fixedDecimalScale={
+                                                                                true
+                                                                            }
+                                                                            max={
+                                                                                amount[
+                                                                                    amount.length -
+                                                                                        1
+                                                                                ]
+                                                                            }
+                                                                            prefix="$"
+                                                                        />
+                                                                        <button
+                                                                            className="new__delete"
+                                                                            onClick={handleDeleteFlatDiscount(
+                                                                                i
+                                                                            )}
+                                                                        >
+                                                                            <DeleteIcon />
+                                                                        </button>
+                                                                    </div>
+                                                                )
+                                                            )}
                                                         <div className="new__flex">
                                                             <h4>
                                                                 Percent
@@ -869,41 +880,49 @@ function FinalizeQuote() {
                                                                 New Discount
                                                             </button>
                                                         </div>
-                                                        {percentDiscount && percentDiscount.map(
-                                                            (discount, i) => (
-                                                                <div key={i}>
-                                                                    <label
-                                                                        htmlFor={`item`}
+                                                        {percentDiscount &&
+                                                            percentDiscount.map(
+                                                                (
+                                                                    discount,
+                                                                    i
+                                                                ) => (
+                                                                    <div
+                                                                        key={i}
                                                                     >
-                                                                        discount:{" "}
-                                                                    </label>
-                                                                    <input
-                                                                        type="number"
-                                                                        min={0}
-                                                                        max={
-                                                                            100
-                                                                        }
-                                                                        placeholder={`0%-100%`}
-                                                                        value={
-                                                                            percentDiscount[
+                                                                        <label
+                                                                            htmlFor={`item`}
+                                                                        >
+                                                                            discount:{" "}
+                                                                        </label>
+                                                                        <input
+                                                                            type="number"
+                                                                            min={
+                                                                                0
+                                                                            }
+                                                                            max={
+                                                                                100
+                                                                            }
+                                                                            placeholder={`0%-100%`}
+                                                                            value={
+                                                                                percentDiscount[
+                                                                                    i
+                                                                                ]
+                                                                            }
+                                                                            onChange={handleFieldChangePercentDiscount(
                                                                                 i
-                                                                            ]
-                                                                        }
-                                                                        onChange={handleFieldChangePercentDiscount(
-                                                                            i
-                                                                        )}
-                                                                    ></input>
-                                                                    <button
-                                                                        className="new__delete"
-                                                                        onClick={handleDeletePercentDiscount(
-                                                                            i
-                                                                        )}
-                                                                    >
-                                                                        <DeleteIcon />
-                                                                    </button>
-                                                                </div>
-                                                            )
-                                                        )}
+                                                                            )}
+                                                                        ></input>
+                                                                        <button
+                                                                            className="new__delete"
+                                                                            onClick={handleDeletePercentDiscount(
+                                                                                i
+                                                                            )}
+                                                                        >
+                                                                            <DeleteIcon />
+                                                                        </button>
+                                                                    </div>
+                                                                )
+                                                            )}
                                                         <div className="new__flex">
                                                             <p>Amount: </p>
                                                             <div className="new__discountFlex">

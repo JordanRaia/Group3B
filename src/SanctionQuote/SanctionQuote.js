@@ -15,7 +15,7 @@ import {
     push,
     update,
     set,
-    remove
+    remove,
 } from "firebase/database";
 
 // final stage for a quote to be sent to payment processing system by in house employee two
@@ -23,6 +23,7 @@ function SanctionQuote() {
     const [customers, setCustomers] = useState([]);
     //const [popup, setPopup] = useState(false);
     const [user, setUser] = useState({});
+    const [users, setUsers] = useState([]);
     const [quotes, setQuotes] = useState([]);
     // for creating new quote in database
     const [amount, setAmount] = useState(["0"]);
@@ -53,23 +54,28 @@ function SanctionQuote() {
             });
     }
 
-    function send(orderNum, associateNum, custidNum, finalAmount){
-        axios.post('https://blitz.cs.niu.edu/PurchaseOrder/', {
-            'order': orderNum,
-            'associate': associateNum,
-            'custid': custidNum,
-            'amount': finalAmount
-        }, {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }
-          })
-        .then(function (response) {
-            setJsonResponse(response.data);
-          })
-        .catch((error) => {
-            console.error(error);
-        });
+    function send(orderNum, associateNum, custidNum, finalAmount) {
+        axios
+            .post(
+                "https://blitz.cs.niu.edu/PurchaseOrder/",
+                {
+                    order: orderNum,
+                    associate: associateNum,
+                    custid: custidNum,
+                    amount: finalAmount,
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                }
+            )
+            .then(function (response) {
+                setJsonResponse(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
 
         console.log("stored blitz response: ", jsonResponse);
     }
@@ -140,11 +146,18 @@ function SanctionQuote() {
             setUser(currentUser);
 
             if (user) {
+                // quotes
                 const quotesRef = dbRef(db, `quotes/sanctioned quotes/`);
-
                 onValue(quotesRef, (snapshot) => {
                     const data = snapshot.val();
                     setQuotes(data);
+                });
+
+                // users
+                const usersRef = dbRef(db, `users`);
+                onValue(usersRef, (snapshot) => {
+                    const data = snapshot.val();
+                    setUsers(data);
                 });
             }
         });
@@ -357,6 +370,7 @@ function SanctionQuote() {
                 "customer id": custId,
                 email: email,
                 "secret notes": secretNotes,
+                employee: quotes[quoteKey]["employee"],
             };
 
             let newQuoteKey = "";
@@ -398,9 +412,6 @@ function SanctionQuote() {
 
     const handleProcessOrder = (quoteId, customerId, quoteAmt) => async (e) => {
         e.preventDefault();
-        
-        //send quote              
-        send(quoteId,user.email,Number(customerId)+1,quoteAmt);
 
         if (email === "") {
             alert("must enter email");
@@ -414,16 +425,25 @@ function SanctionQuote() {
             alert("must enter flat discount or remove");
         } else if (checkForMissing(percentDiscount, false)) {
             alert("must enter percent discount or remove");
-        } else { 
+        } else {
             // submit to database
             // quote entry
+
+            //send quote
+            send(
+                quoteId,
+                users[quotes[quoteId]["employee"]]["fullname"],
+                Number(customers[customerId]["id"]),
+                quoteAmt
+            );
+
             const quoteData = {
-                customer: customers[Number(customerId)+1]["name"],
-                "customer id": Number(customerId)+1,
+                customer: customers[customerId]["name"],
+                "customer id": customerId,
                 email: email,
                 "secret notes": secretNotes,
+                employee: quotes[quoteId]["employee"],
             };
-            console.log("made it here");
             let newQuoteId = "";
 
             if (!quoteId) {
@@ -431,11 +451,9 @@ function SanctionQuote() {
             } else {
                 newQuoteId = quoteId;
                 // remove quote from current quotes
-                await remove(
-                    dbRef(db, `/quotes/sanctioned quotes/${quoteId}`)
-                );
+                await remove(dbRef(db, `/quotes/sanctioned quotes/${quoteId}`));
             }
-            
+
             // get a key for a new quote
             const updates = {};
             updates["/quotes/completed quotes/" + newQuoteId] = quoteData;
@@ -478,10 +496,13 @@ function SanctionQuote() {
                                 </p>
                             </div>
                             <p className="new__quoteAmount">
-                                ${calculateQuoteAmount({ quote }).toLocaleString('en-US', {
-                                    style: 'currency',
-                                    currency: 'USD',
-                                    }).slice(1)}
+                                $
+                                {calculateQuoteAmount({ quote })
+                                    .toLocaleString("en-US", {
+                                        style: "currency",
+                                        currency: "USD",
+                                    })
+                                    .slice(1)}
                             </p>
                             <button
                                 onClick={handleEditButton(quote, i)}
@@ -700,54 +721,60 @@ function SanctionQuote() {
                                                                 New Discount
                                                             </button>
                                                         </div>
-                                                        {flatDiscount && flatDiscount.map(
-                                                            (discount, i) => (
-                                                                <div key={i}>
-                                                                    <label
-                                                                        htmlFor={`item`}
+                                                        {flatDiscount &&
+                                                            flatDiscount.map(
+                                                                (
+                                                                    discount,
+                                                                    i
+                                                                ) => (
+                                                                    <div
+                                                                        key={i}
                                                                     >
-                                                                        discount:{" "}
-                                                                    </label>
-                                                                    <CurrencyFormat
-                                                                        onChange={handleFieldChangeFlatDiscount(
-                                                                            i
-                                                                        )}
-                                                                        value={
-                                                                            flatDiscount[
+                                                                        <label
+                                                                            htmlFor={`item`}
+                                                                        >
+                                                                            discount:{" "}
+                                                                        </label>
+                                                                        <CurrencyFormat
+                                                                            onChange={handleFieldChangeFlatDiscount(
                                                                                 i
-                                                                            ]
-                                                                        }
-                                                                        allowNegative={
-                                                                            false
-                                                                        }
-                                                                        thousandSeparator={
-                                                                            true
-                                                                        }
-                                                                        decimalScale={
-                                                                            2
-                                                                        }
-                                                                        fixedDecimalScale={
-                                                                            true
-                                                                        }
-                                                                        max={
-                                                                            amount[
-                                                                                amount.length -
-                                                                                    1
-                                                                            ]
-                                                                        }
-                                                                        prefix="$"
-                                                                    />
-                                                                    <button
-                                                                        className="new__delete"
-                                                                        onClick={handleDeleteFlatDiscount(
-                                                                            i
-                                                                        )}
-                                                                    >
-                                                                        <DeleteIcon />
-                                                                    </button>
-                                                                </div>
-                                                            )
-                                                        )}
+                                                                            )}
+                                                                            value={
+                                                                                flatDiscount[
+                                                                                    i
+                                                                                ]
+                                                                            }
+                                                                            allowNegative={
+                                                                                false
+                                                                            }
+                                                                            thousandSeparator={
+                                                                                true
+                                                                            }
+                                                                            decimalScale={
+                                                                                2
+                                                                            }
+                                                                            fixedDecimalScale={
+                                                                                true
+                                                                            }
+                                                                            max={
+                                                                                amount[
+                                                                                    amount.length -
+                                                                                        1
+                                                                                ]
+                                                                            }
+                                                                            prefix="$"
+                                                                        />
+                                                                        <button
+                                                                            className="new__delete"
+                                                                            onClick={handleDeleteFlatDiscount(
+                                                                                i
+                                                                            )}
+                                                                        >
+                                                                            <DeleteIcon />
+                                                                        </button>
+                                                                    </div>
+                                                                )
+                                                            )}
                                                         <div className="new__flex">
                                                             <h4>
                                                                 Percent
@@ -761,41 +788,49 @@ function SanctionQuote() {
                                                                 New Discount
                                                             </button>
                                                         </div>
-                                                        {percentDiscount && percentDiscount.map(
-                                                            (discount, i) => (
-                                                                <div key={i}>
-                                                                    <label
-                                                                        htmlFor={`item`}
+                                                        {percentDiscount &&
+                                                            percentDiscount.map(
+                                                                (
+                                                                    discount,
+                                                                    i
+                                                                ) => (
+                                                                    <div
+                                                                        key={i}
                                                                     >
-                                                                        discount:{" "}
-                                                                    </label>
-                                                                    <input
-                                                                        type="number"
-                                                                        min={0}
-                                                                        max={
-                                                                            100
-                                                                        }
-                                                                        placeholder={`0%-100%`}
-                                                                        value={
-                                                                            percentDiscount[
+                                                                        <label
+                                                                            htmlFor={`item`}
+                                                                        >
+                                                                            discount:{" "}
+                                                                        </label>
+                                                                        <input
+                                                                            type="number"
+                                                                            min={
+                                                                                0
+                                                                            }
+                                                                            max={
+                                                                                100
+                                                                            }
+                                                                            placeholder={`0%-100%`}
+                                                                            value={
+                                                                                percentDiscount[
+                                                                                    i
+                                                                                ]
+                                                                            }
+                                                                            onChange={handleFieldChangePercentDiscount(
                                                                                 i
-                                                                            ]
-                                                                        }
-                                                                        onChange={handleFieldChangePercentDiscount(
-                                                                            i
-                                                                        )}
-                                                                    ></input>
-                                                                    <button
-                                                                        className="new__delete"
-                                                                        onClick={handleDeletePercentDiscount(
-                                                                            i
-                                                                        )}
-                                                                    >
-                                                                        <DeleteIcon />
-                                                                    </button>
-                                                                </div>
-                                                            )
-                                                        )}
+                                                                            )}
+                                                                        ></input>
+                                                                        <button
+                                                                            className="new__delete"
+                                                                            onClick={handleDeletePercentDiscount(
+                                                                                i
+                                                                            )}
+                                                                        >
+                                                                            <DeleteIcon />
+                                                                        </button>
+                                                                    </div>
+                                                                )
+                                                            )}
                                                         <div className="new__flex">
                                                             <p>Amount: </p>
                                                             <div className="new__discountFlex">
@@ -837,11 +872,20 @@ function SanctionQuote() {
                                                         >
                                                             Save
                                                         </button>
-                                                        <button onClick={
-                                                            handleProcessOrder(quote,quotes[quote]["customer id"],calculateQuoteAmount({quote}))
-                                                            } className="popup__closeBtn2">
+                                                        <button
+                                                            onClick={handleProcessOrder(
+                                                                quote,
+                                                                quotes[quote][
+                                                                    "customer id"
+                                                                ],
+                                                                calculateQuoteAmount(
+                                                                    { quote }
+                                                                )
+                                                            )}
+                                                            className="popup__closeBtn2"
+                                                        >
                                                             Process Order
-                                                            </button>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
