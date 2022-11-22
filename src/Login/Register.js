@@ -39,6 +39,7 @@ function Login() {
             profile_picture: imageUrl,
             rank: rank,
             address: address,
+            commission: 0,
         });
     }
 
