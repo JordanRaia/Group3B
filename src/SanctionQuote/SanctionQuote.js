@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./SanctionQuote.css";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import CurrencyFormat from "react-currency-format";
 // material ui
@@ -16,7 +15,7 @@ import {
     push,
     update,
     set,
-    remove,
+    remove
 } from "firebase/database";
 
 // final stage for a quote to be sent to payment processing system by in house employee two
@@ -35,7 +34,7 @@ function SanctionQuote() {
     const [secretNotes, setSecretNotes] = useState([]);
     // for editing quotes
     const [editPopup, setEditPopup] = useState([]);
-    //const [jsonResponse, setJsonResponse] = useState([]);
+    const [jsonResponse, setJsonResponse] = useState([]);
 
     useEffect(() => {
         getCustomers();
@@ -54,8 +53,8 @@ function SanctionQuote() {
             });
     }
 
-    /*function send(orderNum, associateNum, custidNum, finalAmount){
-        
+    function send(orderNum, associateNum, custidNum, finalAmount){
+        console.log(custidNum);
         axios.post('https://blitz.cs.niu.edu/PurchaseOrder/', {
             'order': orderNum,
             'associate': associateNum,
@@ -72,7 +71,9 @@ function SanctionQuote() {
         .catch((error) => {
             console.error(error);
         });
-    }*/
+
+        console.log("stored blitz response: ", jsonResponse);
+    }
 
     function closePopup() {
         //setPopup(false);
@@ -396,8 +397,11 @@ function SanctionQuote() {
         }
     };
 
-    const handleProcessOrder = (custId, quoteKey) => async (e) => {
+    const handleProcessOrder = (custId, quoteKey, quoteAmt) => async (e) => {
         e.preventDefault();
+        
+        //send quote              
+        send(custId,user.email,quoteKey,quoteAmt);
 
         if (email === "") {
             alert("must enter email");
@@ -421,13 +425,6 @@ function SanctionQuote() {
                 "secret notes": secretNotes,
             };
 
-            //send quote
-            /*
-            send(quoteKey,user.email,custId,calculateQuoteAmount(quoteKey).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-                }).slice(1));*/
-            
             let newQuoteKey = "";
 
             if (!quoteKey) {
@@ -439,8 +436,8 @@ function SanctionQuote() {
                     dbRef(db, `/quotes/sanctioned quotes/${quoteKey}`)
                 );
             }
-            // get a key for a new quote
 
+            // get a key for a new quote
             const updates = {};
             updates["/quotes/completed quotes/" + newQuoteKey] = quoteData;
 
@@ -470,14 +467,6 @@ function SanctionQuote() {
     return user ? (
         // user is logged in
         <div className="new">
-            <div className="new__flex">
-                <span className="new__bulletText">
-                    • View our Customers here:{" "}
-                </span>
-                <Link to={"/Customers"} style={{ textDecoration: "none" }}>
-                    <span className="new__bulletLink">Customers</span>
-                </Link>
-            </div>
             <h2>Sanctioned Quotes:</h2>
             {Object.keys(quotes).map((quote, i) => {
                 return (
@@ -849,21 +838,11 @@ function SanctionQuote() {
                                                         >
                                                             Save
                                                         </button>
-                                                        <button
-                                                            onClick={
-                                                                handleProcessOrder(
-                                                                    quotes[
-                                                                        quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ],
-                                                                    quote
-                                                                )
-                                                            }
-                                                            className="popup__closeBtn2"
-                                                        >
+                                                        <button onClick={
+                                                            handleProcessOrder(quote,quotes[quote]["customer id"],calculateQuoteAmount({quote}))
+                                                            } className="popup__closeBtn2">
                                                             Process Order
-                                                        </button>
+                                                            </button>
                                                     </div>
                                                 </div>
                                             </div>
