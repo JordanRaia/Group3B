@@ -204,6 +204,9 @@ function NewQuote() {
             alert("must enter percent discount or remove");
         } else {
             // submit to database
+
+            const date = new Date();
+
             // quote entry
             const quoteData = {
                 customer: customers[custId]["name"],
@@ -211,6 +214,7 @@ function NewQuote() {
                 email: email,
                 "secret notes": secretNotes,
                 employee: user.uid,
+                date: date,
             };
 
             let newQuoteKey = "";
@@ -267,6 +271,9 @@ function NewQuote() {
             alert("must enter percent discount or remove");
         } else {
             // submit to database
+
+            const date = new Date();
+
             // quote entry
             const quoteData = {
                 customer: customers[custId]["name"],
@@ -274,6 +281,7 @@ function NewQuote() {
                 email: email,
                 "secret notes": secretNotes,
                 employee: user.uid,
+                date: date,
             };
 
             let newQuoteKey = "";

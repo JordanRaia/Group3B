@@ -356,6 +356,9 @@ function SanctionQuote() {
             alert("must enter percent discount or remove");
         } else {
             // submit to database
+
+            const date = new Date();
+
             // quote entry
             const quoteData = {
                 customer: customers[custId]["name"],
@@ -363,6 +366,7 @@ function SanctionQuote() {
                 email: email,
                 "secret notes": secretNotes,
                 employee: quotes[quoteKey]["employee"],
+                date: date,
             };
 
             let newQuoteKey = "";
@@ -429,12 +433,15 @@ function SanctionQuote() {
                 quoteAmt
             );
 
+            const date = new Date();
+
             const quoteData = {
                 customer: customers[customerId]["name"],
                 "customer id": customerId,
                 email: email,
                 "secret notes": secretNotes,
                 employee: quotes[quoteId]["employee"],
+                date: date,
             };
             let newQuoteId = "";
 
