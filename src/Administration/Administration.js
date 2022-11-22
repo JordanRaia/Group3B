@@ -54,7 +54,7 @@ const Administration = () => {
                 if (auth) {
                     //creating account was successful
 
-                    let profileUrl = "users/default/profile_pic.png";
+                    let profileUrl = "users/default/profile.jpg";
 
                     //add userdata to database
                     writeUserData(
