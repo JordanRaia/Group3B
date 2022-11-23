@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from "react";
 import "./Administration.css";
+import EditUser from "./EditUser.js";
 import { useNavigate } from "react-router-dom";
 import { 
     onAuthStateChanged,
     createUserWithEmailAndPassword,
-    deleteUser,
-    getAuth
+    // getAuth
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import {
@@ -15,9 +15,11 @@ import {
     query,
     equalTo,
     set,
+    update,
+    remove
 } from "firebase/database";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+// import Button from "@mui/material/Button";
 
 // page for administrator to view all users of the site and be able to change their permissions,
 // ie. user, sales associate, in house employee, in house employee 2, and administrator
@@ -25,10 +27,15 @@ const Administration = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState({}); // Checking if user is logged in.
     const [users, setUsers] = useState([]); // List of all users.
+    const [newName, setNewName] = useState("");
+    const [newEmail, setNewEmail] = useState("");
+    // const [newPassword, setNewPassword] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [popup, setPopup] = useState(false);
     useEffect(() => {authState();}, []);
+
     const authState = () => {
         onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
@@ -38,10 +45,6 @@ const Administration = () => {
                     const data = snapshot.val();
                     console.log(data);
                     const cleanedData = Object.values(data)
-                    // const cleanedData = Object.keys(data).map((key) => {
-                    //     console.log(data[key]);
-                    //     return (data[key]);
-                    // })
                     setUsers(cleanedData);
                 });
             }
@@ -59,7 +62,7 @@ const Administration = () => {
     const register = async (e) => {
         e.preventDefault(); //prevent page from refreshing
 
-        await createUserWithEmailAndPassword(auth, email, password)
+        await createUserWithEmailAndPassword(auth, newEmail, password)
         .then((userCredential) => {
             if (auth) {
                 //creating account was successful
@@ -69,8 +72,8 @@ const Administration = () => {
                 //add userdata to database
                 writeUserData(
                     userCredential.user.uid,
-                    name,
-                    email,
+                    newName,
+                    newEmail,
                     profileUrl,
                     "salesAssociate"
                 );
@@ -78,31 +81,42 @@ const Administration = () => {
                 navigate("/Administration");
             }
         })
-        //creating an account was unsuccessful and alerting user with error message
+        // creating an account was unsuccessful and alerting user with error message
         .catch((error) => alert(error.message));
     }
+    const editData = (uid) => {     
+        update(dbRef(db, 'users/'+uid), {
+            fullname: name,
+            email: email,
+        })
+    }
     const resetFields = () => {
-        setName("");
-        setEmail("");
+        setNewName("");
+        setNewEmail("");
         setPassword("");
     }
     const checkUser = (id) => {
         const userRef = query(dbRef(db, `users`), orderByChild("userIdNo"), equalTo(id));
-        //getAuth().
-
         onValue(userRef, (snapshot) => {
             const data = snapshot.val();
-            deleteUser(data.userIdNo).then(() => {
+            remove(dbRef(db, 'users/'+data[Object.keys(data)[0]].userIdNo)).then(() => {
                 console.log("Successfully deleted.");
             }).catch((error) => {
                 console.log(error);
             })
-            console.log(data);
         });
     }
-    console.log(users);
+    const closePopup = () => {
+        setPopup(false);
+    }
+
+    // const changePass = (uid) => {
+    //     updatePassword(uid, password)
+    // }
+
     return (
         <div className="admin">
+
             <div className="adminTitle">Administrator</div>
             <div className="divider"/>
             {
@@ -113,13 +127,53 @@ const Administration = () => {
                                 console.log(item.fullname);
                                 return (
                                 <div className="associateNode">
+                                    
                                     <div className="salesAssociates">{item.fullname}</div>
                                     <div className="commission">Commission: </div>
                                     <div className="commissionAmt">$500.50</div>
                                     <div className="userRank">Associate</div>
-                                    <button className="editButton">Edit</button>
-                                    <button className="deleteButton" onClick={() => {checkUser(item.userIdNo)}}>Check</button>
-                                </div>
+                                    <button className="editButton" onClick={() => {setPopup(true)}}>Edit</button>
+                                    <button className="deleteButton" onClick={() => {checkUser(item.userIdNo)}}>Delete</button>
+                                    <EditUser trigger={popup} setTrigger={closePopup}>
+                                    <form>
+                                        <div className="newAssocPopup">
+                                            <TextField
+                                                label="Name"
+                                                variant="standard"
+                                                sx={{ mb: "30px" }}
+                                                value={name}
+                                                onChange={(e) => setName(e.target.value)}
+                                            />
+                                        {/* </div> */}
+                                        {/* <div className="newAssocEmail"> */}
+                                            <TextField
+                                                label="Email"
+                                                variant="standard"
+                                                sx={{ mb: "30px" }}
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                            />
+                                        {/* </div>
+                                            <TextField
+                                                label="Password"
+                                                variant="standard"
+                                                sx={{ mb: "30px" }}
+                                                value={password}
+                                                onChange={(e) => updatePassword(e.target.value)}
+                                            /> */ }
+                                        {/* <div className="newAssocComm"> */}
+                                            <TextField
+                                                label="Commission"
+                                                variant="standard"
+                                                sx={{ mb: "30px" }}
+                                                value=""
+                                            />
+                                        {/* </div> */}
+                                        </div>
+                                        <input onClick = {() => {editData(item.userIdNo)}} className="submitButton" type="submit" />
+                                    </form>
+                                    </EditUser>
+                                </div>                                   
                                 )
                             })
                         }
@@ -135,8 +189,8 @@ const Administration = () => {
                         label="Name"
                         variant="standard"
                         sx={{ mb: "30px" }}
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
                     />
                 </div>
                 <div className="eMail field">
@@ -144,8 +198,8 @@ const Administration = () => {
                         label="Email"
                         variant="standard"
                         sx={{ mb: "30px" }}
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={newEmail}
+                        onChange={(e) => setNewEmail(e.target.value)}
                     />
                 </div>
                 <div className="password field">
@@ -161,16 +215,18 @@ const Administration = () => {
                     />
                 </div>
                 <button
-                    className="login__button"
+                    className="createButton"
                     onClick={register}
-                >
-                    <div className="login__buttonContainer">
-                        <div className="login__buttonText">
-                            Create Sales Associate
+                    >
+                    {/* <div className="createAssocButton">
+                        <div className="createAssocText">
                         </div>
+                    </div> */}
+                    <div className="createButtonText">
+                        Create
                     </div>
                 </button>
-            </div>
+            </div>  
         </div>
     )
 }
