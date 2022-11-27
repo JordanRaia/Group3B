@@ -29,10 +29,12 @@ const Administration = () => {
     const [users, setUsers] = useState([]); // List of all users.
     const [newName, setNewName] = useState("");
     const [newEmail, setNewEmail] = useState("");
+    // const [newCommission, setNewCommission] = useState("");
     // const [newPassword, setNewPassword] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [commission, setCommission] = useState("");
     const [popup, setPopup] = useState(false);
     useEffect(() => {authState();}, []);
 
@@ -50,8 +52,9 @@ const Administration = () => {
             }
         });
     }
-    function writeUserData(userId, name, email, imageUrl, rank) {
+    function writeUserData(userId, name, email, imageUrl, rank, commission) {
         set(dbRef(db, "users/" + userId), {
+            commission: commission,
             userIdNo: userId,
             fullname: name,
             email: email,
@@ -75,7 +78,8 @@ const Administration = () => {
                     newName,
                     newEmail,
                     profileUrl,
-                    "salesAssociate"
+                    "salesAssociate",
+                    commission
                 );
                 resetFields();
                 navigate("/Administration");
@@ -88,6 +92,7 @@ const Administration = () => {
         update(dbRef(db, 'users/'+uid), {
             fullname: name,
             email: email,
+            commission: commission
         })
     }
     const resetFields = () => {
@@ -129,8 +134,8 @@ const Administration = () => {
                                 <div className="associateNode">
                                     
                                     <div className="salesAssociates">{item.fullname}</div>
-                                    <div className="commission">Commission: </div>
-                                    <div className="commissionAmt">$500.50</div>
+                                    <div className="commission">Commission:</div>
+                                    <div className="commissionAmt">{item.commission}</div>
                                     <div className="userRank">Associate</div>
                                     <button className="editButton" onClick={() => {setPopup(true)}}>Edit</button>
                                     <button className="deleteButton" onClick={() => {checkUser(item.userIdNo)}}>Delete</button>
@@ -153,15 +158,15 @@ const Administration = () => {
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
                                             />
-                                        {/* </div>
+                                            {/* <div className="newAssocComm"> */}
                                             <TextField
-                                                label="Password"
+                                                label="Commission"
                                                 variant="standard"
                                                 sx={{ mb: "30px" }}
-                                                value={password}
-                                                onChange={(e) => updatePassword(e.target.value)}
-                                            /> */ }
-                                        {/* <div className="newAssocComm"> */}
+                                                value={commission}
+                                                onChange={(e) => setCommission(e.target.value)}
+                                            />
+                                            {/* </div>
                                             <TextField
                                                 label="Commission"
                                                 variant="standard"
