@@ -19,6 +19,7 @@ function Login() {
     const navigate = useNavigate();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [address, setAddress] = useState("");
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
     //url
@@ -31,13 +32,15 @@ function Login() {
     const defaultProfileUrl =
         "https://firebasestorage.googleapis.com/v0/b/group3b-38bd5.appspot.com/o/users%2Fdefault%2Fprofile.png?alt=media&token=ee6e94df-17f3-4ccc-b805-29aef7475798";
 
-    function writeUserData(userId, name, email, imageUrl, rank) {
+    function writeUserData(userId, name, email, imageUrl, rank, address) {
         set(dbRef(db, "users/" + userId), {
             userIdNo: userId,
             fullname: name,
             email: email,
             profile_picture: imageUrl,
             rank: rank,
+            address: address,
+            commission: 0,
         });
     }
 
@@ -83,7 +86,8 @@ function Login() {
                             name,
                             email,
                             profileUrl,
-                            "user"
+                            "user",
+                            address
                         );
 
                         //redirect to homepage
@@ -93,15 +97,18 @@ function Login() {
                 //creating an account was unsuccessful and alerting user with error message
                 .catch((error) => alert(error.message));
         } else {
-            if(password !== "" && password2 !== "")
-            {
+            if (password !== "" && password2 !== "") {
                 alert("Passwords do not match");
             }
         }
 
-        if(name === "" || password2 === "" || password === "" || email === "")
-        {
-            alert("error: missing fields")
+        if (
+            name === "" ||
+            password2 === "" ||
+            password === "" ||
+            email === ""
+        ) {
+            alert("error: missing fields");
         }
     };
 
@@ -149,18 +156,29 @@ function Login() {
                                     label="Full Name"
                                     variant="standard"
                                     sx={{ mb: "30px" }}
+                                    className="register__textfield"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                 />
                                 <TextField
                                     label="Email"
+                                    className="register__textfield"
                                     variant="standard"
                                     sx={{ mb: "30px" }}
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                                 <TextField
+                                    label="Address"
+                                    className="register__textfield"
+                                    variant="standard"
+                                    sx={{ mb: "30px" }}
+                                    value={address}
+                                    onChange={(e) => setAddress(e.target.value)}
+                                />
+                                <TextField
                                     label="Password"
+                                    className="register__textfield"
                                     variant="standard"
                                     type="password"
                                     sx={{ mb: "30px" }}
@@ -171,6 +189,7 @@ function Login() {
                                 />
                                 <TextField
                                     label="Confirm Password"
+                                    className="register__textfield"
                                     variant="standard"
                                     type="password"
                                     sx={{ mb: "50px" }}
@@ -190,7 +209,7 @@ function Login() {
                                     </div>
                                 </button>
                                 <div>
-                                    <div className="login__register">
+                                    <div className="register__register">
                                         <span className="login__registerText">
                                             • Already have an account?{" "}
                                         </span>

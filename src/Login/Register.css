@@ -32,3 +32,85 @@
 .register__icon {
     font-size: 1rem!important;
 }
+
+/* register */
+.register__register {
+    display: flex;
+    white-space: pre-wrap;
+    list-style-type: circle;
+}
+
+.register__register:first-child {
+    margin-top: 10rem;
+}
+
+@media screen and (max-height: 920px) {
+    .register__register:first-child {
+        margin-top: 3rem;
+    }
+}
+
+@media screen and (max-height: 780px) {
+    .register__register:first-child {
+        margin-top: 1rem;
+    }
+}
+
+@media screen and (max-height: 800px) {
+    .login__headerText {
+        margin-bottom: 1rem;
+    }
+
+    .login__centerLogo {
+        margin-bottom: 1rem;
+    }
+}
+
+@media screen and (max-height: 775px) {
+    .login__headerText {
+        margin-bottom: .5rem;
+    }
+
+    .login__centerLogo {
+        margin-bottom: 0rem;
+    }
+
+    .login__whitespace {
+        height: 5px;
+    }
+}
+
+@media screen and (max-height: 1080px) {
+    .register__textfield {
+        margin-bottom: 3px!important;
+    }
+}
+
+@media screen and (max-height: 725px) {
+    .register__textfield {
+        margin-bottom: 3px!important;
+    }
+}
+
+@media screen and (max-height: 685px) {
+    .register__textfield {
+        margin-bottom: 0px!important;
+    }
+
+    .login__whitespace {
+        height: 0px;
+    }
+
+    .register__uploadButtonFlex {
+        margin-bottom: 0px;
+    }
+
+    .register__centerLogo {
+        margin-bottom: 0px;
+    }
+
+    .register__logoContainer {
+        height: 6.813rem;
+        width: 6.813rem;
+    }
+}

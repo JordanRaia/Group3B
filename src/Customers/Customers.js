@@ -66,13 +66,4 @@ function Customers() {
         </div>
     );
 }
-/* //PRE- axios table body:
-                <tr>
-                    <td>12</td>
-                    <td>Jay Gordon</td>
-                    <td>San Francisco</td>
-                    <td>cherry blossom st</td>
-                    <td>jgordon12@gmail.com</td>
-                </tr>
-*/
 export default Customers;
