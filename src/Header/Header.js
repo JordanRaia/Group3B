@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Header.css";
 import { Link, Outlet } from "react-router-dom";
-import Logo from "../logo/3B-logos_white.png";
+import Logo from "../logo/3B-logos_black.png";
 // react-bootstrap
 import { Container, Navbar, Nav } from "react-bootstrap";
 //firebase
@@ -76,7 +76,7 @@ function Header() {
 
     return (
         <>
-            <Navbar sticky="top" bg="dark" expand="lg" variant="dark">
+            <Navbar sticky="top" expand="lg">
                 <Container>
                     {/* Logo or Title Here */}
                     <Link to={"/"} style={{ textDecoration: "none" }}>
@@ -120,6 +120,7 @@ function Header() {
                             >
                                 Sanction Quote
                             </Nav.Link>
+                            <div className="divider"/>
                             {/* Administration */}
                             <Nav.Link
                                 as={Link}
@@ -144,10 +145,6 @@ function Header() {
                                 src={profileUrl}
                                 alt="profile"
                             />
-                            <div className="header__flexDown">
-                                <div className="header__helloText">
-                                    Hello {user ? name : "Guest"}
-                                </div>
                                 {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
                                 <div className="header__linkFlex">
                                     <Link
@@ -162,7 +159,12 @@ function Header() {
                                         </div>
                                     </Link>
                                 </div>
-                            </div>
+
+                                <div className="divider"/>
+
+                                <div className="header__helloText">
+                                    {user ? name : "Guest"}
+                                </div>
                             <img
                                 className="header__profilePic"
                                 id="profile1"

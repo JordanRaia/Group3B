@@ -140,7 +140,7 @@ const Administration = () => {
     }
 
 
-    return (
+    return user ? (
         <div className="admin">
             <div className="adminTitle">Administrator</div>
             <div className="divider"/>
@@ -236,7 +236,12 @@ const Administration = () => {
                 </button>
             </div>  
         </div>
-    )
+    ) : (
+        // user is not logged in
+        <div className="new">
+            <h1>Please login to access this page.</h1>
+        </div>
+    );
 }
 
 export default Administration;
