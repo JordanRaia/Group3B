@@ -29,8 +29,6 @@ const Administration = () => {
     const [users, setUsers] = useState([]); // List of all users.
     const [newName, setNewName] = useState("");
     const [newEmail, setNewEmail] = useState("");
-    // const [newCommission, setNewCommission] = useState("");
-    // const [newPassword, setNewPassword] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -45,11 +43,12 @@ const Administration = () => {
                 const usersRef = query(dbRef(db, `users`), orderByChild("rank"), equalTo("salesAssociate"))
                 onValue(usersRef, (snapshot) => {
                     const data = snapshot.val();
-                    console.log(data);
                     const cleanedData = Object.values(data)
                     setUsers(cleanedData);
+                    console.log(cleanedData);
                 });
             }
+            
         });
     }
     function writeUserData(userId, name, email, imageUrl, rank, commission) {
@@ -79,7 +78,7 @@ const Administration = () => {
                     newEmail,
                     profileUrl,
                     "salesAssociate",
-                    commission
+                    0
                 );
                 resetFields();
                 navigate("/Administration");
@@ -88,17 +87,41 @@ const Administration = () => {
         // creating an account was unsuccessful and alerting user with error message
         .catch((error) => alert(error.message));
     }
-    const editData = (uid) => {     
-        update(dbRef(db, 'users/'+uid), {
-            fullname: name,
-            email: email,
-            commission: commission
-        })
+    const editData = (id) => {
+        const userRef = query(dbRef(db, `users`), orderByChild("userIdNo"), equalTo(id));
+        onValue(userRef, (snapshot) => {
+            const data = snapshot.val();
+            update(dbRef(db, 'users/'+data[Object.keys(data)[0]].userIdNo), {
+                fullname: name,
+                email: email,
+                commission: commission
+            }).then(() => {
+                console.log("Successfully updated.");
+            }).catch((error) => {
+                console.log(error);
+            })
+        });     
+        // update(dbRef(db, 'users/'+uid), {
+        //     fullname: name,
+        //     email: email,
+        //     commission: commission
+        // })
+    }
+    const checkUserData = (name, email, commission) => {
+        setName(name);
+        setEmail(email);
+        setCommission(commission);
     }
     const resetFields = () => {
         setNewName("");
         setNewEmail("");
         setPassword("");
+        setCommission("");
+    }
+    const resetPopup = () => {
+        setName("");
+        setEmail("");
+        setCommission("");
     }
     const checkUser = (id) => {
         const userRef = query(dbRef(db, `users`), orderByChild("userIdNo"), equalTo(id));
@@ -112,16 +135,13 @@ const Administration = () => {
         });
     }
     const closePopup = () => {
+        resetPopup();
         setPopup(false);
     }
 
-    // const changePass = (uid) => {
-    //     updatePassword(uid, password)
-    // }
 
     return (
         <div className="admin">
-
             <div className="adminTitle">Administrator</div>
             <div className="divider"/>
             {
@@ -129,15 +149,14 @@ const Administration = () => {
                     <div className="associateList">
                         {
                             users.map((item) => {
-                                console.log(item.fullname);
+                                console.log(item.userIdNo);
                                 return (
-                                <div className="associateNode">
-                                    
+                                <div className="associateNode">                                   
                                     <div className="salesAssociates">{item.fullname}</div>
                                     <div className="commission">Commission:</div>
                                     <div className="commissionAmt">{item.commission}</div>
                                     <div className="userRank">Associate</div>
-                                    <button className="editButton" onClick={() => {setPopup(true)}}>Edit</button>
+                                    <button className="editButton" onClick={() => {setPopup(true); checkUserData(item.fullname, item.email, item.commission)}}>Edit</button>
                                     <button className="deleteButton" onClick={() => {checkUser(item.userIdNo)}}>Delete</button>
                                     <EditUser trigger={popup} setTrigger={closePopup}>
                                     <form>
@@ -149,8 +168,6 @@ const Administration = () => {
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
                                             />
-                                        {/* </div> */}
-                                        {/* <div className="newAssocEmail"> */}
                                             <TextField
                                                 label="Email"
                                                 variant="standard"
@@ -158,7 +175,6 @@ const Administration = () => {
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
                                             />
-                                            {/* <div className="newAssocComm"> */}
                                             <TextField
                                                 label="Commission"
                                                 variant="standard"
@@ -166,14 +182,6 @@ const Administration = () => {
                                                 value={commission}
                                                 onChange={(e) => setCommission(e.target.value)}
                                             />
-                                            {/* </div>
-                                            <TextField
-                                                label="Commission"
-                                                variant="standard"
-                                                sx={{ mb: "30px" }}
-                                                value=""
-                                            />
-                                        {/* </div> */}
                                         </div>
                                         <input onClick = {() => {editData(item.userIdNo)}} className="submitButton" type="submit" />
                                     </form>
@@ -214,8 +222,7 @@ const Administration = () => {
                         type="password"
                         sx={{ mb: "30px" }}
                         value={password}
-                        onChange={(e) =>
-                            setPassword(e.target.value)
+                        onChange={(e) => setPassword(e.target.value)
                         }
                     />
                 </div>
@@ -223,10 +230,6 @@ const Administration = () => {
                     className="createButton"
                     onClick={register}
                     >
-                    {/* <div className="createAssocButton">
-                        <div className="createAssocText">
-                        </div>
-                    </div> */}
                     <div className="createButtonText">
                         Create
                     </div>
