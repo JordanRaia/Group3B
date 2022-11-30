@@ -73,13 +73,52 @@ function SanctionQuote() {
                 }
             )
             .then(function (response) {
-                setJsonResponse(response.data);
+                const responseData = response.data;
+                setJsonResponse(responseData);
+
+                // give the sale associate the commission
+                // get commission amount
+                let newCommAmt =
+                    (finalAmount *
+                        Number(responseData["commission"].replace("%", ""))) /
+                    100;
+
+                // get the current commission of the sales associate
+                const commissionRef = dbRef(
+                    db,
+                    `users/${quotes[orderNum]["employee"]}`
+                );
+                onValue(
+                    commissionRef,
+                    (snapshot) => {
+                        //set data to commission amount
+                        const data = snapshot.val();
+
+                        // add commission to commAmt
+                        let commAmt = data["commission"] + newCommAmt;
+
+                        //set database commission to new amount with added commAmt
+                        const updates = {};
+                        updates[
+                            `/users/${quotes[orderNum]["employee"]}/commission`
+                        ] = commAmt.toFixed(2);
+                        // update database
+                        update(dbRef(db), updates);
+
+                        alert(
+                            `A commission of ${newCommAmt.toFixed(2)} has been added to ${data["fullname"]}'s total commission.`
+                        );
+
+                        console.log(jsonResponse);
+                    },
+                    {
+                        onlyOnce: true,
+                    }
+                );
             })
             .catch((error) => {
                 console.error(error);
             });
-
-        console.log("stored blitz response: ", jsonResponse);
     }
 
     function closePopup() {
@@ -671,7 +710,9 @@ function SanctionQuote() {
                                                             </div>
                                                             {lineItems.map(
                                                                 (item, i) => (
-                                                                    <div key={i}>
+                                                                    <div
+                                                                        key={i}
+                                                                    >
                                                                         <label
                                                                             htmlFor={`item`}
                                                                         >
@@ -726,7 +767,9 @@ function SanctionQuote() {
                                                             </div>
                                                             {secretNotes.map(
                                                                 (note, i) => (
-                                                                    <div key={i}>
+                                                                    <div
+                                                                        key={i}
+                                                                    >
                                                                         <label
                                                                             htmlFor={`note`}
                                                                         >
