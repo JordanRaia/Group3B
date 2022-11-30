@@ -16,6 +16,7 @@ function Header() {
 
     //grab user
     const [user, setUser] = useState({});
+    const [rank, setRank] = useState("none");
     const [name, setName] = useState("");
     //Url to profile picture
     const [profile, setProfile] = useState("");
@@ -45,6 +46,15 @@ function Header() {
                 const data = snapshot.val();
 
                 setProfile(data);
+            });
+
+            // get the user's rank
+            const rankRef = dbRef(db, `users/${currentUser.uid}/rank`);
+            onValue(rankRef, (snapshot) => {
+                //set data to name
+                const data = snapshot.val();
+                //save name to useState name
+                setRank(data);
             });
 
             if (profile !== "users/default/profile.jpg" && profile !== "") {
@@ -97,45 +107,55 @@ function Header() {
                                 Home
                             </Nav.Link>
                             {/* New Quote */}
-                            <Nav.Link
-                                as={Link}
-                                to={"/NewQuote"}
-                                className="header__navLink"
-                            >
-                                New Quote
-                            </Nav.Link>
+                            {rank === "sales" && (
+                                <Nav.Link
+                                    as={Link}
+                                    to={"/NewQuote"}
+                                    className="header__navLink"
+                                >
+                                    New Quote
+                                </Nav.Link>
+                            )}
                             {/* Finalize Quote */}
-                            <Nav.Link
-                                as={Link}
-                                to={"/FinalizeQuote"}
-                                className="header__navLink"
-                            >
-                                Finalize Quote
-                            </Nav.Link>
+                            {rank === "inhouse1" && (
+                                <Nav.Link
+                                    as={Link}
+                                    to={"/FinalizeQuote"}
+                                    className="header__navLink"
+                                >
+                                    Finalize Quote
+                                </Nav.Link>
+                            )}
                             {/* Sanction Quote */}
-                            <Nav.Link
-                                as={Link}
-                                to={"/SanctionQuote"}
-                                className="header__navLink"
-                            >
-                                Sanction Quote
-                            </Nav.Link>
+                            {rank === "inhouse2" && (
+                                <Nav.Link
+                                    as={Link}
+                                    to={"/SanctionQuote"}
+                                    className="header__navLink"
+                                >
+                                    Sanction Quote
+                                </Nav.Link>
+                            )}
                             {/* Administration */}
-                            <Nav.Link
-                                as={Link}
-                                to={"/Administration"}
-                                className="header__navLink"
-                            >
-                                Administration
-                            </Nav.Link>
+                            {rank === "admin" && (
+                                <Nav.Link
+                                    as={Link}
+                                    to={"/Administration"}
+                                    className="header__navLink"
+                                >
+                                    Administration
+                                </Nav.Link>
+                            )}
                             {/* Quotes */}
-                            <Nav.Link
-                                as={Link}
-                                to={"/Quotes"}
-                                className="header__navLink"
-                            >
-                                Quotes
-                            </Nav.Link>
+                            {rank === "admin" && (
+                                <Nav.Link
+                                    as={Link}
+                                    to={"/Quotes"}
+                                    className="header__navLink"
+                                >
+                                    Quotes
+                                </Nav.Link>
+                            )}
                         </Nav>
                         <div className="header__flex">
                             <img

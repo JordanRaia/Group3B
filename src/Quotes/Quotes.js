@@ -74,6 +74,15 @@ function Quotes() {
                     const data = snapshot.val();
                     setCompletedQuotes(data);
                 });
+
+                // get the user's rank
+                const rankRef = dbRef(db, `users/${currentUser.uid}/rank`);
+                onValue(rankRef, (snapshot) => {
+                    //set data to name
+                    const data = snapshot.val();
+                    //save name to useState name
+                    setRank(data);
+                });
             }
         });
     }
