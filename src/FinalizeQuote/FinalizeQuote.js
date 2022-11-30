@@ -552,7 +552,7 @@ function FinalizeQuote() {
 
     return user ? (
         // user is logged in
-        rank === "inhouse1" ? (
+        rank === "inhouse1" || rank === "dev" ? (
             <div className="new">
                 <div className="new__flex">
                     <span className="new__bulletText">

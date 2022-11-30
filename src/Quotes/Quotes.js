@@ -88,7 +88,7 @@ function Quotes() {
     }
 
     return user ? (
-        rank === "admin" ? (
+        rank === "admin" || rank === "dev" ? (
             <div className="quotes">
                 <div className="new__flex">
                     <span className="new__bulletText">

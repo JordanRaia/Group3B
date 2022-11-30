@@ -91,7 +91,7 @@ const Administration = () => {
 
     return user ? (
         // logged in
-        rank === "admin" ? (
+        rank === "admin" || rank === "dev" ? (
             <div className="admin_background">
                 <div className="admin">
                     <div className="adminTitle">Administrator</div>

@@ -574,7 +574,7 @@ function NewQuote() {
 
     return user ? (
         // user is logged in
-        rank === "sales" ? (
+        rank === "sales" || rank === "dev" ? (
             // user is ranked "sales"
             <div className="new">
                 <h2 className="new__headerText">Create New Quote:</h2>

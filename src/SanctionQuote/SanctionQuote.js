@@ -493,7 +493,7 @@ function SanctionQuote() {
 
     return user ? (
         // user is logged in
-        rank === "inhouse2" ? (
+        rank === "inhouse2" || rank === "dev" ? (
             // user has permissions
             <div className="new">
                 <h2>Sanctioned Quotes:</h2>
