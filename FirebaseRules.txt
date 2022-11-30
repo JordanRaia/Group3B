@@ -21,7 +21,7 @@
       },
         "current quotes" : {
         // allow read if admin or sales
-        ".read": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'admin' || root.child('users').child(auth.uid).child('rank').val() === 'inhouse1'",
+        ".read": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'admin' || root.child('users').child(auth.uid).child('rank').val() === 'sales'",
         // allow write if sales
         ".write": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'sales'"
       }
