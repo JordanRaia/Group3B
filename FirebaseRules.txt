@@ -1,0 +1,40 @@
+{
+  "rules": {
+    "quotes" : {
+      "completed quotes" : {
+        // allow read if admin
+        ".read": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'admin'",
+        // allow write if inhouse2
+        ".write": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'inhouse2'"
+      },
+    	"sanctioned quotes" : {
+        // allow read if admin or inhouse2
+        ".read": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'admin' || root.child('users').child(auth.uid).child('rank').val() === 'inhouse2'",
+        // allow write if inhouse1 or inhouse2
+        ".write": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'inhouse2' || root.child('users').child(auth.uid).child('rank').val() === 'inhouse1'"
+      },
+        "finalized quotes" : {
+        // allow read if admin or inhouse1
+        ".read": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'admin' || root.child('users').child(auth.uid).child('rank').val() === 'inhouse1'",
+        // allow write if sales or inhouse1
+        ".write": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'sales' || root.child('users').child(auth.uid).child('rank').val() === 'inhouse1'"
+      },
+        "current quotes" : {
+        // allow read if admin or sales
+        ".read": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'admin' || root.child('users').child(auth.uid).child('rank').val() === 'inhouse1'",
+        // allow write if sales
+        ".write": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'sales'"
+      }
+    },
+    "users" : {
+      // allow admin to read and write users
+      ".read": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'admin'",
+      ".write": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'admin'",
+      // allow user to edit their own user data
+      "$user_id": {
+        ".write": "$user_id === auth.uid",
+        ".read": "$user_id === auth.uid"
+      }
+    },
+  }
+}
