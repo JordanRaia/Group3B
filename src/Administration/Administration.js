@@ -1,25 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+//import { useNavigate } from "react-router-dom";
 import "./Administration.css";
+// material ui
+import Popup from "reactjs-popup";
+// firebase
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "../firebase";
+import {
+    onValue,
+    ref as dbRef,
+    child,
+    push,
+    update,
+    query,
+    //set,
+    //remove,
+} from "firebase/database";
 import InvalidPermissions from "../InvalidPermissions/InvalidPermissions";
 import NoLogin from "../NoLogin/NoLogin";
-import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth, db, storage } from "../firebase";
-import { onValue, ref as dbRef, query, set } from "firebase/database";
-import TextField from "@mui/material/TextField";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { getDownloadURL, ref as stoRef } from "firebase/storage";
 
 // page for administrator to view all users of the site and be able to change their permissions,
 // ie. user, sales associate, in house employee, in house employee 2, and administrator
 const Administration = () => {
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
     const [user, setUser] = useState({}); // Checking if user is logged in.
-    const [rank, setRank] = useState("none");
-    const [users, setUsers] = useState([]); // List of all users.
-    const [name, setName] = useState("");
+    const [salesteam, setSalesTeam] = useState([]); // List of all users.
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [commission, setCommission] = useState("");
+    const [name, setName] = useState("");
+    const [pic, setPic] = useState("");
+    const [rank, setRank] = useState("");
+    const [address, setAddress] = useState("");
+    const [editPopup, setEditPopup] = useState([]);
 
     useEffect(() => {
         authState();
@@ -33,7 +45,7 @@ const Administration = () => {
                 const usersRef = query(dbRef(db, `users`));
                 onValue(usersRef, (snapshot) => {
                     const data = snapshot.val();
-                    setUsers(data);
+                    setSalesTeam(data);
                 });
 
                 // get the user's rank
@@ -48,7 +60,7 @@ const Administration = () => {
         });
     };
 
-    const writeUserData = (userId, name, email, imageUrl, rank) => {
+    /*const writeUserData = (userId, name, email, imageUrl, rank) => {
         set(dbRef(db, "users/" + userId), {
             fullname: name,
             email: email,
@@ -87,121 +99,285 @@ const Administration = () => {
         setName("");
         setEmail("");
         setPassword("");
+    };*/
+
+    const handleEditButton = (salesperson, i) => (e) => {
+        e.preventDefault();
+
+        let tempArr = Array(Object.keys(salesteam).length).fill(false); //fill temp Arr with false for every quote
+        tempArr[i] = true;
+        setEditPopup(tempArr);
+
+        //email
+        setEmail(salesteam[salesperson]["email"]);
+        //commission
+        setCommission(salesteam[salesperson]["commission"]);
+        //fullname
+        setName(salesteam[salesperson]["fullname"]);
+        //pic
+        setPic(salesteam[salesperson]["profile_picture"]);
+        //rank
+        setRank(salesteam[salesperson]["rank"]);
+        //address
+        setAddress(salesteam[salesperson]["address"]);
     };
+
+    const handleSaveSalesPerson = (quoteKey) => async (e) => {
+        e.preventDefault(); // prevent page refresh
+
+        if (email === "") {
+            alert("must enter email");
+        } else if (name === "") {
+            alert("must enter name");
+        } else if (address === "") {
+            alert("must enter address");
+        } else if (commission === "") {
+            alert("must enter commission amt");
+        } else if (rank === "") {
+            alert("must enter rank");
+        } else {
+            // submit to database
+
+            // quote entry
+            const quoteData = {
+                address: address,
+                commission: commission,
+                email: email,
+                fullname: name,
+                profile_picture: pic,
+                rank: rank
+            };
+
+            let newQuoteKey = "";
+
+            // get a key for a new quote
+            if (!quoteKey) {
+                newQuoteKey = push(child(dbRef(db), "users")).key;
+            } else {
+                newQuoteKey = quoteKey;
+            }
+
+            const updates = {};
+            updates["/users/" + newQuoteKey] = quoteData;
+
+            await update(dbRef(db), updates);
+
+            closePopup();
+            return newQuoteKey;
+        }
+    };
+
+    function closePopup() {
+        //setPopup(false);
+        setEditPopup(new Array(Object.keys(salesteam).length).fill(false));
+        setEmail("");
+        setCommission("");
+        setName("");
+        setRank("");
+        setAddress("");
+    }
 
     return user ? (
         // logged in
         rank === "admin" || rank === "dev" ? (
-            <div className="admin_background">
-                <div className="admin">
-                    <div className="adminTitle">Administrator</div>
-                    <div className="divider" />
-                    {users ? (
-                        <div className="associateList">
-                            {Object.keys(users).map((account) => {
-                                getDownloadURL(
-                                    stoRef(
-                                        storage,
-                                        users[account]["profile_picture"]
-                                    )
-                                ).then((url) => {
-                                    const profileImg = document.getElementById(
-                                        `${account}_picture`
-                                    );
-                                    profileImg.setAttribute("src", url);
-                                });
-                                return (
-                                    <div
-                                        key={account}
-                                        className="associateNode"
-                                    >
-                                        <img
-                                            alt="profilePic"
-                                            id={`${account}_picture`}
-                                            className="admin__profilePic"
-                                        ></img>
-                                        <div className="salesAssociates">
-                                            {users[account]["fullname"]}
-                                        </div>
-                                        <div className="commission">
-                                            Commission:{" "}
-                                        </div>
-                                        <div className="commissionAmt">
-                                            $500.50
-                                        </div>
-                                        <div className="userRank">
-                                            {users[account]["rank"]}
-                                        </div>
-                                        <button className="editButton">
-                                            Edit
-                                        </button>
-                                        <button className="deleteButton">
-                                            Delete
-                                        </button>
-                                    </div>
-                                );
-                            })}
-                            {/* <div className="associateNode">
-                            <div className="salesAssociates">Gerald Ellsworth</div>
-                            <div className="commission">Commission: </div>
-                            <div className="commissionAmt">$500.50</div>
-                            <div className="userRank">Associate</div>
-                            <button className="editButton">Edit</button>
-                            <button className="deleteButton">Delete</button>
-                        </div> */}
-                        </div>
-                    ) : (
-                        <div> Loading... </div>
-                    )}
-                    <div className="divider" />
-                    <div className="newUser">
-                        <div className="name field">
-                            <TextField
-                                label="Name"
-                                variant="standard"
-                                sx={{ mb: "30px" }}
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                        </div>
-                        <div className="eMail field">
-                            {/* <div className="inputTitle">email:</div> */}
-                            <TextField
-                                label="Email"
-                                variant="standard"
-                                sx={{ mb: "30px" }}
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
-                        <div className="password field">
-                            <TextField
-                                label="Password"
-                                variant="standard"
-                                type="password"
-                                sx={{ mb: "30px" }}
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
-                        <button
-                            className="admin_login__button"
-                            onClick={register}
-                        >
-                            <div className="admin_login__buttonContainer">
-                                <div className="admin_login__buttonText">
-                                    Create Sales Associate
+            // user has permissions
+            <div className="new">
+                <h2>Administration:</h2>
+                {Object.keys(salesteam).map((salesperson, i) => {
+                    return (
+                        <div key={i} className="new__personContainer">
+                            <div className="new__quote">
+                                <div className="new__salesPersonInfo">
+                                    <p className="new__salesPersonId">{salesteam[salesperson]["fullname"]} </p>
+                                    <p className="new__salesPerson">
+                                        {salesteam["fullname"]}
+                                    </p>
                                 </div>
+                                <p className="new__salesname">
+                                    {salesteam[email]}
+                                </p>
+                                <button
+                                    onClick={handleEditButton(salesperson, i)}
+                                    className="new__quoteButton"
+                                >
+                                    View Teammate
+                                </button>
+                                <Popup open={editPopup[i]}>
+                                    {(close) => {
+                                        return (
+                                            <div className="popup">
+                                                <div className="popup__inner">
+                                                    <button
+                                                        onClick={() => {
+                                                            close();
+                                                            closePopup();
+                                                        }}
+                                                        className="popup__closeBtn"
+                                                    >
+                                                        close
+                                                    </button>
+                                                    <div className="new__popup">
+                                                        <h3>
+                                                            Edit team member: {salesperson}
+                                                        </h3>
+                                                        <h3>
+                                                            {
+                                                                salesteam[salesperson][
+                                                                    "fullname"
+                                                                ]
+                                                            }
+                                                        </h3>
+                                                        <div className="new__salespersonInfo">
+                                                            <span className="new__text">
+                                                                {salesteam &&
+                                                                    salesteam[
+                                                                        salesperson
+                                                                    ] &&
+                                                                    salesteam[
+                                                                        salesperson
+                                                                    ][
+                                                                        "fullname"
+                                                                    ] &&
+                                                                    salesteam[
+                                                                        salesperson[
+                                                                            "email"
+                                                                        ]
+                                                                    ]}
+                                                            </span>
+                                                            <span className="new__text">
+                                                                {salesteam &&
+                                                                    salesteam[
+                                                                        salesperson
+                                                                    ] &&
+                                                                    salesteam[
+                                                                        salesperson
+                                                                    ][
+                                                                        "fullname"
+                                                                    ] &&
+                                                                    salesteam[
+                                                                        salesperson[
+                                                                            "address"
+                                                                        ]]}
+                                                            </span>
+                                                            <span className="new__text">
+                                                                {salesteam &&
+                                                                    salesteam[
+                                                                        salesperson
+                                                                    ] &&
+                                                                    salesteam[
+                                                                        salesperson
+                                                                    ][
+                                                                        "fullname"
+                                                                    ]}
+                                                            </span>
+                                                        </div>
+                                                        <form>
+                                                            <div className="new__flex">
+                                                                <label htmlFor="fullname">
+                                                                    Name:{" "}
+                                                                </label>
+                                                                <input
+                                                                    onChange={(e) =>
+                                                                        setName(e.target.value)}
+                                                                    value={name}
+                                                                    type="text"
+                                                                    id="fullname"
+                                                                    name="fullname"
+                                                                />
+                                                            </div> 
+                                                            <div className="new__flex">
+                                                                <label htmlFor="email">
+                                                                    Email:{" "}
+                                                                </label>
+                                                                <input
+                                                                    onChange={(e) =>
+                                                                        setEmail(e.target.value)}
+                                                                    value={email}
+                                                                    type="text"
+                                                                    id="email"
+                                                                    name="email"
+                                                                />
+                                                            </div>  
+                                                            <div className="new__flex">
+                                                                <label htmlFor="address">
+                                                                    Address:{" "}
+                                                                </label>
+                                                                <input
+                                                                    onChange={(e) =>
+                                                                        setAddress(e.target.value)}
+                                                                    value={address}
+                                                                    type="text"
+                                                                    id="address"
+                                                                    name="address"
+                                                                />
+                                                            </div>
+                                                            <div className="new__flex">
+                                                                <label htmlFor="rank">
+                                                                    Rank:{" "}
+                                                                </label>
+                                                                <input
+                                                                    onChange={(e) =>
+                                                                        setRank(e.target.value)}
+                                                                    value={rank}
+                                                                    type="text"
+                                                                    id="rank"
+                                                                    name="rank"
+                                                                />
+                                                            </div> 
+                                                            <div className="new__flex">
+                                                                <label htmlFor="commission">
+                                                                    Commission:{" "}
+                                                                </label>
+                                                                <input
+                                                                    onChange={(e) =>
+                                                                        setCommission(e.target.value)}
+                                                                    value={commission}
+                                                                    type="text"
+                                                                    id="commission"
+                                                                    name="commission"
+                                                                />
+                                                            </div> 
+                                                            <div className="new__flex">
+                                                                <label htmlFor="address">
+                                                                    Address:{" "}
+                                                                </label>
+                                                                <input
+                                                                    onChange={(e) =>
+                                                                        setAddress(e.target.value)}
+                                                                    value={address}
+                                                                    type="text"
+                                                                    id="address"
+                                                                    name="address"
+                                                                />
+                                                            </div>                                             
+                                                        </form>
+                                                        <div>
+                                                            <button
+                                                                onClick={handleSaveSalesPerson(salesteam[salesperson])}
+                                                            >
+                                                                Save
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    }}
+                                </Popup>
                             </div>
-                        </button>
-                    </div>
-                </div>
+                        </div>
+                    );
+                })}
+                <h3>
+                    {Object.keys(salesteam).length} sales person
+                    {Object.keys(salesteam).length !== 1 && "s"} found
+                </h3>
             </div>
         ) : (
             <InvalidPermissions />
         )
     ) : (
-        // not logged in
+        // user is not logged in
         <NoLogin />
     );
 };
