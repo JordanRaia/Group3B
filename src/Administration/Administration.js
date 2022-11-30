@@ -218,57 +218,25 @@ const Administration = () => {
                                                     </button>
                                                     <div className="new__popup">
                                                         <h3>
-                                                            Edit team member: {salesperson}
+                                                            Edit team member: {salesteam[salesperson]["fullname"]}
                                                         </h3>
                                                         <h3>
                                                             {
                                                                 salesteam[salesperson][
-                                                                    "fullname"
+                                                                    "email"
                                                                 ]
                                                             }
                                                         </h3>
                                                         <div className="new__salespersonInfo">
                                                             <span className="new__text">
-                                                                {salesteam &&
-                                                                    salesteam[
-                                                                        salesperson
-                                                                    ] &&
-                                                                    salesteam[
-                                                                        salesperson
-                                                                    ][
-                                                                        "fullname"
-                                                                    ] &&
-                                                                    salesteam[
-                                                                        salesperson[
-                                                                            "email"
-                                                                        ]
-                                                                    ]}
+                                                                Address: {" "}
+                                                                {salesteam[salesperson]["address"] ? salesteam[salesperson]["address"] : "no address on hand"}
                                                             </span>
+                                                        </div>
+                                                        <div>
                                                             <span className="new__text">
-                                                                {salesteam &&
-                                                                    salesteam[
-                                                                        salesperson
-                                                                    ] &&
-                                                                    salesteam[
-                                                                        salesperson
-                                                                    ][
-                                                                        "fullname"
-                                                                    ] &&
-                                                                    salesteam[
-                                                                        salesperson[
-                                                                            "address"
-                                                                        ]]}
-                                                            </span>
-                                                            <span className="new__text">
-                                                                {salesteam &&
-                                                                    salesteam[
-                                                                        salesperson
-                                                                    ] &&
-                                                                    salesteam[
-                                                                        salesperson
-                                                                    ][
-                                                                        "fullname"
-                                                                    ]}
+                                                                Position:{" "}
+                                                                {salesteam[salesperson]["rank"]}
                                                             </span>
                                                         </div>
                                                         <form>
@@ -336,19 +304,6 @@ const Administration = () => {
                                                                     id="commission"
                                                                     name="commission"
                                                                 />
-                                                            </div> 
-                                                            <div className="new__flex">
-                                                                <label htmlFor="address">
-                                                                    Address:{" "}
-                                                                </label>
-                                                                <input
-                                                                    onChange={(e) =>
-                                                                        setAddress(e.target.value)}
-                                                                    value={address}
-                                                                    type="text"
-                                                                    id="address"
-                                                                    name="address"
-                                                                />
                                                             </div>                                             
                                                         </form>
                                                         <div>
@@ -375,7 +330,7 @@ const Administration = () => {
             </div>
         ) : (
             <InvalidPermissions />
-        )
+        )     
     ) : (
         // user is not logged in
         <NoLogin />
