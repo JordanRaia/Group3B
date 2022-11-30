@@ -107,7 +107,7 @@ function Header() {
                                 Home
                             </Nav.Link>
                             {/* New Quote */}
-                            {rank === "sales" && (
+                            {rank === "sales" || rank === "dev" && (
                                 <Nav.Link
                                     as={Link}
                                     to={"/NewQuote"}
@@ -117,7 +117,7 @@ function Header() {
                                 </Nav.Link>
                             )}
                             {/* Finalize Quote */}
-                            {rank === "inhouse1" && (
+                            {rank === "inhouse1" || rank === "dev" && (
                                 <Nav.Link
                                     as={Link}
                                     to={"/FinalizeQuote"}
@@ -127,7 +127,7 @@ function Header() {
                                 </Nav.Link>
                             )}
                             {/* Sanction Quote */}
-                            {rank === "inhouse2" && (
+                            {rank === "inhouse2" || rank === "dev" && (
                                 <Nav.Link
                                     as={Link}
                                     to={"/SanctionQuote"}
@@ -137,7 +137,7 @@ function Header() {
                                 </Nav.Link>
                             )}
                             {/* Administration */}
-                            {rank === "admin" && (
+                            {rank === "admin" || rank === "dev" && (
                                 <Nav.Link
                                     as={Link}
                                     to={"/Administration"}
@@ -147,7 +147,7 @@ function Header() {
                                 </Nav.Link>
                             )}
                             {/* Quotes */}
-                            {rank === "admin" && (
+                            {rank === "admin" || rank === "dev" && (
                                 <Nav.Link
                                     as={Link}
                                     to={"/Quotes"}
