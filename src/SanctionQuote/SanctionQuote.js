@@ -671,7 +671,7 @@ function SanctionQuote() {
                                                             </div>
                                                             {lineItems.map(
                                                                 (item, i) => (
-                                                                    <div>
+                                                                    <div key={i}>
                                                                         <label
                                                                             htmlFor={`item`}
                                                                         >
@@ -726,7 +726,7 @@ function SanctionQuote() {
                                                             </div>
                                                             {secretNotes.map(
                                                                 (note, i) => (
-                                                                    <div>
+                                                                    <div key={i}>
                                                                         <label
                                                                             htmlFor={`note`}
                                                                         >
