@@ -30,7 +30,9 @@ const Administration = () => {
     const [name, setName] = useState("");
     const [rank, setRank] = useState("");
     const [address, setAddress] = useState("");
+    const [userRank, setUserRank] = useState("");
     const [editPopup, setEditPopup] = useState([]);
+    
 
     useEffect(() => {
         authState();
@@ -114,10 +116,20 @@ const Administration = () => {
         //fullname
         setName(salesteam[salesperson]["fullname"]);
         //rank
-        setRank(salesteam[salesperson]["rank"]);
+        setUserRank(salesteam[salesperson]["rank"]);
         //address
         setAddress(salesteam[salesperson]["address"]);
     };
+
+    function closePopup() {
+        //setPopup(false);
+        setEditPopup(new Array(Object.keys(salesteam).length).fill(false));
+        setEmail("");
+        setCommission("");
+        setName("");
+        setUserRank("");
+        setAddress("");
+    }
 
     const handleSaveSalesPerson = (quoteKey) => async (e) => {
         e.preventDefault(); // prevent page refresh
@@ -130,7 +142,7 @@ const Administration = () => {
             alert("must enter address");
         } else if (commission === "") {
             alert("must enter commission amt");
-        } else if (rank === "") {
+        } else if (userRank === "") {
             alert("must enter rank");
         } else {
             // submit to database
@@ -141,7 +153,7 @@ const Administration = () => {
                 commission: commission,
                 email: email,
                 fullname: name,
-                rank: rank
+                rank: userRank
             };
 
             let newQuoteKey = "";
@@ -162,16 +174,6 @@ const Administration = () => {
             return newQuoteKey;
         }
     };
-
-    function closePopup() {
-        //setPopup(false);
-        setEditPopup(new Array(Object.keys(salesteam).length).fill(false));
-        setEmail("");
-        setCommission("");
-        setName("");
-        setRank("");
-        setAddress("");
-    }
 
     return user ? (
         // logged in
@@ -276,16 +278,16 @@ const Administration = () => {
                                                                 />
                                                             </div>
                                                             <div className="new__flex">
-                                                                <label htmlFor="rank">
+                                                                <label htmlFor="userRank">
                                                                     Rank:{" "}
                                                                 </label>
                                                                 <input
                                                                     onChange={(e) =>
                                                                         setRank(e.target.value)}
-                                                                    value={rank}
+                                                                    value={userRank}
                                                                     type="text"
-                                                                    id="rank"
-                                                                    name="rank"
+                                                                    id="userRank"
+                                                                    name="userRank"
                                                                 />
                                                             </div> 
                                                             <div className="new__flex">
