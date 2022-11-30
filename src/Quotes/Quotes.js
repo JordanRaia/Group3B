@@ -1,8 +1,12 @@
 import axios from "axios";
 import { onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useState } from "react";
+import InvalidPermissions from "../InvalidPermissions/InvalidPermissions";
+import NoLogin from "../NoLogin/NoLogin";
+// firebase
 import { auth, db } from "../firebase";
 import { onValue, ref as dbRef } from "firebase/database";
+
 import "./Quotes.css";
 import Quote from "./Quote";
 import { Link } from "react-router-dom";
@@ -11,6 +15,7 @@ import { Link } from "react-router-dom";
 function Quotes() {
     const [customers, setCustomers] = useState([]);
     const [user, setUser] = useState({});
+    const [rank, setRank] = useState("none");
     const [currentQuotes, setCurrentQuotes] = useState([]);
     const [finalizedQuotes, setFinalizedQuotes] = useState([]);
     const [sanctionedQuotes, setSanctionedQuotes] = useState([]);
@@ -73,35 +78,41 @@ function Quotes() {
         });
     }
 
-    return (
-        <div className="quotes">
-            <div className="new__flex">
-                <span className="new__bulletText">
-                    • View our Customers here:{" "}
-                </span>
-                <Link to={"/Customers"} style={{ textDecoration: "none" }}>
-                    <span className="new__bulletLink">Customers</span>
-                </Link>
+    return user ? (
+        rank === "admin" ? (
+            <div className="quotes">
+                <div className="new__flex">
+                    <span className="new__bulletText">
+                        • View our Customers here:{" "}
+                    </span>
+                    <Link to={"/Customers"} style={{ textDecoration: "none" }}>
+                        <span className="new__bulletLink">Customers</span>
+                    </Link>
+                </div>
+                <h2>Quotes:</h2>
+                <Quote quotes={currentQuotes} customers={customers} />
+                <Quote quotes={finalizedQuotes} customers={customers} />
+                <Quote quotes={sanctionedQuotes} customers={customers} />
+                <Quote quotes={completedQuotes} customers={customers} />
+                <h3>
+                    {Object.keys(currentQuotes).length +
+                        Object.keys(finalizedQuotes).length +
+                        Object.keys(sanctionedQuotes).length +
+                        Object.keys(completedQuotes).length}{" "}
+                    quote
+                    {Object.keys(currentQuotes).length +
+                        Object.keys(finalizedQuotes).length +
+                        Object.keys(sanctionedQuotes).length +
+                        Object.keys(completedQuotes).length !==
+                        1 && "s"}{" "}
+                    found
+                </h3>
             </div>
-            <h2>Quotes:</h2>
-            <Quote quotes={currentQuotes} customers={customers} />
-            <Quote quotes={finalizedQuotes} customers={customers} />
-            <Quote quotes={sanctionedQuotes} customers={customers} />
-            <Quote quotes={completedQuotes} customers={customers} />
-            <h3>
-                {Object.keys(currentQuotes).length +
-                    Object.keys(finalizedQuotes).length +
-                    Object.keys(sanctionedQuotes).length +
-                    Object.keys(completedQuotes).length}{" "}
-                quote
-                {Object.keys(currentQuotes).length +
-                    Object.keys(finalizedQuotes).length +
-                    Object.keys(sanctionedQuotes).length +
-                    Object.keys(completedQuotes).length !==
-                    1 && "s"}{" "}
-                found
-            </h3>
-        </div>
+        ) : (
+            <InvalidPermissions />
+        )
+    ) : (
+        <NoLogin />
     );
 }
 
