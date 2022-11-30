@@ -28,7 +28,6 @@ const Administration = () => {
     const [email, setEmail] = useState("");
     const [commission, setCommission] = useState("");
     const [name, setName] = useState("");
-    const [pic, setPic] = useState("");
     const [rank, setRank] = useState("");
     const [address, setAddress] = useState("");
     const [editPopup, setEditPopup] = useState([]);
@@ -114,8 +113,6 @@ const Administration = () => {
         setCommission(salesteam[salesperson]["commission"]);
         //fullname
         setName(salesteam[salesperson]["fullname"]);
-        //pic
-        setPic(salesteam[salesperson]["profile_picture"]);
         //rank
         setRank(salesteam[salesperson]["rank"]);
         //address
@@ -144,7 +141,6 @@ const Administration = () => {
                 commission: commission,
                 email: email,
                 fullname: name,
-                profile_picture: pic,
                 rank: rank
             };
 
