@@ -304,7 +304,7 @@ const Administration = () => {
                                                         </form>
                                                         <div>
                                                             <button
-                                                                onClick={handleSaveSalesPerson(salesteam[salesperson])}
+                                                                onClick={handleSaveSalesPerson(salesperson)}
                                                             >
                                                                 Save
                                                             </button>
