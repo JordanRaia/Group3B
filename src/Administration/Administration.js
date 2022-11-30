@@ -160,120 +160,133 @@ const Administration = () => {
 
     return user ? (
         <div className="admin">
-            <div className="adminTitle">Administrator</div>
-            <div className="divider"/>
-            {
-                users ? (
-                    <div className="associateList">
-                        {
-                            users.map((item) => {
-                                console.log(item.userIdNo);
-                                return (
-                                <div className="associateNode">                                   
-                                    <div className="salesAssociates">{item.fullname}</div>
-                                    <div className="commission">Commission:</div>
-                                    <div className="commissionAmt">{item.commission}</div>
-                                    <div className="userRank">Associate</div>
-                                    <button className="editButton" onClick={() => {setPopup(true); checkUserData(item.fullname, item.email, item.commission, item.address)}}>Edit</button>
-                                    <button className="deleteButton" onClick={() => {checkUser(item.userIdNo)}}>Delete</button>
-                                    <EditUser trigger={popup} setTrigger={closePopup}>
-                                    <form>
-                                        <div className="newAssocPopup">
-                                            <TextField
-                                                label="Name"
-                                                variant="standard"
-                                                sx={{ mb: "30px" }}
-                                                value={name}
-                                                onChange={(e) => setName(e.target.value)}
-                                            />
-                                            <TextField
-                                                label="Email"
-                                                variant="standard"
-                                                sx={{ mb: "30px" }}
-                                                value={email}
-                                                onChange={(e) => setEmail(e.target.value)}
-                                            />
-                                            <TextField
-                                                label="Commission"
-                                                variant="standard"
-                                                sx={{ mb: "30px" }}
-                                                value={commission}
-                                                onChange={(e) => { 
-                                                    const re = /^[0-9\b]+$/;
-                                                    if (e.target.value === '' || re.test(e.target.value)) {
-                                                    setCommission(e.target.value)}} }
-                                            />
-                                            <TextField
-                                                label="Address"
-                                                variant="standard"
-                                                sx={{ mb: "30px" }}
-                                                value={address}
-                                                onChange={(e) => setAddress(e.target.value)}
-                                            />
-                                        </div>
-                                        <input onClick = {() => {editData(item.userIdNo)}} className="submitButton" type="submit" />
-                                    </form>
-                                    </EditUser>
-                                </div>                                   
-                                )
-                            })
-                        }
-                    </div>
-                ) : (
-                    <div> Loading... </div>
-                )
-            }
-            <div className="divider"/>
-            <div className="newUser">
-                <div className="name field">
-                    <TextField
-                        label="Name"
-                        variant="standard"
-                        sx={{ mb: "30px" }}
-                        value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
-                    />
+            <h2 className="adminTitle">Administration</h2>
+            <div className="flexCont">
+                <div className="flexLeft">
+                    <div className="divider"/>
+                    {
+                        users ? (
+                            <div className="associateList">
+                                {
+                                    users.map((item) => {
+                                        console.log(item.userIdNo);
+                                        return (
+                                        <div className="associateNode">
+                                            <div className="textData">                                   
+                                                <div className="salesAssociates">{item.fullname}</div>
+                                                <div className="commission">{`Commission: $${item.commission}`}</div>
+                                                <div className="userRank">Associate</div>
+                                            </div>
+                                            <div className="buttons"> 
+                                                <button className="adminButton editButton" onClick={() => {setPopup(true); checkUserData(item.fullname, item.email, item.commission, item.address)}}>Edit</button>
+                                                <button className="adminButton deleteButton" onClick={() => {checkUser(item.userIdNo)}}>Delete</button>
+                                            </div>
+                                            <EditUser trigger={popup} setTrigger={closePopup}>
+                                            <form>
+                                                <div className="newAssocPopup">
+                                                    <TextField
+                                                        label="Name"
+                                                        variant="standard"
+                                                        sx={{ mb: "30px" }}
+                                                        value={name}
+                                                        onChange={(e) => setName(e.target.value)}
+                                                    />
+                                                    <TextField
+                                                        label="Email"
+                                                        variant="standard"
+                                                        sx={{ mb: "30px" }}
+                                                        value={email}
+                                                        onChange={(e) => setEmail(e.target.value)}
+                                                    />
+                                                    <TextField
+                                                        label="Commission"
+                                                        variant="standard"
+                                                        sx={{ mb: "30px" }}
+                                                        value={commission}
+                                                        onChange={(e) => { 
+                                                            const re = /^[0-9\b]+$/;
+                                                            if (e.target.value === '' || re.test(e.target.value)) {
+                                                            setCommission(e.target.value)}}}
+                                                    />
+                                                    <TextField
+                                                        label="Address"
+                                                        variant="standard"
+                                                        sx={{ mb: "30px" }}
+                                                        value={address}
+                                                        onChange={(e) => setAddress(e.target.value)}
+                                                    />
+                                                </div>
+                                                <input onClick = {() => {editData(item.userIdNo)}} className="submitButton" type="submit" />
+                                            </form>
+                                            </EditUser>
+                                            {/* <div className="divider"/> */}
+                                        </div>                                   
+                                        )
+                                    })
+                                }
+                            </div>
+                        ) : (
+                            <div> Loading... </div>
+                            )
+                    }
+                    <div className="divider"/>
                 </div>
-                <div className="eMail field">
-                    <TextField
-                        label="Email"
-                        variant="standard"
-                        sx={{ mb: "30px" }}
-                        value={newEmail}
-                        onChange={(e) => setNewEmail(e.target.value)}
-                    />
+                <div className="flexRight">
+                    <div className="newUser">
+                        <h4>Create New User</h4>
+                        <div className="name field">
+                            <TextField
+                                label="Name"
+                                variant="standard"
+                                sx={{ mb: "30px" }}
+                                value={newName}
+                                onChange={(e) => setNewName(e.target.value)}
+                                />
+                        </div>
+                        <div className="eMail field">
+                            <TextField
+                                label="Email"
+                                variant="standard"
+                                sx={{ mb: "30px" }}
+                                value={newEmail}
+                                onChange={(e) => setNewEmail(e.target.value)}
+                            />
+                        </div>
+                        <div className="address field">
+                            <TextField
+                                label="Address"
+                                variant="standard"
+                                type="address"
+                                sx={{ mb: "30px" }}
+                                value={newAddress}
+                                onChange={(e) => setNewAddress(e.target.value)
+                                }
+                            />
+                        </div>
+                        <div className="password field">
+                            <TextField
+                                label="Password"
+                                variant="standard"
+                                type="password"
+                                sx={{ mb: "30px" }}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)
+                                }
+                            />
+                        </div>
+                        <button
+                            className="createButton"
+                            onClick={register}
+                            >
+                            <div className="createButtonText">
+                                Create
+                            </div>
+                        </button>
+                    </div>  
                 </div>
-                <div className="address field">
-                    <TextField
-                        label="Address"
-                        variant="standard"
-                        type="address"
-                        sx={{ mb: "30px" }}
-                        value={newAddress}
-                        onChange={(e) => setNewAddress(e.target.value)
-                        }
-                    />
-                </div>
-                <div className="password field">
-                    <TextField
-                        label="Password"
-                        variant="standard"
-                        type="password"
-                        sx={{ mb: "30px" }}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)
-                        }
-                    />
-                </div>
-                <button
-                    className="createButton"
-                    onClick={register}
-                    >
-                    <div className="createButtonText">
-                        Create
-                    </div>
-                </button>
-            </div>  
+            
+            </div>
+            
         </div>
     ) : (
         // user is not logged in

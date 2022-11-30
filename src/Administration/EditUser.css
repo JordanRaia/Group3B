@@ -10,8 +10,7 @@
 
 .popupInner {
     position: relative;
-    width: 50%;
-    max-width: 1300px;
+    width: 400px;
     min-height: 350px;
     background-color: white;
     border: 1px solid #999;
@@ -44,20 +43,36 @@
 
 .popupCloseBtn {
     cursor: pointer;
-    border: 1px solid white;
-    border-radius: 50%;
     position: absolute;
+    border: none;
+    background-color: transparent;
+    width: 20px;
+    height: 20px;
     right: 10px;
     top: 10px;
+    transition: .2s;
+    display: flex;
+}
+
+.popupCloseBtn:after, .popupCloseBtn:before {
+    position: absolute;
+    /* left: 15px; */
+    content: ' ';
+    height: 20px;
+    width: 2px;
+    background-color: #333;
+}
+
+.popupCloseBtn:before {
+    transform: rotate(45deg);
+  }
+
+.popupCloseBtn:after {
+    transform: rotate(-45deg);
 }
 
 .popupCloseBtn:hover {
-    cursor: pointer;
-    border: 1px solid #999;
-    border-radius: 50%;
-    position: absolute;
-    right: 10px;
-    top: 10px;
+    opacity: .6;
 }
 
 .submitButton {

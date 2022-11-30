@@ -9,7 +9,7 @@ const EditUser = (props) => {
                     onClick={() => props.setTrigger(false)}
                     className="popupCloseBtn"
                 >
-                    X
+                    
                 </button>
                 {props.children}
             </div>
