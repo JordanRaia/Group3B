@@ -29,6 +29,8 @@ const Administration = () => {
     const [users, setUsers] = useState([]); // List of all users.
     const [newName, setNewName] = useState("");
     const [newEmail, setNewEmail] = useState("");
+    const [newAddress, setNewAddress] = useState("");
+    const [address, setAddress] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -51,16 +53,21 @@ const Administration = () => {
             
         });
     }
-    function writeUserData(userId, name, email, imageUrl, rank, commission) {
+
+    // Used to write user data to the DB
+    function writeUserData(userId, name, email, imageUrl, rank, address) {
         set(dbRef(db, "users/" + userId), {
-            commission: commission,
+            commission: 0,
             userIdNo: userId,
             fullname: name,
             email: email,
             profile_picture: imageUrl,
             rank: rank,
+            address: address
         });
     }
+
+    // Registers a new sales associate to the DB
     const register = async (e) => {
         e.preventDefault(); //prevent page from refreshing
 
@@ -78,7 +85,8 @@ const Administration = () => {
                     newEmail,
                     profileUrl,
                     "salesAssociate",
-                    0
+                    newAddress,
+                    0,
                 );
                 resetFields();
                 navigate("/Administration");
@@ -87,6 +95,8 @@ const Administration = () => {
         // creating an account was unsuccessful and alerting user with error message
         .catch((error) => alert(error.message));
     }
+
+    // Edits a user's data in the DB
     const editData = (id) => {
         const userRef = query(dbRef(db, `users`), orderByChild("userIdNo"), equalTo(id));
         onValue(userRef, (snapshot) => {
@@ -94,35 +104,42 @@ const Administration = () => {
             update(dbRef(db, 'users/'+data[Object.keys(data)[0]].userIdNo), {
                 fullname: name,
                 email: email,
-                commission: commission
+                commission: commission,
+                address: address
             }).then(() => {
                 console.log("Successfully updated.");
             }).catch((error) => {
                 console.log(error);
             })
         });     
-        // update(dbRef(db, 'users/'+uid), {
-        //     fullname: name,
-        //     email: email,
-        //     commission: commission
-        // })
     }
-    const checkUserData = (name, email, commission) => {
+
+    // Fills the popup box with data when it's opened.
+    const checkUserData = (name, email, commission, address) => {
         setName(name);
         setEmail(email);
         setCommission(commission);
+        setAddress(address);
     }
+
+    // Resets the text box fields
     const resetFields = () => {
         setNewName("");
         setNewEmail("");
         setPassword("");
         setCommission("");
+        setNewAddress("");
     }
+
+    // Resets the values in the popup window
     const resetPopup = () => {
         setName("");
         setEmail("");
         setCommission("");
+        setAddress("");
     }
+
+    // Attempts to delete a user from the DB
     const checkUser = (id) => {
         const userRef = query(dbRef(db, `users`), orderByChild("userIdNo"), equalTo(id));
         onValue(userRef, (snapshot) => {
@@ -134,11 +151,12 @@ const Administration = () => {
             })
         });
     }
+
+    // Exit the popup window
     const closePopup = () => {
         resetPopup();
         setPopup(false);
     }
-
 
     return user ? (
         <div className="admin">
@@ -156,7 +174,7 @@ const Administration = () => {
                                     <div className="commission">Commission:</div>
                                     <div className="commissionAmt">{item.commission}</div>
                                     <div className="userRank">Associate</div>
-                                    <button className="editButton" onClick={() => {setPopup(true); checkUserData(item.fullname, item.email, item.commission)}}>Edit</button>
+                                    <button className="editButton" onClick={() => {setPopup(true); checkUserData(item.fullname, item.email, item.commission, item.address)}}>Edit</button>
                                     <button className="deleteButton" onClick={() => {checkUser(item.userIdNo)}}>Delete</button>
                                     <EditUser trigger={popup} setTrigger={closePopup}>
                                     <form>
@@ -180,7 +198,17 @@ const Administration = () => {
                                                 variant="standard"
                                                 sx={{ mb: "30px" }}
                                                 value={commission}
-                                                onChange={(e) => setCommission(e.target.value)}
+                                                onChange={(e) => { 
+                                                    const re = /^[0-9\b]+$/;
+                                                    if (e.target.value === '' || re.test(e.target.value)) {
+                                                    setCommission(e.target.value)}} }
+                                            />
+                                            <TextField
+                                                label="Address"
+                                                variant="standard"
+                                                sx={{ mb: "30px" }}
+                                                value={address}
+                                                onChange={(e) => setAddress(e.target.value)}
                                             />
                                         </div>
                                         <input onClick = {() => {editData(item.userIdNo)}} className="submitButton" type="submit" />
@@ -213,6 +241,17 @@ const Administration = () => {
                         sx={{ mb: "30px" }}
                         value={newEmail}
                         onChange={(e) => setNewEmail(e.target.value)}
+                    />
+                </div>
+                <div className="address field">
+                    <TextField
+                        label="Address"
+                        variant="standard"
+                        type="address"
+                        sx={{ mb: "30px" }}
+                        value={newAddress}
+                        onChange={(e) => setNewAddress(e.target.value)
+                        }
                     />
                 </div>
                 <div className="password field">
