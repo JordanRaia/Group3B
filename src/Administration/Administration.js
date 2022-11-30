@@ -305,8 +305,9 @@ const Administration = () => {
                                                             </div>                                             
                                                         </form>
                                                         <div>
-                                                            <button
-                                                                onClick={()=>{handleSaveSalesPerson(salesperson);close(); closePopup();}}
+                                                        <button
+                                                                onClick={handleSaveSalesPerson(salesperson)}
+                                                                className="popup__closeBtn2"
                                                             >
                                                                 Save
                                                             </button>
