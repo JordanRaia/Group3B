@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./Administration.css";
+import InvalidPermissions from "../InvalidPermissions/InvalidPermissions";
+import NoLogin from "../NoLogin/NoLogin";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db, storage } from "../firebase";
 import { onValue, ref as dbRef, query, set } from "firebase/database";
 import TextField from "@mui/material/TextField";
-// import Button from "@mui/material/Button";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { getDownloadURL, ref as stoRef } from "firebase/storage";
 
@@ -14,6 +15,7 @@ import { getDownloadURL, ref as stoRef } from "firebase/storage";
 const Administration = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState({}); // Checking if user is logged in.
+    const [rank, setRank] = useState("none");
     const [users, setUsers] = useState([]); // List of all users.
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -32,6 +34,15 @@ const Administration = () => {
                 onValue(usersRef, (snapshot) => {
                     const data = snapshot.val();
                     setUsers(data);
+                });
+
+                // get the user's rank
+                const rankRef = dbRef(db, `users/${currentUser.uid}/rank`);
+                onValue(rankRef, (snapshot) => {
+                    //set data to name
+                    const data = snapshot.val();
+                    //save name to useState name
+                    setRank(data);
                 });
             }
         });
@@ -78,50 +89,59 @@ const Administration = () => {
         setPassword("");
     };
 
-    return (
-        <div className="admin_background">
-            <div className="admin">
-                <div className="adminTitle">Administrator</div>
-                <div className="divider" />
-                {users ? (
-                    <div className="associateList">
-                        {Object.keys(users).map((account) => {
-                            getDownloadURL(
-                                stoRef(
-                                    storage,
-                                    users[account]["profile_picture"]
-                                )
-                            ).then((url) => {
-                                const profileImg = document.getElementById(
-                                    `${account}_picture`
+    return user ? (
+        // logged in
+        rank === "admin" ? (
+            <div className="admin_background">
+                <div className="admin">
+                    <div className="adminTitle">Administrator</div>
+                    <div className="divider" />
+                    {users ? (
+                        <div className="associateList">
+                            {Object.keys(users).map((account) => {
+                                getDownloadURL(
+                                    stoRef(
+                                        storage,
+                                        users[account]["profile_picture"]
+                                    )
+                                ).then((url) => {
+                                    const profileImg = document.getElementById(
+                                        `${account}_picture`
+                                    );
+                                    profileImg.setAttribute("src", url);
+                                });
+                                return (
+                                    <div
+                                        key={account}
+                                        className="associateNode"
+                                    >
+                                        <img
+                                            alt="profilePic"
+                                            id={`${account}_picture`}
+                                            className="admin__profilePic"
+                                        ></img>
+                                        <div className="salesAssociates">
+                                            {users[account]["fullname"]}
+                                        </div>
+                                        <div className="commission">
+                                            Commission:{" "}
+                                        </div>
+                                        <div className="commissionAmt">
+                                            $500.50
+                                        </div>
+                                        <div className="userRank">
+                                            {users[account]["rank"]}
+                                        </div>
+                                        <button className="editButton">
+                                            Edit
+                                        </button>
+                                        <button className="deleteButton">
+                                            Delete
+                                        </button>
+                                    </div>
                                 );
-                                profileImg.setAttribute("src", url);
-                            });
-                            return (
-                                <div key={account} className="associateNode">
-                                    <img
-                                        alt="profilePic"
-                                        id={`${account}_picture`}
-                                        className="admin__profilePic"
-                                    ></img>
-                                    <div className="salesAssociates">
-                                        {users[account]["fullname"]}
-                                    </div>
-                                    <div className="commission">
-                                        Commission:{" "}
-                                    </div>
-                                    <div className="commissionAmt">$500.50</div>
-                                    <div className="userRank">
-                                        {users[account]["rank"]}
-                                    </div>
-                                    <button className="editButton">Edit</button>
-                                    <button className="deleteButton">
-                                        Delete
-                                    </button>
-                                </div>
-                            );
-                        })}
-                        {/* <div className="associateNode">
+                            })}
+                            {/* <div className="associateNode">
                             <div className="salesAssociates">Gerald Ellsworth</div>
                             <div className="commission">Commission: </div>
                             <div className="commissionAmt">$500.50</div>
@@ -129,51 +149,60 @@ const Administration = () => {
                             <button className="editButton">Edit</button>
                             <button className="deleteButton">Delete</button>
                         </div> */}
-                    </div>
-                ) : (
-                    <div> Loading... </div>
-                )}
-                <div className="divider" />
-                <div className="newUser">
-                    <div className="name field">
-                        <TextField
-                            label="Name"
-                            variant="standard"
-                            sx={{ mb: "30px" }}
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
-                    </div>
-                    <div className="eMail field">
-                        {/* <div className="inputTitle">email:</div> */}
-                        <TextField
-                            label="Email"
-                            variant="standard"
-                            sx={{ mb: "30px" }}
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-                    <div className="password field">
-                        <TextField
-                            label="Password"
-                            variant="standard"
-                            type="password"
-                            sx={{ mb: "30px" }}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <button className="admin_login__button" onClick={register}>
-                        <div className="admin_login__buttonContainer">
-                            <div className="admin_login__buttonText">
-                                Create Sales Associate
-                            </div>
                         </div>
-                    </button>
+                    ) : (
+                        <div> Loading... </div>
+                    )}
+                    <div className="divider" />
+                    <div className="newUser">
+                        <div className="name field">
+                            <TextField
+                                label="Name"
+                                variant="standard"
+                                sx={{ mb: "30px" }}
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                        </div>
+                        <div className="eMail field">
+                            {/* <div className="inputTitle">email:</div> */}
+                            <TextField
+                                label="Email"
+                                variant="standard"
+                                sx={{ mb: "30px" }}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+                        <div className="password field">
+                            <TextField
+                                label="Password"
+                                variant="standard"
+                                type="password"
+                                sx={{ mb: "30px" }}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                        <button
+                            className="admin_login__button"
+                            onClick={register}
+                        >
+                            <div className="admin_login__buttonContainer">
+                                <div className="admin_login__buttonText">
+                                    Create Sales Associate
+                                </div>
+                            </div>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        ) : (
+            <InvalidPermissions />
+        )
+    ) : (
+        // not logged in
+        <NoLogin />
     );
 };
 
