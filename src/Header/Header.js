@@ -120,7 +120,7 @@ function Header() {
                             >
                                 Sanction Quote
                             </Nav.Link>
-                            <div className="divider"/>
+                            <div className="header__divider" />
                             {/* Administration */}
                             <Nav.Link
                                 as={Link}
@@ -145,26 +145,27 @@ function Header() {
                                 src={profileUrl}
                                 alt="profile"
                             />
-                                {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
-                                <div className="header__linkFlex">
-                                    <Link
-                                        className="header__link"
-                                        to={!user && "/login"}
-                                    >
-                                        <div
-                                            onClick={handleAuth}
-                                            className="header__signIn"
-                                        >
-                                            {user ? "Sign Out" : "Sign In"}
-                                        </div>
-                                    </Link>
-                                </div>
 
-                                <div className="divider"/>
+                            {/* <div className="divider" /> */}
 
+                            {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
+                            <div className="header__linkFlex">
                                 <div className="header__helloText">
                                     {user ? name : "Guest"}
                                 </div>
+                                <Link
+                                    className="header__link"
+                                    to={!user && "/login"}
+                                >
+                                    <div
+                                        onClick={handleAuth}
+                                        className="header__signIn"
+                                    >
+                                        {user ? "Sign Out" : "Sign In"}
+                                    </div>
+                                </Link>
+                            </div>
+
                             <img
                                 className="header__profilePic"
                                 id="profile1"

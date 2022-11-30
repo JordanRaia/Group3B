@@ -46,6 +46,7 @@
 
 .header__linkFlex {
     display: flex;
+    flex-direction: column;
     justify-content: right;
 }
 
@@ -85,11 +86,27 @@
     font-weight: 400!important;
 }
 
-#basic-navbar-nav .divider {
+.header__signIn {
+    text-align: right;
+}
+
+@media screen and (max-width: 920px) {
+    .header__signIn {
+        text-align: left;
+    }
+}
+
+#basic-navbar-nav .header__divider {
     width: 1px;
     height: 30px;
     align-self: center;
     background-color: #D3D3D3
+}
+
+@media screen and (max-width: 920px) {
+    .header__divider {
+        display: none;
+    }
 }
 
 #basic-navbar-nav a {
