@@ -26,4 +26,4 @@ const storage = getStorage();
 //firebase authentication
 const auth = getAuth();
 
-export { db, storage, auth , firebaseConfig};
+export { db, storage, auth };

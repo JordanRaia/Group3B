@@ -21,9 +21,9 @@ const Administration = () => {
     const [users, setUsers] = useState([]); // List of all users.
     const [address, setAddress] = useState("");
     const [name, setName] = useState("");
+    const [profile, setProfile] = useState("users/default/profile.jpg")
     const [email, setEmail] = useState("");
     const [commission, setCommission] = useState("");
-    // const [popup, setPopup] = useState(false);
     const [editPopup, setEditPopup] = useState([]);
     const [rank, setRank] = useState("");
     useEffect(() => {
@@ -37,15 +37,12 @@ const Administration = () => {
             if (user) {
                 const usersRef = query(
                     dbRef(db, `users`)
-                    // orderByChild("rank"),
-                    // equalTo("salesAssociate")
                 );
                 onValue(usersRef, (snapshot) => {
                     const data = snapshot.val();
                     //create nested array that retains the object keys
                     const cleanedData = Object.entries(data);
                     setUsers(cleanedData);
-                    // console.log(cleanedData);
                 });
             }
         });
@@ -55,24 +52,19 @@ const Administration = () => {
     const editData = (id) => (e) => {
         e.preventDefault();
 
-        // console.log(id);
-
         const userRef = query(
             dbRef(db, `users/${id}`)
-            // orderByChild("userIdNo"),
-            // equalTo(id)
         );
         onValue(
             userRef,
             (snapshot) => {
-                // const data = snapshot.val();
-
                 update(dbRef(db, "users/" + id), {
                     fullname: name,
                     email: email,
                     commission: commission,
                     address: address,
                     rank: rank,
+                    profile_picture: profile,
                 })
                     .then(() => {
                         console.log("Successfully updated.");
@@ -90,11 +82,12 @@ const Administration = () => {
     };
 
     // Fills the popup box with data when it's opened.
-    const checkUserData = (name, email, commission, address, rank, i) => {
+    const checkUserData = (name, email, commission, address, rank, i, profile="users/default/profile.jpg") => {
         let tempArr = Array(users.length).fill(false); //fill temp Arr with false for every quote
         tempArr[i] = true;
         setEditPopup(tempArr);
         setName(name);
+        setProfile(profile);
         setEmail(email);
         setCommission(commission);
         setAddress(address);
@@ -134,7 +127,6 @@ const Administration = () => {
     const closePopup = () => {
         resetPopup();
         resetFields();
-        // setPopup(false);
 
         // fill editPopup with false
         setEditPopup(new Array(users.length).fill(false));
@@ -149,7 +141,6 @@ const Administration = () => {
                     {users ? (
                         <div className="associateList">
                             {users.map((item, i) => {
-                                // console.log(item[0]);   //key value
                                 return (
                                     <div className="associateNode">
                                         <div className="textData">
@@ -173,7 +164,8 @@ const Administration = () => {
                                                         item[1].commission,
                                                         item[1].address,
                                                         item[1].rank,
-                                                        i
+                                                        i,
+                                                        item[i].profile_picture
                                                     );
                                                 }}
                                             >
@@ -300,16 +292,6 @@ const Administration = () => {
                                                                     {item[1].rank === "inhouse1" ? (<option value="inhouse1" selected>In-House 1</option>) : (<option value="inhouse1">In-House 1</option>)}
                                                                     {item[1].rank === "inhouse2" ? (<option value="inhouse2" selected>In-House 2</option>) : (<option value="inhouse2">In-House 2</option>)}
                                                                 </select>
-                                                                {/* <div className="dropDown">
-                                                                    <div className="selected">
-                                                                        any text
-                                                                    </div>
-                                                                    <ul>
-                                                                        <li>rank 1</li>
-                                                                        <li>rank 2</li>
-                                                                        <li>rank 3</li>
-                                                                    </ul>
-                                                                </div> */}
                                                             </div>
                                                             <input
                                                                 key={item[0]}
