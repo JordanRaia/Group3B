@@ -6,6 +6,42 @@
     margin-top: 40px;
 }
 
+@media screen and (max-width: 1400px) {
+    .admin {
+        max-width: 1120px;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .admin {
+        max-width: 940px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .admin {
+        max-width: 700px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .admin {
+        max-width: 520px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .admin {
+        max-width: 520px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .admin {
+        max-width: 96.5%;
+    }
+}
+
 .admin_background {
     margin: 0;
     padding: 0;
@@ -47,42 +83,6 @@
     padding: 14px 28px;
 }
 
-@media screen and (max-width: 1400px) {
-    .admin {
-        max-width: 1120px;
-    }
-}
-
-@media screen and (max-width: 1200px) {
-    .admin {
-        max-width: 940px;
-    }
-}
-
-@media screen and (max-width: 992px) {
-    .admin {
-        max-width: 700px;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .admin {
-        max-width: 520px;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .admin {
-        max-width: 520px;
-    }
-}
-
-@media screen and (max-width: 576px) {
-    .admin {
-        max-width: 96.5%;
-    }
-}
-
 .admin__popup {
     background-color: white;
     padding: 40px;
@@ -117,6 +117,12 @@
 
 .associateNode .textData {
     display: flex;
+}
+
+@media screen and (max-width: 768px) {
+    .textData {
+        flex-direction: column;
+    }
 }
 
 .associateNode .buttons {
@@ -171,6 +177,12 @@
     width: 300px;
 }
 
+@media screen and (max-width: 992px) {
+    .salesAssociates {
+        width: 14rem;
+    }
+}
+
 .commission {
     width: 200px;
 }
@@ -182,7 +194,7 @@
 }
 
 .flexCont .flexLeft {
-    width: 60%;
+    width: 100%;
 }
 
 .flexCont .flexRight {
