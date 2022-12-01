@@ -11,6 +11,7 @@ import Administration from "./Administration/Administration";
 import Quotes from "./Quotes/Quotes";
 import Customers from "./Customers/Customers";
 import Page404 from "./Page404/Page404";
+import Footer from "./Footer/Footer";
 
 function App() {
     return (
@@ -29,6 +30,7 @@ function App() {
                     <Route path="*" element={<Page404 />} />
                 </Route>
             </Routes>
+            <Footer/>
         </div>
     );
 }
