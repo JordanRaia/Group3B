@@ -96,6 +96,40 @@
     z-index: 99999;
 }
 
+.popup__closeBtn {
+    cursor: pointer;
+    position: absolute;
+    border: none;
+    background-color: transparent;
+    width: 20px;
+    height: 20px;
+    right: 10px;
+    top: 10px;
+    transition: .2s;
+    display: flex;
+}
+
+.popup__closeBtn:after, .popup__closeBtn:before {
+    position: absolute;
+    /* left: 15px; */
+    content: ' ';
+    height: 20px;
+    width: 2px;
+    background-color: #333;
+}
+
+.popup__closeBtn:before {
+    transform: rotate(45deg);
+  }
+
+.popup__closeBtn:after {
+    transform: rotate(-45deg);
+}
+
+.popup__closeBtn:hover {
+    opacity: .6;
+}
+
 .admin__profilePic {
     height: 3rem;
     width: 3rem;

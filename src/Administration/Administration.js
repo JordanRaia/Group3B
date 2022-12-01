@@ -213,9 +213,7 @@ const Administration = () => {
                                                                         closePopup();
                                                                     }}
                                                                     className="popup__closeBtn"
-                                                                >
-                                                                    close
-                                                                </button>
+                                                                />
                                                                 <FormControl>
                                                                     <div className="editAssocFields">
                                                                         <TextField
