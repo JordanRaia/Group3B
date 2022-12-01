@@ -356,10 +356,13 @@ const Administration = () => {
                                                                                 >
                                                                                     Developer
                                                                                 </option>
-                                                                            ) : (
+                                                                            ) : rank ===
+                                                                              "dev" ? (
                                                                                 <option value="dev">
                                                                                     Developer
                                                                                 </option>
+                                                                            ) : (
+                                                                                ""
                                                                             )}
                                                                             {item[1]
                                                                                 .rank ===
