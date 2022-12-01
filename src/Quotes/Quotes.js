@@ -264,6 +264,7 @@ function Quotes() {
                     {getQuoteLength()} quote
                     {getQuoteLength() > 1 && "s"} found
                 </h3>
+                <div className="BottomSpace"> </div>
             </div>
         ) : (
             <InvalidPermissions />
