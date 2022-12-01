@@ -16,6 +16,8 @@ import Button from "@mui/material/Button";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 
 function Login() {
+    const defaultProfileUrl =
+        "https://firebasestorage.googleapis.com/v0/b/group3b-38bd5.appspot.com/o/users%2Fdefault%2Fprofile.jpg?alt=media&token=6d49f5cd-3830-48ea-8cb4-363af2ddf703";
     const navigate = useNavigate();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -23,14 +25,11 @@ function Login() {
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
     //url
-    const [profileImage, setProfileImage] = useState("");
+    const [profileImage, setProfileImage] = useState(defaultProfileUrl);
     //blob
     const [profileImageBlob, setProfileImageBlob] = useState();
     //if profile image was uploaded
     const [profileBool, setProfileBool] = useState(false);
-
-    const defaultProfileUrl =
-        "https://firebasestorage.googleapis.com/v0/b/group3b-38bd5.appspot.com/o/users%2Fdefault%2Fprofile.png?alt=media&token=ee6e94df-17f3-4ccc-b805-29aef7475798";
 
     function writeUserData(userId, name, email, imageUrl, rank, address) {
         set(dbRef(db, "users/" + userId), {
