@@ -58,18 +58,17 @@
     width: 100%;
 }
 
-/* .home__flexColumn {
-    margin: 2rem;
-    margin: 1rem;
-} */
-
-
-/* .home__Header {
-    font-family: Poppins;
-    font-weight: 700;
-    font-size: xx-large;
+.home__flexColumn {
+    display: flex;
+    flex-direction: column;
+    height: 12rem;
 }
 
+
+.home__header {
+    margin-top: 3rem;
+}
+/*
 .home__subHeader {
     font-family: Poppins;
     font-weight: 600;
@@ -77,10 +76,16 @@
 } */
 
 .home__logo {
-    border: 5px solid black;
+    border: 3px solid black;
     border-radius: 50%;
-    width: 50%;
+    width: 100%;
     margin: 1rem;
+}
+
+.home__logoContainer {
+    height: 12rem;
+    width: 12rem;
+    display: flex;
 }
 
 .cardContainer {
