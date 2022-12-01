@@ -22,7 +22,6 @@ function Home() {
                 const data = snapshot.val();
                 //save name to useState name
                 setRank(data);
-                console.log(data);
             });
         } else {
             setRank("");
