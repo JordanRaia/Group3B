@@ -87,7 +87,7 @@ function Header() {
 
     return (
         <>
-            <header class="header__bar">
+            <header className="header__bar">
                 <Navbar sticky="top" expand="lg">
                     <Container>
                         {/* Logo or Title Here */}
