@@ -118,7 +118,7 @@ function Quote({ quotes, customers, quote, i, associates, status }) {
 
         //flat discount
         if (typeof quotes[quote]["discount"] != "undefined") {
-            if (typeof quotes[quote]["discount"]["percent"] != "undefined") {
+            if (typeof quotes[quote]["discount"]["amount"] != "undefined") {
                 setFlatDiscount(quotes[quote]["discount"]["amount"]);
                 flat = quotes[quote]["discount"]["amount"];
             }

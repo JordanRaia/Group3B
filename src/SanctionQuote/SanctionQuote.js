@@ -164,7 +164,7 @@ function SanctionQuote() {
 
         //flat discount
         if (typeof quotes[quote]["discount"] != "undefined") {
-            if (typeof quotes[quote]["discount"]["percent"] != "undefined") {
+            if (typeof quotes[quote]["discount"]["amount"] != "undefined") {
                 setFlatDiscount(quotes[quote]["discount"]["amount"]);
                 flat = quotes[quote]["discount"]["amount"];
             }
@@ -390,7 +390,7 @@ function SanctionQuote() {
         return false;
     }
 
-    const handleQuoteSave = (custId, quoteKey) => async (e) => {
+    const handleQuoteSave = (custId, quoteKey, i) => async (e) => {
         e.preventDefault(); // prevent page refresh
 
         if (email === "") {
@@ -460,6 +460,8 @@ function SanctionQuote() {
     const handleProcessOrder = (quoteId, customerId, quoteAmt) => async (e) => {
         e.preventDefault();
 
+        console.log("here")
+
         if (email === "") {
             alert("must enter email");
         } else if (checkForMissing(lineItems)) {
@@ -507,6 +509,8 @@ function SanctionQuote() {
             // get a key for a new quote
             const updates = {};
             updates["/quotes/completed quotes/" + newQuoteId] = quoteData;
+
+            return
 
             await update(dbRef(db), updates);
             await set(
@@ -919,11 +923,11 @@ function SanctionQuote() {
                                                                 <div className="new__discountFlex">
                                                                     {amount.map(
                                                                         (
-                                                                            amt
+                                                                            amt, i
                                                                         ) => (
                                                                             <p
                                                                                 key={
-                                                                                    amt
+                                                                                    i
                                                                                 }
                                                                                 className="new__discount"
                                                                             >
@@ -954,7 +958,8 @@ function SanctionQuote() {
                                                                     ][
                                                                         "customer id"
                                                                     ],
-                                                                    quote
+                                                                    quote,
+                                                                    i
                                                                 )}
                                                             >
                                                                 Save

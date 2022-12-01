@@ -89,7 +89,7 @@ function NewQuote() {
 
         //flat discount
         if (typeof quotes[quote]["discount"] != "undefined") {
-            if (typeof quotes[quote]["discount"]["percent"] != "undefined") {
+            if (typeof quotes[quote]["discount"]["amount"] != "undefined") {
                 setFlatDiscount(quotes[quote]["discount"]["amount"]);
                 flat = quotes[quote]["discount"]["amount"];
             }
@@ -718,6 +718,7 @@ function NewQuote() {
                                 {flatDiscount &&
                                     flatDiscount.map((discount, i) => (
                                         <div key={i}>
+                                            {console.log(discount)}
                                             <label htmlFor={`item`}>
                                                 discount:{" "}
                                             </label>
