@@ -83,6 +83,19 @@
     }
 }
 
+.admin__popup {
+    background-color: white;
+    padding: 40px;
+    position: relative;
+}
+
+.admin__popup .popup__closeBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 99999;
+}
+
 .admin__profilePic {
     height: 3rem;
     width: 3rem;
@@ -175,4 +188,9 @@
 .flexCont .flexRight {
     width: 30%;
     border: solid 1px #333
+}
+
+.admin__popup .editAssocFields {
+    display: flex;
+    flex-direction: column;
 }
