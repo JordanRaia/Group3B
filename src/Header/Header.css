@@ -6,6 +6,10 @@
     align-items: center;
 }
 
+header {
+    height: 50px;
+}
+
 #basic-navbar-nav .header__flex .divider {
     width: 20px;
     height: 1px;

@@ -86,120 +86,123 @@ function Header() {
 
     return (
         <>
-            <Navbar sticky="top" expand="lg">
-                <Container>
-                    {/* Logo or Title Here */}
-                    <Link to={"/"} style={{ textDecoration: "none" }}>
-                        <img className="header__logo" src={Logo} alt="" />
-                    </Link>
-                    {/* adds hamburger menu for mobile */}
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    {/* Navbar Start */}
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
-                            {/* Navbar Links */}
-                            {/* Home */}
-                            <Nav.Link
-                                as={Link}
-                                to={"/"}
-                                className="header__navLink"
-                            >
-                                Home
-                            </Nav.Link>
-                            {/* New Quote */}
-                            {(rank === "sales" || rank === "dev") && (
+            <header class="header__bar">
+                <Navbar sticky="top" expand="lg">
+                    <Container>
+                        {/* Logo or Title Here */}
+                        <Link to={"/"} style={{ textDecoration: "none" }}>
+                            <img className="header__logo" src={Logo} alt="" />
+                        </Link>
+                        {/* adds hamburger menu for mobile */}
+                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                        {/* Navbar Start */}
+                        <Navbar.Collapse id="basic-navbar-nav">
+                            <Nav className="me-auto">
+                                {/* Navbar Links */}
+                                {/* Home */}
                                 <Nav.Link
                                     as={Link}
-                                    to={"/NewQuote"}
+                                    to={"/"}
                                     className="header__navLink"
                                 >
-                                    New Quote
+                                    Home
                                 </Nav.Link>
-                            )}
-                            {/* Finalize Quote */}
-                            {(rank === "inhouse1" || rank === "dev") && (
-                                <Nav.Link
-                                    as={Link}
-                                    to={"/FinalizeQuote"}
-                                    className="header__navLink"
-                                >
-                                    Finalize Quote
-                                </Nav.Link>
-                            )}
-                            {/* Sanction Quote */}
-                            {(rank === "inhouse2" || rank === "dev") && (
-                                <Nav.Link
-                                    as={Link}
-                                    to={"/SanctionQuote"}
-                                    className="header__navLink"
-                                >
-                                    Sanction Quote
-                                </Nav.Link>
-                            )}
-                            {/* Administration */}
-                            {(rank === "admin" || rank === "dev") && (
-                                <div className="header__divider" />
-                            )}
-                            {(rank === "admin" || rank === "dev") && (
-                                <Nav.Link
-                                    as={Link}
-                                    to={"/Administration"}
-                                    className="header__navLink"
-                                >
-                                    Administration
-                                </Nav.Link>
-                            )}
-                            {/* Quotes */}
-                            {(rank === "admin" || rank === "dev") && (
-                                <Nav.Link
-                                    as={Link}
-                                    to={"/Quotes"}
-                                    className="header__navLink"
-                                >
-                                    Quotes
-                                </Nav.Link>
-                            )}
-                        </Nav>
-                        <div className="header__flex">
-                            <img
-                                className="header__profilePic"
-                                id="profile"
-                                src={profileUrl}
-                                alt="profile"
-                            />
-
-                            {/* <div className="divider" /> */}
-
-                            {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
-                            <div className="header__linkFlex">
-                                <div className="header__helloText">
-                                    {user ? name : "Guest"}
-                                </div>
-                                <Link
-                                    className="header__link"
-                                    to={!user && "/login"}
-                                >
-                                    <div
-                                        onClick={handleAuth}
-                                        className="header__signIn"
+                                {/* New Quote */}
+                                {(rank === "sales" || rank === "dev") && (
+                                    <Nav.Link
+                                        as={Link}
+                                        to={"/NewQuote"}
+                                        className="header__navLink"
                                     >
-                                        {user ? "Sign Out" : "Sign In"}
-                                    </div>
-                                </Link>
-                            </div>
+                                        New Quote
+                                    </Nav.Link>
+                                )}
+                                {/* Finalize Quote */}
+                                {(rank === "inhouse1" || rank === "dev") && (
+                                    <Nav.Link
+                                        as={Link}
+                                        to={"/FinalizeQuote"}
+                                        className="header__navLink"
+                                    >
+                                        Finalize Quote
+                                    </Nav.Link>
+                                )}
+                                {/* Sanction Quote */}
+                                {(rank === "inhouse2" || rank === "dev") && (
+                                    <Nav.Link
+                                        as={Link}
+                                        to={"/SanctionQuote"}
+                                        className="header__navLink"
+                                    >
+                                        Sanction Quote
+                                    </Nav.Link>
+                                )}
+                                {/* Administration */}
+                                {(rank === "admin" || rank === "dev") && (
+                                    <div className="header__divider" />
+                                )}
+                                {(rank === "admin" || rank === "dev") && (
+                                    <Nav.Link
+                                        as={Link}
+                                        to={"/Administration"}
+                                        className="header__navLink"
+                                    >
+                                        Administration
+                                    </Nav.Link>
+                                )}
+                                {/* Quotes */}
+                                {(rank === "admin" || rank === "dev") && (
+                                    <Nav.Link
+                                        as={Link}
+                                        to={"/Quotes"}
+                                        className="header__navLink"
+                                    >
+                                        Quotes
+                                    </Nav.Link>
+                                )}
+                            </Nav>
+                            <div className="header__flex">
+                                <img
+                                    className="header__profilePic"
+                                    id="profile"
+                                    src={profileUrl}
+                                    alt="profile"
+                                />
 
-                            <img
-                                className="header__profilePic"
-                                id="profile1"
-                                src={profileUrl}
-                                alt="profile"
-                            />
-                        </div>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar>
-            {/* Allows for elemnts underneath in react-router-dom (in App.js) */}
-            <Outlet />
+                                {/* <div className="divider" /> */}
+
+                                {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
+                                <div className="header__linkFlex">
+                                    <div className="header__helloText">
+                                        {user ? name : "Guest"}
+                                    </div>
+                                    <Link
+                                        className="header__link"
+                                        to={!user && "/login"}
+                                    >
+                                        <div
+                                            onClick={handleAuth}
+                                            className="header__signIn"
+                                        >
+                                            {user ? "Sign Out" : "Sign In"}
+                                        </div>
+                                    </Link>
+                                </div>
+
+                                <img
+                                    className="header__profilePic"
+                                    id="profile1"
+                                    src={profileUrl}
+                                    alt="profile"
+                                />
+                            </div>
+                        </Navbar.Collapse>
+                    </Container>
+                </Navbar>
+                {/* Allows for elemnts underneath in react-router-dom (in App.js) */}
+                    <Outlet />
+
+            </header>
         </>
     );
 }
