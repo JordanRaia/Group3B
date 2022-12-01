@@ -510,8 +510,6 @@ function SanctionQuote() {
             const updates = {};
             updates["/quotes/completed quotes/" + newQuoteId] = quoteData;
 
-            return
-
             await update(dbRef(db), updates);
             await set(
                 dbRef(db, `/quotes/completed quotes/${newQuoteId}/discount`),
