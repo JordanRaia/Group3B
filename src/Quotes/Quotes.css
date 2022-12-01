@@ -40,3 +40,15 @@
         max-width: 96.5%;
     }
 }
+
+.div_box {
+    display: flex;
+}
+
+.new__quoteCustomerInfo {
+    width: 750px;
+}
+
+.new__quoteAmount {
+    width: 250px;
+}

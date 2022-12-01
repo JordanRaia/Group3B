@@ -181,18 +181,20 @@ function Quote({ quotes }, customers) {
                 return (
                     <div key={i} className="new__quoteContainer">
                         <div className="new__quote">
-                            <div className="new__quoteCustomerInfo">
-                                <p className="new__quoteId">{quote}: </p>
-                                <p className="new__quoteCustomer">
-                                    {quotes[quote]["customer"]}
+                            <div className="div_box">
+                                <div className="new__quoteCustomerInfo">
+                                    <p className="new__quoteId">{quote}: </p>
+                                    <p className="new__quoteCustomer">
+                                        {quotes[quote]["customer"]}
+                                    </p>
+                                </div>
+                                <p className="new__quoteAmount">
+                                    ${calculateQuoteAmount({ quote }).toLocaleString('en-US', {
+                                        style: 'currency',
+                                        currency: 'USD',
+                                        }).slice(1)}
                                 </p>
                             </div>
-                            <p className="new__quoteAmount">
-                                ${calculateQuoteAmount({ quote }).toLocaleString('en-US', {
-                                    style: 'currency',
-                                    currency: 'USD',
-                                    }).slice(1)}
-                            </p>
                             <button
                                 onClick={handleViewButton(quote, i)}
                                 className="new__quoteButton"
