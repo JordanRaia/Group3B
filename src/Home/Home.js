@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { onValue, ref as dbRef } from "firebase/database";
 import { auth, db } from "../firebase";
+import Footer from "../Footer/Footer";
 
 function Home() {
     const [user, setUser] = useState({});
@@ -100,6 +101,7 @@ function Home() {
                     )}
                 </div>
             </div>
+            <span><Footer/></span>
         </div>
     );
 }

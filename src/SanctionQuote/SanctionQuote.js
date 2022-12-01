@@ -19,6 +19,7 @@ import {
 } from "firebase/database";
 import InvalidPermissions from "../InvalidPermissions/InvalidPermissions";
 import NoLogin from "../NoLogin/NoLogin";
+import Footer from "../Footer/Footer";
 
 // final stage for a quote to be sent to payment processing system by in house employee two
 function SanctionQuote() {
@@ -991,6 +992,7 @@ function SanctionQuote() {
                     {Object.keys(quotes).length} quote
                     {Object.keys(quotes).length !== 1 && "s"} found
                 </h3>
+                <span><Footer/></span>
             </div>
         ) : (
             // invalid permissions

@@ -22,6 +22,7 @@ import {
 } from "firebase/database";
 // material ui
 import DeleteIcon from "@mui/icons-material/Delete";
+import Footer from "../Footer/Footer";
 
 // for sales employees to create new quotes and send to finalize quote
 function NewQuote() {
@@ -1303,6 +1304,7 @@ function NewQuote() {
                     {Object.keys(quotes).length} quote
                     {Object.keys(quotes).length !== 1 && "s"} found
                 </h3>
+                <span><Footer/></span>
             </div>
         ) : (
             // invalid permissions
