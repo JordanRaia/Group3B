@@ -40,3 +40,19 @@
         max-width: 96.5%;
     }
 }
+
+.quotes__search {
+    width: 100%!important;
+}
+
+.quotes__flex {
+    display: flex;
+}
+
+.quotes__form {
+    width: 100%!important;
+}
+
+.quotes__sortText {
+    white-space: pre;
+}

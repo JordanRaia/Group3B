@@ -30,7 +30,7 @@ function App() {
                     <Route path="*" element={<Page404 />} />
                 </Route>
             </Routes>
-            <Footer/>
+            {/* <Footer/> */}
         </div>
     );
 }

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CurrencyFormat from "react-currency-format";
 import Popup from "reactjs-popup";
 
-function Quote({ quotes }, customers) {
+function Quote({ quotes, customers, quote, i, associates, status }) {
     // for creating new quote in database
     const [amount, setAmount] = useState(["0"]);
     const [flatDiscount, setFlatDiscount] = useState([]);
@@ -175,342 +175,296 @@ function Quote({ quotes }, customers) {
 
         setAmount(amountArr);
     };
+
+    const dateFormat = (date) => {
+        const d = new Date(date);
+        return d.toLocaleDateString();
+    };
+
     return (
         <div>
-            {Object.keys(quotes).map((quote, i) => {
-                return (
-                    <div key={i} className="new__quoteContainer">
-                        <div className="new__quote">
-                            <div className="new__quoteCustomerInfo">
-                                <p className="new__quoteId">{quote}: </p>
-                                <p className="new__quoteCustomer">
-                                    {quotes[quote]["customer"]}
-                                </p>
-                            </div>
-                            <p className="new__quoteAmount">
-                                ${calculateQuoteAmount({ quote }).toLocaleString('en-US', {
-                                    style: 'currency',
-                                    currency: 'USD',
-                                    }).slice(1)}
-                            </p>
-                            <button
-                                onClick={handleViewButton(quote, i)}
-                                className="new__quoteButton"
-                            >
-                                View Quote
-                            </button>
-                            <Popup open={editPopup[i]}>
-                                {(close) => {
-                                    return (
-                                        <div className="popup">
-                                            <div className="popup__inner">
-                                                <button
-                                                    onClick={() => {
-                                                        close();
-                                                        closePopup();
-                                                    }}
-                                                    className="popup__closeBtn"
-                                                >
-                                                </button>
-                                                <div className="new__popup">
-                                                    <h3>Quote: {quote}</h3>
-                                                    <h3>
-                                                        {
-                                                            quotes[quote][
-                                                                "customer"
-                                                            ]
-                                                        }
-                                                    </h3>
-                                                    <div className="new__customerInfo">
-                                                        <span className="new__text">
-                                                            {quotes &&
-                                                                quotes[quote] &&
-                                                                quotes[quote][
-                                                                    "customer id"
-                                                                ] &&
-                                                                customers[
-                                                                    quotes[
-                                                                        quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ]
-                                                                ] &&
-                                                                customers[
-                                                                    quotes[
-                                                                        quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ]
-                                                                ]["street"] &&
-                                                                customers[
-                                                                    quotes[
-                                                                        quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ]
-                                                                ]["street"]}
-                                                        </span>
-                                                        <span className="new__text">
-                                                            {quotes &&
-                                                                quotes[quote] &&
-                                                                quotes[quote][
-                                                                    "customer id"
-                                                                ] &&
-                                                                customers[
-                                                                    quotes[
-                                                                        quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ]
-                                                                ] &&
-                                                                customers[
-                                                                    quotes[
-                                                                        quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ]
-                                                                ]["city"] &&
-                                                                customers[
-                                                                    quotes[
-                                                                        quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ]
-                                                                ]["city"]}
-                                                        </span>
-                                                        <span className="new__text">
-                                                            {quotes &&
-                                                                quotes[quote] &&
-                                                                quotes[quote][
-                                                                    "customer id"
-                                                                ] &&
-                                                                customers[
-                                                                    quotes[
-                                                                        quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ]
-                                                                ] &&
-                                                                customers[
-                                                                    quotes[
-                                                                        quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ]
-                                                                ]["contact"] &&
-                                                                customers[
-                                                                    quotes[
-                                                                        quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ]
-                                                                ]["contact"]}
-                                                        </span>
-                                                    </div>
-                                                    <form>
-                                                        <div className="new__flex">
-                                                            <label htmlFor="email">
-                                                                Email:{" "}
-                                                            </label>
-                                                            <input
-                                                                value={email}
-                                                                type="text"
-                                                                disabled
-                                                            />
-                                                        </div>
-                                                        <div className="new__flex">
-                                                            <h4>
-                                                                Line Items:{" "}
-                                                            </h4>
-                                                        </div>
-                                                        {lineItems.map(
-                                                            (item, i) => (
-                                                                <div>
-                                                                    <label
-                                                                        htmlFor={`item`}
-                                                                    >
-                                                                        item:{" "}
-                                                                    </label>
-                                                                    <input
-                                                                        type="text"
-                                                                        disabled
-                                                                        value={
-                                                                            lineItems[
-                                                                                i
-                                                                            ]
-                                                                        }
-                                                                    ></input>
-                                                                    <label
-                                                                        htmlFor={`amount`}
-                                                                    >
-                                                                        {" "}
-                                                                        amount:{" "}
-                                                                    </label>
-                                                                    <CurrencyFormat
-                                                                        disabled={
-                                                                            true
-                                                                        }
-                                                                        value={
-                                                                            lineItemAmount[
-                                                                                i
-                                                                            ]
-                                                                        }
-                                                                        allowNegative={
-                                                                            false
-                                                                        }
-                                                                        thousandSeparator={
-                                                                            true
-                                                                        }
-                                                                        decimalScale={
-                                                                            2
-                                                                        }
-                                                                        fixedDecimalScale={
-                                                                            true
-                                                                        }
-                                                                        prefix="$"
-                                                                    />
-                                                                </div>
-                                                            )
-                                                        )}
-                                                        <div className="new__flex">
-                                                            <h4>
-                                                                Secret Notes:{" "}
-                                                            </h4>
-                                                        </div>
-                                                        {secretNotes.map(
-                                                            (note, i) => (
-                                                                <div>
-                                                                    <label
-                                                                        htmlFor={`note`}
-                                                                    >
-                                                                        note:{" "}
-                                                                    </label>
-                                                                    <input
-                                                                        disabled
-                                                                        type="text"
-                                                                        value={
-                                                                            secretNotes[
-                                                                                i
-                                                                            ]
-                                                                        }
-                                                                    ></input>
-                                                                </div>
-                                                            )
-                                                        )}
-                                                        <div className="new__flex">
-                                                            <h4>
-                                                                Flat Discounts:{" "}
-                                                            </h4>
-                                                        </div>
-                                                        {flatDiscount && flatDiscount.map(
-                                                            (discount, i) => (
-                                                                <div key={i}>
-                                                                    <label
-                                                                        htmlFor={`item`}
-                                                                    >
-                                                                        discount:{" "}
-                                                                    </label>
-                                                                    <CurrencyFormat
-                                                                        disabled
-                                                                        value={
-                                                                            flatDiscount[
-                                                                                i
-                                                                            ]
-                                                                        }
-                                                                        allowNegative={
-                                                                            false
-                                                                        }
-                                                                        thousandSeparator={
-                                                                            true
-                                                                        }
-                                                                        decimalScale={
-                                                                            2
-                                                                        }
-                                                                        fixedDecimalScale={
-                                                                            true
-                                                                        }
-                                                                        max={
-                                                                            amount[
-                                                                                amount.length -
-                                                                                    1
-                                                                            ]
-                                                                        }
-                                                                        prefix="$"
-                                                                    />
-                                                                </div>
-                                                            )
-                                                        )}
-                                                        <div className="new__flex">
-                                                            <h4>
-                                                                Percent
-                                                                Discounts:{" "}
-                                                            </h4>
-                                                        </div>
-                                                        {percentDiscount && percentDiscount.map(
-                                                            (discount, i) => (
-                                                                <div key={i}>
-                                                                    <label
-                                                                        htmlFor={`item`}
-                                                                    >
-                                                                        discount:{" "}
-                                                                    </label>
-                                                                    <input
-                                                                        type="number"
-                                                                        min={0}
-                                                                        max={
-                                                                            100
-                                                                        }
-                                                                        placeholder={`0%-100%`}
-                                                                        value={
-                                                                            percentDiscount[
-                                                                                i
-                                                                            ]
-                                                                        }
-                                                                        disabled
-                                                                    ></input>
-                                                                </div>
-                                                            )
-                                                        )}
-                                                        <div className="new__flex">
-                                                            <p>Amount: </p>
-                                                            <div className="new__discountFlex">
-                                                                {amount.map(
-                                                                    (amt) => (
-                                                                        <p
-                                                                            key={
-                                                                                amt
-                                                                            }
-                                                                            className="new__discount"
-                                                                        >
-                                                                            <CurrencyFormat
-                                                                                displayType="text"
-                                                                                value={
-                                                                                    amt
-                                                                                }
-                                                                                decimalScale={
-                                                                                    2
-                                                                                }
-                                                                                fixedDecimalScale={
-                                                                                    true
-                                                                                }
-                                                                                prefix="$"
-                                                                            />
-                                                                        </p>
-                                                                    )
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                }}
-                            </Popup>
-                        </div>
+            {/* {Object.keys(quotes).map((quote, i) => { */}
+            {/* return ( */}
+            <div key={i} className="new__quoteContainer">
+                <div className="new__quote">
+                    <div className="new__quoteCustomerInfo">
+                        <p className="new__quoteCustomer">
+                            {dateFormat(quotes[quote]["date"])}
+                        </p>
+                        <p className="new__quoteCustomer">({status})</p>
+                        <p className="new__quoteCustomer">
+                            {associates[quotes[quote]["employee"]]["fullname"]} - {quotes[quote]["customer"]}
+                        </p>
                     </div>
-                );
-            })}
+                    <p className="new__quoteAmount">
+                        $
+                        {calculateQuoteAmount({ quote })
+                            .toLocaleString("en-US", {
+                                style: "currency",
+                                currency: "USD",
+                            })
+                            .slice(1)}
+                    </p>
+                    <button
+                        onClick={handleViewButton(quote, i)}
+                        className="new__quoteButton"
+                    >
+                        View Quote
+                    </button>
+                    <Popup open={editPopup[i]}>
+                        {(close) => {
+                            return (
+                                <div className="popup">
+                                    <div className="popup__inner">
+                                        <button
+                                            onClick={() => {
+                                                close();
+                                                closePopup();
+                                            }}
+                                            className="popup__closeBtn"
+                                        ></button>
+                                        <div className="new__popup">
+                                            <h3>Quote: {quote}</h3>
+                                            <h3>{quotes[quote]["customer"]}</h3>
+                                            <div className="new__customerInfo">
+                                                <span className="new__text">
+                                                    {quotes &&
+                                                        quotes[quote] &&
+                                                        quotes[quote][
+                                                            "customer id"
+                                                        ] &&
+                                                        customers[
+                                                            quotes[quote][
+                                                                "customer id"
+                                                            ]
+                                                        ] &&
+                                                        customers[
+                                                            quotes[quote][
+                                                                "customer id"
+                                                            ]
+                                                        ]["street"] &&
+                                                        customers[
+                                                            quotes[quote][
+                                                                "customer id"
+                                                            ]
+                                                        ]["street"]}
+                                                </span>
+                                                <span className="new__text">
+                                                    {quotes &&
+                                                        quotes[quote] &&
+                                                        quotes[quote][
+                                                            "customer id"
+                                                        ] &&
+                                                        customers[
+                                                            quotes[quote][
+                                                                "customer id"
+                                                            ]
+                                                        ] &&
+                                                        customers[
+                                                            quotes[quote][
+                                                                "customer id"
+                                                            ]
+                                                        ]["city"] &&
+                                                        customers[
+                                                            quotes[quote][
+                                                                "customer id"
+                                                            ]
+                                                        ]["city"]}
+                                                </span>
+                                                <span className="new__text">
+                                                    {quotes &&
+                                                        quotes[quote] &&
+                                                        quotes[quote][
+                                                            "customer id"
+                                                        ] &&
+                                                        customers[
+                                                            quotes[quote][
+                                                                "customer id"
+                                                            ]
+                                                        ] &&
+                                                        customers[
+                                                            quotes[quote][
+                                                                "customer id"
+                                                            ]
+                                                        ]["contact"] &&
+                                                        customers[
+                                                            quotes[quote][
+                                                                "customer id"
+                                                            ]
+                                                        ]["contact"]}
+                                                </span>
+                                            </div>
+                                            <form>
+                                                <div className="new__flex">
+                                                    <label htmlFor="email">
+                                                        Email:{" "}
+                                                    </label>
+                                                    <input
+                                                        value={email}
+                                                        type="text"
+                                                        disabled
+                                                    />
+                                                </div>
+                                                <div className="new__flex">
+                                                    <h4>Line Items: </h4>
+                                                </div>
+                                                {lineItems.map((item, i) => (
+                                                    <div>
+                                                        <label htmlFor={`item`}>
+                                                            item:{" "}
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            disabled
+                                                            value={lineItems[i]}
+                                                        ></input>
+                                                        <label
+                                                            htmlFor={`amount`}
+                                                        >
+                                                            {" "}
+                                                            amount:{" "}
+                                                        </label>
+                                                        <CurrencyFormat
+                                                            disabled={true}
+                                                            value={
+                                                                lineItemAmount[
+                                                                    i
+                                                                ]
+                                                            }
+                                                            allowNegative={
+                                                                false
+                                                            }
+                                                            thousandSeparator={
+                                                                true
+                                                            }
+                                                            decimalScale={2}
+                                                            fixedDecimalScale={
+                                                                true
+                                                            }
+                                                            prefix="$"
+                                                        />
+                                                    </div>
+                                                ))}
+                                                <div className="new__flex">
+                                                    <h4>Secret Notes: </h4>
+                                                </div>
+                                                {secretNotes.map((note, i) => (
+                                                    <div>
+                                                        <label htmlFor={`note`}>
+                                                            note:{" "}
+                                                        </label>
+                                                        <input
+                                                            disabled
+                                                            type="text"
+                                                            value={
+                                                                secretNotes[i]
+                                                            }
+                                                        ></input>
+                                                    </div>
+                                                ))}
+                                                <div className="new__flex">
+                                                    <h4>Flat Discounts: </h4>
+                                                </div>
+                                                {flatDiscount &&
+                                                    flatDiscount.map(
+                                                        (discount, i) => (
+                                                            <div key={i}>
+                                                                <label
+                                                                    htmlFor={`item`}
+                                                                >
+                                                                    discount:{" "}
+                                                                </label>
+                                                                <CurrencyFormat
+                                                                    disabled
+                                                                    value={
+                                                                        flatDiscount[
+                                                                            i
+                                                                        ]
+                                                                    }
+                                                                    allowNegative={
+                                                                        false
+                                                                    }
+                                                                    thousandSeparator={
+                                                                        true
+                                                                    }
+                                                                    decimalScale={
+                                                                        2
+                                                                    }
+                                                                    fixedDecimalScale={
+                                                                        true
+                                                                    }
+                                                                    max={
+                                                                        amount[
+                                                                            amount.length -
+                                                                                1
+                                                                        ]
+                                                                    }
+                                                                    prefix="$"
+                                                                />
+                                                            </div>
+                                                        )
+                                                    )}
+                                                <div className="new__flex">
+                                                    <h4>Percent Discounts: </h4>
+                                                </div>
+                                                {percentDiscount &&
+                                                    percentDiscount.map(
+                                                        (discount, i) => (
+                                                            <div key={i}>
+                                                                <label
+                                                                    htmlFor={`item`}
+                                                                >
+                                                                    discount:{" "}
+                                                                </label>
+                                                                <input
+                                                                    type="number"
+                                                                    min={0}
+                                                                    max={100}
+                                                                    placeholder={`0%-100%`}
+                                                                    value={
+                                                                        percentDiscount[
+                                                                            i
+                                                                        ]
+                                                                    }
+                                                                    disabled
+                                                                ></input>
+                                                            </div>
+                                                        )
+                                                    )}
+                                                <div className="new__flex">
+                                                    <p>Amount: </p>
+                                                    <div className="new__discountFlex">
+                                                        {amount.map((amt) => (
+                                                            <p
+                                                                key={amt}
+                                                                className="new__discount"
+                                                            >
+                                                                <CurrencyFormat
+                                                                    displayType="text"
+                                                                    value={amt}
+                                                                    decimalScale={
+                                                                        2
+                                                                    }
+                                                                    fixedDecimalScale={
+                                                                        true
+                                                                    }
+                                                                    prefix="$"
+                                                                />
+                                                            </p>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        }}
+                    </Popup>
+                </div>
+            </div>
+            {/* );
+            })} */}
         </div>
     );
 }
