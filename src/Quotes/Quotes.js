@@ -257,7 +257,7 @@ function Quotes() {
                                 quote={quote.quote}
                                 i={i}
                                 associates={associates}
-                                status={quote.status}
+                                status={quote.status.replace(" quotes", "")}
                             />
                         )
                     );

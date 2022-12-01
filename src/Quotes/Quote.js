@@ -183,18 +183,18 @@ function Quote({ quotes, customers, quote, i, associates, status }) {
 
     return (
         <div>
-            {/* {Object.keys(quotes).map((quote, i) => { */}
-            {/* return ( */}
             <div key={i} className="new__quoteContainer">
                 <div className="new__quote">
-                    <div className="new__quoteCustomerInfo">
-                        <p className="new__quoteCustomer">
-                            {dateFormat(quotes[quote]["date"])}
-                        </p>
-                        <p className="new__quoteCustomer">({status})</p>
-                        <p className="new__quoteCustomer">
-                            {associates[quotes[quote]["employee"]]["fullname"]} - {quotes[quote]["customer"]}
-                        </p>
+                    <div className="div_box">
+                        <div className="new__quoteCustomerInfo">
+                            <p className="new__quoteCustomer">
+                                {dateFormat(quotes[quote]["date"])}
+                            </p>
+                            <p className="new__quoteCustomer">({status})</p>
+                            <p className="new__quoteCustomer">
+                                {associates[quotes[quote]["employee"]]["fullname"]} - {quotes[quote]["customer"]}
+                            </p>
+                        </div>
                     </div>
                     <p className="new__quoteAmount">
                         $
@@ -463,8 +463,6 @@ function Quote({ quotes, customers, quote, i, associates, status }) {
                     </Popup>
                 </div>
             </div>
-            {/* );
-            })} */}
         </div>
     );
 }

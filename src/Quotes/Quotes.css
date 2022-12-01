@@ -3,6 +3,7 @@
     max-width: 1300px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 350px;
 }
 
 @media screen and (max-width: 1400px) {
@@ -55,4 +56,16 @@
 
 .quotes__sortText {
     white-space: pre;
+}
+
+.div_box {
+    display: flex;
+}
+
+.new__quoteCustomerInfo {
+    width: 750px;
+}
+
+.new__quoteAmount {
+    width: 250px;
 }

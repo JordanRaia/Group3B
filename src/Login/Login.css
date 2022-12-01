@@ -6,6 +6,7 @@
     justify-content: center;
     height: 100vh;
     background: linear-gradient(120deg, rgb(182, 244, 146), rgb(51, 139, 147));
+    margin-bottom: 65px;
 }
 
 .login__center {
@@ -29,6 +30,7 @@
     background: white;
     box-shadow: 10px 10px 5px black;
     border-radius: 10px;
+    height: auto;
 }
 
 /* header */
