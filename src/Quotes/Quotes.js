@@ -263,8 +263,8 @@ function Quotes() {
                             <MenuItem value="All">All</MenuItem>
                             {Object.keys(customers).map((customer) => {
                                 return (
-                                    <MenuItem key={customer} value={customer}>
-                                        {customer}
+                                    <MenuItem key={customer} value={customers[customer]["name"]}>
+                                        {customers[customer]["name"]}
                                     </MenuItem>
                                 );
                             })}
