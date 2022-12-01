@@ -50,6 +50,12 @@
     display: flex;
 }
 
+@media screen and (max-width: 768px) {
+    .quotes__flex {
+        flex-direction: column;
+    }
+}
+
 .quotes__form {
     width: 100%!important;
 }
@@ -64,6 +70,19 @@
 
 .new__quoteCustomerInfo {
     width: 750px;
+}
+
+
+@media screen and (max-width: 992px) {
+    .new__quoteCustomerInfo {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .new__quote {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 .new__quoteAmount {
