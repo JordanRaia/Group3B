@@ -1,11 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 /* Responsive width, matches with default bootstrap navbar */
-.home_background {
+ .home_background {
     margin: 0;
     padding: 0;
-    height: 100vh;
-    /* background: linear-gradient(120deg, rgb(182, 244, 146), rgb(51, 139, 147)); */
+    /* background: linear-gradient(120deg, rgb(182, 244, 146), rgb(51, 139, 147));  */
     overflow: hidden;
 }
 
