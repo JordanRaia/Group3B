@@ -573,9 +573,7 @@ function SanctionQuote() {
                                                             closePopup();
                                                         }}
                                                         className="popup__closeBtn"
-                                                    >
-                                                        close
-                                                    </button>
+                                                    />
                                                     <div className="new__popup">
                                                         <h3>
                                                             Edit quote: {quote}
