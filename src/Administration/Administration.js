@@ -6,7 +6,7 @@ import InvalidPermissions from "../InvalidPermissions/InvalidPermissions";
 import NoLogin from "../NoLogin/NoLogin";
 import { onAuthStateChanged } from "firebase/auth";
 import Popup from "reactjs-popup";
-import { auth, db } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import {
     onValue,
     ref as dbRef,
@@ -17,6 +17,7 @@ import {
 import TextField from "@mui/material/TextField";
 // import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
+import { getDownloadURL, ref as stoRef } from "firebase/storage";
 // page for administrator to view all users of the site and be able to change their permissions,
 // ie. user, sales associate, in house employee, in house employee 2, and administrator
 const Administration = () => {
@@ -161,10 +162,24 @@ const Administration = () => {
                         {users ? (
                             <div className="associateList">
                                 {users.map((item, i) => {
-                                    // console.log(item[0]);   //key value
+                                    getDownloadURL(
+                                        stoRef(storage, item[1].profile_picture)
+                                    ).then((url) => {
+                                        const profileImg =
+                                            document.getElementById(
+                                                `${item[0]}_profile`
+                                            );
+                                        profileImg.setAttribute("src", url);
+                                    });
                                     return (
-                                        <div className="associateNode">
+                                        <div key={i} className="associateNode">
                                             <div className="textData">
+                                                <img
+                                                    className="admin__profilePic"
+                                                    id={`${item[0]}_profile`}
+                                                    src=""
+                                                    alt="profilePic"
+                                                />
                                                 <div className="salesAssociates">
                                                     {item[1].fullname}
                                                 </div>

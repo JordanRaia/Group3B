@@ -131,11 +131,11 @@
 }
 
 .admin__profilePic {
-    height: 3rem;
-    width: 3rem;
+    height: 1.5rem;
+    width: 1.5rem;
     object-fit: cover;
     border-radius: 50%;
-    border: 1px solid black;
+    margin-right: 0.313rem;
 }
 
 .adminTitle {
