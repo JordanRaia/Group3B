@@ -32,7 +32,7 @@ const Administration = () => {
     const [address, setAddress] = useState("");
     const [userRank, setUserRank] = useState("");
     const [editPopup, setEditPopup] = useState([]);
-    
+    const [profilePic, setProfilePic] = useState("");
 
     useEffect(() => {
         authState();
@@ -119,6 +119,8 @@ const Administration = () => {
         setUserRank(salesteam[salesperson]["rank"]);
         //address
         setAddress(salesteam[salesperson]["address"]);
+        //pfp
+        setProfilePic(salesteam[salesperson]["profile_picture"])
     };
 
     function closePopup() {
@@ -153,7 +155,8 @@ const Administration = () => {
                 commission: commission,
                 email: email,
                 fullname: name,
-                rank: userRank
+                rank: userRank,
+                profile_picture: profilePic
             };
 
             let newQuoteKey = "";
