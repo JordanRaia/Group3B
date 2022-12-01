@@ -3,6 +3,7 @@
     max-width: 1300px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 350px;
 }
 
 @media screen and (max-width: 1400px) {

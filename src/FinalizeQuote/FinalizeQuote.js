@@ -20,7 +20,6 @@ import {
     set,
     remove,
 } from "firebase/database";
-import Footer from "../Footer/Footer";
 // for sales employees to create new quotes and send to finalize quote
 function FinalizeQuote() {
     const [customers, setCustomers] = useState([]);
@@ -1044,7 +1043,6 @@ function FinalizeQuote() {
                     {Object.keys(quotes).length} quote
                     {Object.keys(quotes).length !== 1 && "s"} found
                 </h3>
-                <span><Footer/></span>
             </div>
         ) : (
             <InvalidPermissions />

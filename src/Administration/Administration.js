@@ -17,7 +17,6 @@ import {
 import TextField from "@mui/material/TextField";
 // import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
-import Footer from "../Footer/Footer";
 // page for administrator to view all users of the site and be able to change their permissions,
 // ie. user, sales associate, in house employee, in house employee 2, and administrator
 const Administration = () => {
@@ -449,7 +448,6 @@ const Administration = () => {
                         <div className="divider" />
                     </div>
                 </div>
-                <span><Footer/></span>
             </div>
         ) : (
             <InvalidPermissions />
