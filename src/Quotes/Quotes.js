@@ -18,6 +18,10 @@ import { MenuItem, Select } from "@mui/material";
 // date
 import "rsuite/dist/rsuite.min.css";
 import { DateRangePicker } from "rsuite";
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
+import IconButton from '@mui/material/IconButton';
 
 // page for Administrator to view quotes in all stages: New quote, finalized quote, sanctioned quotes
 function Quotes() {
@@ -186,12 +190,33 @@ function Quotes() {
                 </div>
                 <h2>Quotes:</h2>
                 <div className="quotes__form">
-                    <TextField
-                        className="quotes__search"
-                        label="search"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
+                    <div className="SearchBar">
+                        <TextField
+                            className="quotes__search"
+                            label="search"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                ),
+                                endAdornment: (
+                                    <IconButton
+                                        sx={{ visibility: search ? "visible" : "hidden" }}
+                                        onClick={() => { setSearch(""); }}
+                                    >
+                                    <ClearIcon />
+                                    </IconButton>
+                                )
+                            }}
+                            sx={{
+                                m: 2,
+                                "& .Mui-focused .MuiIconButton-root": { color: "primary.main" },
+                            }}
+                        />
+                    </div>
                     <div className="quotes__flex">
                         <p className="quotes__sortText">date: </p>
                         <DateRangePicker

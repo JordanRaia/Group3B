@@ -43,7 +43,7 @@
 }
 
 .quotes__search {
-    width: 100%!important;
+    width: 100% !important;
 }
 
 .quotes__flex {
@@ -97,4 +97,52 @@
 
 .BottomSpace {
     height: 100px;
+}
+
+.new_PopUp_Info label {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+}
+
+.new_PopUp_Info h4 {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+    font-weight: bold;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 5px;
+    padding-right: 10px;
+}
+
+.SecretBubble {
+    border-top: 2px solid black;
+    padding-bottom: 10px;
+}
+
+@media screen and (max-width: 992px) {
+    .LineBubble {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.LineBubble {
+    border-top: 2px solid black;
+    margin-top: 10px;
+    padding-bottom: 10px;
+}
+
+.FlatBubble {
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    padding-bottom: 10px;
+}
+
+.EmailBubble {
+    border-top: 2px solid black;
+    padding-top: 10px;
+}
+
+.EmailBubble label {
+    font-weight: bold;
 }

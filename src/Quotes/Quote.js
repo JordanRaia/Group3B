@@ -301,90 +301,46 @@ function Quote({ quotes, customers, quote, i, associates, status }) {
                                                         ]["contact"]}
                                                 </span>
                                             </div>
-                                            <form>
-                                                <div className="new__flex">
-                                                    <label htmlFor="email">
-                                                        Email:{" "}
-                                                    </label>
-                                                    <input
-                                                        value={email}
-                                                        type="text"
-                                                        disabled
-                                                    />
-                                                </div>
-                                                <div className="new__flex">
-                                                    <h4>Line Items: </h4>
-                                                </div>
-                                                {lineItems.map((item, i) => (
-                                                    <div>
-                                                        <label htmlFor={`item`}>
-                                                            item:{" "}
+                                            <form className="new_PopUp_Info">
+                                                <div className="EmailBubble">
+                                                    <div className="new__flex">
+                                                        <label htmlFor="email">
+                                                            Email:{" "}
                                                         </label>
                                                         <input
+                                                            value={email}
                                                             type="text"
                                                             disabled
-                                                            value={lineItems[i]}
-                                                        ></input>
-                                                        <label
-                                                            htmlFor={`amount`}
-                                                        >
-                                                            {" "}
-                                                            amount:{" "}
-                                                        </label>
-                                                        <CurrencyFormat
-                                                            disabled={true}
-                                                            value={
-                                                                lineItemAmount[
-                                                                    i
-                                                                ]
-                                                            }
-                                                            allowNegative={
-                                                                false
-                                                            }
-                                                            thousandSeparator={
-                                                                true
-                                                            }
-                                                            decimalScale={2}
-                                                            fixedDecimalScale={
-                                                                true
-                                                            }
-                                                            prefix="$"
                                                         />
                                                     </div>
-                                                ))}
-                                                <div className="new__flex">
-                                                    <h4>Secret Notes: </h4>
                                                 </div>
-                                                {secretNotes.map((note, i) => (
-                                                    <div>
-                                                        <label htmlFor={`note`}>
-                                                            note:{" "}
-                                                        </label>
-                                                        <input
-                                                            disabled
-                                                            type="text"
-                                                            value={
-                                                                secretNotes[i]
-                                                            }
-                                                        ></input>
+                                                <div className="LineBubble">
+                                                    <div className="new__flex">
+                                                        <h4>Line Items: </h4>
                                                     </div>
-                                                ))}
-                                                <div className="new__flex">
-                                                    <h4>Flat Discounts: </h4>
-                                                </div>
-                                                {flatDiscount &&
-                                                    flatDiscount.map(
-                                                        (discount, i) => (
-                                                            <div key={i}>
+                                                    {lineItems.map((item, i) => (
+                                                        <div>
+                                                            <div className="Item">
+                                                                <label htmlFor={`item`}>
+                                                                    Item:{" "}
+                                                                </label>
+                                                                <input
+                                                                    type="text"
+                                                                    disabled
+                                                                    value={lineItems[i]}
+                                                                ></input>
+                                                            </div>
+                                                            <div className="Amount">
                                                                 <label
-                                                                    htmlFor={`item`}
+                                                                    htmlFor={`amount`}
                                                                 >
-                                                                    discount:{" "}
+                                                                    {" "}
+                                                                    Amount:{" "}
                                                                 </label>
                                                                 <CurrencyFormat
-                                                                    disabled
+                                                                    disabled={true}
                                                                     value={
-                                                                        flatDiscount[
+                                                                        lineItemAmount[
                                                                             i
                                                                         ]
                                                                     }
@@ -394,23 +350,79 @@ function Quote({ quotes, customers, quote, i, associates, status }) {
                                                                     thousandSeparator={
                                                                         true
                                                                     }
-                                                                    decimalScale={
-                                                                        2
-                                                                    }
+                                                                    decimalScale={2}
                                                                     fixedDecimalScale={
                                                                         true
-                                                                    }
-                                                                    max={
-                                                                        amount[
-                                                                            amount.length -
-                                                                                1
-                                                                        ]
                                                                     }
                                                                     prefix="$"
                                                                 />
                                                             </div>
-                                                        )
-                                                    )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="SecretBubble">
+                                                    <div className="new__flex">
+                                                        <h4>Secret Notes: </h4>
+                                                    </div>
+                                                    {secretNotes.map((note, i) => (
+                                                        <div>
+                                                            <label htmlFor={`note`}>
+                                                                Note:{" "}
+                                                            </label>
+                                                            <input
+                                                                disabled
+                                                                type="text"
+                                                                value={
+                                                                    secretNotes[i]
+                                                                }
+                                                            ></input>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="FlatBubble">
+                                                    <div className="new__flex">
+                                                        <h4>Flat Discounts: </h4>
+                                                    </div>
+                                                    {flatDiscount &&
+                                                        flatDiscount.map(
+                                                            (discount, i) => (
+                                                                <div key={i}>
+                                                                    <label
+                                                                        htmlFor={`item`}
+                                                                    >
+                                                                        discount:{" "}
+                                                                    </label>
+                                                                    <CurrencyFormat
+                                                                        disabled
+                                                                        value={
+                                                                            flatDiscount[
+                                                                                i
+                                                                            ]
+                                                                        }
+                                                                        allowNegative={
+                                                                            false
+                                                                        }
+                                                                        thousandSeparator={
+                                                                            true
+                                                                        }
+                                                                        decimalScale={
+                                                                            2
+                                                                        }
+                                                                        fixedDecimalScale={
+                                                                            true
+                                                                        }
+                                                                        max={
+                                                                            amount[
+                                                                                amount.length -
+                                                                                    1
+                                                                            ]
+                                                                        }
+                                                                        prefix="$"
+                                                                    />
+                                                                </div>
+                                                            )
+                                                        )}
+                                                </div>
                                                 <div className="new__flex">
                                                     <h4>Percent Discounts: </h4>
                                                 </div>
