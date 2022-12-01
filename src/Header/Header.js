@@ -16,7 +16,7 @@ function Header() {
 
     //grab user
     const [user, setUser] = useState({});
-    const [rank, setRank] = useState("none");
+    const [rank, setRank] = useState("");
     const [name, setName] = useState("");
     //Url to profile picture
     const [profile, setProfile] = useState("");
@@ -72,6 +72,7 @@ function Header() {
         } else {
             //set profile picture to deafult
             setProfileUrl(defaultProfileUrl);
+            setRank("");
         }
     });
 
