@@ -5,11 +5,7 @@ import InvalidPermissions from "../InvalidPermissions/InvalidPermissions";
 import NoLogin from "../NoLogin/NoLogin";
 // firebase
 import { auth, db } from "../firebase";
-import {
-    onValue,
-    query,
-    ref as dbRef,
-} from "firebase/database";
+import { onValue, query, ref as dbRef } from "firebase/database";
 import TextField from "@mui/material/TextField";
 import "./Quotes.css";
 import Quote from "./Quote";
@@ -18,10 +14,10 @@ import { MenuItem, Select } from "@mui/material";
 // date
 import "rsuite/dist/rsuite.min.css";
 import { DateRangePicker } from "rsuite";
-import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
-import ClearIcon from '@mui/icons-material/Clear';
-import IconButton from '@mui/material/IconButton';
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
+import IconButton from "@mui/material/IconButton";
 
 // page for Administrator to view quotes in all stages: New quote, finalized quote, sanctioned quotes
 function Quotes() {
@@ -95,16 +91,16 @@ function Quotes() {
                                     quote: quoteId,
                                     search: search,
                                 });
+
+                                // sort by date
+                                tempArr.sort(function (a, b) {
+                                    return new Date(b.date) - new Date(a.date);
+                                });
+
+                                setAllQuotes(tempArr);
                             });
                         });
                     });
-
-                    // sort by date
-                    tempArr.sort(function (a, b) {
-                        return new Date(b.date) - new Date(a.date);
-                    });
-
-                    setAllQuotes(tempArr);
                 });
 
                 // get the user's rank
@@ -204,16 +200,24 @@ function Quotes() {
                                 ),
                                 endAdornment: (
                                     <IconButton
-                                        sx={{ visibility: search ? "visible" : "hidden" }}
-                                        onClick={() => { setSearch(""); }}
+                                        sx={{
+                                            visibility: search
+                                                ? "visible"
+                                                : "hidden",
+                                        }}
+                                        onClick={() => {
+                                            setSearch("");
+                                        }}
                                     >
-                                    <ClearIcon />
+                                        <ClearIcon />
                                     </IconButton>
-                                )
+                                ),
                             }}
                             sx={{
                                 m: 2,
-                                "& .Mui-focused .MuiIconButton-root": { color: "primary.main" },
+                                "& .Mui-focused .MuiIconButton-root": {
+                                    color: "primary.main",
+                                },
                             }}
                         />
                     </div>
@@ -263,7 +267,10 @@ function Quotes() {
                             <MenuItem value="All">All</MenuItem>
                             {Object.keys(customers).map((customer) => {
                                 return (
-                                    <MenuItem key={customer} value={customers[customer]["name"]}>
+                                    <MenuItem
+                                        key={customer}
+                                        value={customers[customer]["name"]}
+                                    >
                                         {customers[customer]["name"]}
                                     </MenuItem>
                                 );
