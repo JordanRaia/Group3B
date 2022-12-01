@@ -48,6 +48,7 @@
 
 .quotes__flex {
     display: flex;
+    padding-top: 10px;
 }
 
 @media screen and (max-width: 768px) {
