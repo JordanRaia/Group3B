@@ -6,9 +6,7 @@ import NoLogin from "../NoLogin/NoLogin";
 // firebase
 import { auth, db } from "../firebase";
 import {
-    equalTo,
     onValue,
-    orderByChild,
     query,
     ref as dbRef,
 } from "firebase/database";
@@ -16,7 +14,7 @@ import TextField from "@mui/material/TextField";
 import "./Quotes.css";
 import Quote from "./Quote";
 import { Link } from "react-router-dom";
-import { FormControl, MenuItem, Select } from "@mui/material";
+import { MenuItem, Select } from "@mui/material";
 // date
 import "rsuite/dist/rsuite.min.css";
 import { DateRangePicker } from "rsuite";
