@@ -1,12 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-.header__flexDown {
-    display: flex;
-    flex-direction: column;
-}
-
 .header__flex {
     display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+#basic-navbar-nav .header__flex .divider {
+    width: 20px;
+    height: 1px;
 }
 
 .header__flex img:first-child {
@@ -24,7 +26,7 @@
 }
 
 .header__helloText {
-    color: rgba(255, 255, 255, 0.55);;
+    /* color: rgba(255, 255, 255, 0.55);; */
     text-decoration: none;
     font-family: Poppins;
     font-weight: 400;
@@ -32,18 +34,19 @@
 
 .header__link {
     text-decoration: none;
-    color: rgba(255, 255, 255, 0.55);
+    /* color: rgba(255, 255, 255, 0.55); */
     transition: color 150ms;
 }
 
 .header__link:hover {
     text-decoration: underline;
-    color: white;
+    /* color: white; */
     transition: color 150ms;
 }
 
 .header__linkFlex {
     display: flex;
+    flex-direction: column;
     justify-content: right;
 }
 
@@ -56,7 +59,7 @@
 .header__logo {
     height: 3rem;
     width: 3rem;
-    border: 1px solid rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(0, 0, 0, 1);
     border-radius: 100%;
     margin-right: .5rem;
 }
@@ -67,7 +70,7 @@
     border-radius: 50%;
     margin-left: .5rem;
     margin-right: 0;
-    border: 2px solid rgba(255, 255, 255, 0.55);
+    /* border: 2px solid rgba(255, 255, 255, 0.55); */
     object-fit: cover;
 }
 
@@ -81,4 +84,42 @@
 .header__navLink, .header__navDropdown, .header__navDropDownItem, .header__signIn {
     font-family: Poppins!important;
     font-weight: 400!important;
+}
+
+.header__signIn {
+    text-align: right;
+}
+
+@media screen and (max-width: 920px) {
+    .header__signIn {
+        text-align: left;
+    }
+}
+
+#basic-navbar-nav .header__divider {
+    width: 1px;
+    height: 30px;
+    align-self: center;
+    background-color: #D3D3D3
+}
+
+@media screen and (max-width: 920px) {
+    .header__divider {
+        display: none;
+    }
+}
+
+#basic-navbar-nav a {
+    color: #333;
+    transition: .2s;
+}
+
+#basic-navbar-nav a:hover {
+    color: #3A52CD;
+}
+
+.navbar {
+    -webkit-box-shadow: 0px 4px 10px 0px rgba(0,0,0,0.15);
+    -moz-box-shadow: 0px 4px 10px 0px rgba(0,0,0,0.15);
+    box-shadow: 0px 4px 10px 0px rgba(0,0,0,0.15);
 }

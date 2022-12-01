@@ -3,6 +3,7 @@
     max-width: 1300px;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 40px;
 }
 
 .admin_background {
@@ -82,6 +83,19 @@
     }
 }
 
+.admin__popup {
+    background-color: white;
+    padding: 40px;
+    position: relative;
+}
+
+.admin__popup .popup__closeBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 99999;
+}
+
 .admin__profilePic {
     height: 3rem;
     width: 3rem;
@@ -91,10 +105,21 @@
 }
 
 .adminTitle {
-    font-size: 60px;
+    font-weight: 600;
 }
 
 .associateNode {
+    display: flex;
+    /* gap: 20px; */
+    margin: 10px 0;
+    justify-content: space-between;
+}
+
+.associateNode .textData {
+    display: flex;
+}
+
+.associateNode .buttons {
     display: flex;
     gap: 20px;
 }
@@ -113,6 +138,8 @@
     margin: 10px 0;
     display: flex;
     gap: 20px;
+    align-items: center;
+    flex-direction: column;
 }
 
 .newUser .field {
@@ -120,3 +147,50 @@
     gap: 5px;
 }
 
+.associateNode .adminButton {
+    border: none;
+    background-color: transparent;
+    font-weight: 600;
+    transition: .2s;
+    padding: 0;
+}
+
+.associateNode .editButton {
+    color: #666
+}
+
+.associateNode .deleteButton {
+    color: #DF1212;
+}
+
+.associateNode .adminButton:hover {
+    opacity: .6;
+}
+
+.salesAssociates {
+    width: 300px;
+}
+
+.commission {
+    width: 200px;
+}
+
+.flexCont {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.flexCont .flexLeft {
+    width: 60%;
+}
+
+.flexCont .flexRight {
+    width: 30%;
+    border: solid 1px #333
+}
+
+.admin__popup .editAssocFields {
+    display: flex;
+    flex-direction: column;
+}

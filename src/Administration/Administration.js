@@ -1,39 +1,35 @@
 import React, { useEffect, useState } from "react";
 //import { useNavigate } from "react-router-dom";
 import "./Administration.css";
-// material ui
-import Popup from "reactjs-popup";
-// firebase
+// import EditUser from "./EditUser.js";
+import InvalidPermissions from "../InvalidPermissions/InvalidPermissions";
+import NoLogin from "../NoLogin/NoLogin";
 import { onAuthStateChanged } from "firebase/auth";
+import Popup from "reactjs-popup";
 import { auth, db } from "../firebase";
 import {
     onValue,
     ref as dbRef,
-    child,
-    push,
-    update,
     query,
-    //set,
-    //remove,
+    update,
+    remove,
 } from "firebase/database";
-import InvalidPermissions from "../InvalidPermissions/InvalidPermissions";
-import NoLogin from "../NoLogin/NoLogin";
-
+import TextField from "@mui/material/TextField";
+// import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
 // page for administrator to view all users of the site and be able to change their permissions,
 // ie. user, sales associate, in house employee, in house employee 2, and administrator
 const Administration = () => {
-    //const navigate = useNavigate();
     const [user, setUser] = useState({}); // Checking if user is logged in.
-    const [salesteam, setSalesTeam] = useState([]); // List of all users.
+    const [users, setUsers] = useState([]); // List of all users.
+    const [address, setAddress] = useState("");
+    const [name, setName] = useState("");
+    const [profile, setProfile] = useState("users/default/profile.jpg");
     const [email, setEmail] = useState("");
     const [commission, setCommission] = useState("");
-    const [name, setName] = useState("");
-    const [rank, setRank] = useState("");
-    const [address, setAddress] = useState("");
-    const [userRank, setUserRank] = useState("");
     const [editPopup, setEditPopup] = useState([]);
-    const [profilePic, setProfilePic] = useState("");
-
+    const [newRank, setNewRank] = useState("");
+    const [rank, setRank] = useState("none");
     useEffect(() => {
         authState();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -46,11 +42,13 @@ const Administration = () => {
                 const usersRef = query(dbRef(db, `users`));
                 onValue(usersRef, (snapshot) => {
                     const data = snapshot.val();
-                    setSalesTeam(data);
+                    //create nested array that retains the object keys
+                    const cleanedData = Object.entries(data);
+                    setUsers(cleanedData);
                 });
 
-                // get the user's rank
                 const rankRef = dbRef(db, `users/${currentUser.uid}/rank`);
+
                 onValue(rankRef, (snapshot) => {
                     //set data to name
                     const data = snapshot.val();
@@ -61,278 +59,398 @@ const Administration = () => {
         });
     };
 
-    /*const writeUserData = (userId, name, email, imageUrl, rank) => {
-        set(dbRef(db, "users/" + userId), {
-            fullname: name,
-            email: email,
-            profile_picture: imageUrl,
-            rank: rank,
+    // Edits a user's data in the DB
+    const editData = (id) => (e) => {
+        e.preventDefault();
+
+        const userRef = query(dbRef(db, `users/${id}`));
+        onValue(
+            userRef,
+            (snapshot) => {
+                update(dbRef(db, "users/" + id), {
+                    fullname: name,
+                    email: email,
+                    commission: commission,
+                    address: address,
+                    rank: newRank,
+                    profile_picture: profile,
+                })
+                    .then(() => {
+                        console.log("Successfully updated.");
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            },
+            {
+                onlyOnce: true,
+            }
+        );
+
+        closePopup();
+    };
+
+    // Fills the popup box with data when it's opened.
+    const checkUserData = (
+        name,
+        email,
+        commission,
+        address,
+        rank,
+        i,
+        profile = "users/default/profile.jpg"
+    ) => {
+        let tempArr = Array(users.length).fill(false); //fill temp Arr with false for every quote
+        tempArr[i] = true;
+        setEditPopup(tempArr);
+        setName(name);
+        setProfile(profile);
+        setEmail(email);
+        setCommission(commission);
+        setAddress(address);
+        setNewRank(rank);
+    };
+
+    // Resets the text box fields
+    const resetFields = () => {
+        setCommission("");
+    };
+
+    // Resets the values in the popup window
+    const resetPopup = () => {
+        setName("");
+        setEmail("");
+        setCommission("");
+        setAddress("");
+        setNewRank("");
+    };
+
+    // Attempts to delete a user from the DB
+    const checkUser = (id) => {
+        const userRef = query(dbRef(db, `users/${id}/`));
+        onValue(userRef, (snapshot) => {
+            // const data = snapshot.val();
+            remove(dbRef(db, `users/${id}`))
+                .then(() => {
+                    console.log("Successfully deleted.");
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         });
     };
 
-    const register = async (e) => {
-        e.preventDefault(); //prevent page from refreshing
+    // Exit the popup window
+    const closePopup = () => {
+        resetPopup();
+        resetFields();
 
-        await createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                if (auth) {
-                    //creating account was successful
-
-                    let profileUrl = "users/default/profile.jpg";
-
-                    //add userdata to database
-                    writeUserData(
-                        userCredential.user.uid,
-                        name,
-                        email,
-                        profileUrl,
-                        "salesAssociate"
-                    );
-                    resetFields();
-                    navigate("/Administration");
-                }
-            })
-            //creating an account was unsuccessful and alerting user with error message
-            .catch((error) => alert(error.message));
-    };
-
-    const resetFields = () => {
-        setName("");
-        setEmail("");
-        setPassword("");
-    };*/
-
-    const handleEditButton = (salesperson, i) => (e) => {
-        e.preventDefault();
-
-        let tempArr = Array(Object.keys(salesteam).length).fill(false); //fill temp Arr with false for every quote
-        tempArr[i] = true;
-        setEditPopup(tempArr);
-
-        //email
-        setEmail(salesteam[salesperson]["email"]);
-        //commission
-        setCommission(salesteam[salesperson]["commission"]);
-        //fullname
-        setName(salesteam[salesperson]["fullname"]);
-        //rank
-        setUserRank(salesteam[salesperson]["rank"]);
-        //address
-        setAddress(salesteam[salesperson]["address"]);
-        //pfp
-        setProfilePic(salesteam[salesperson]["profile_picture"])
-    };
-
-    function closePopup() {
-        //setPopup(false);
-        setEditPopup(new Array(Object.keys(salesteam).length).fill(false));
-        setEmail("");
-        setCommission("");
-        setName("");
-        setUserRank("");
-        setAddress("");
-    }
-
-    const handleSaveSalesPerson = (quoteKey) => async (e) => {
-        e.preventDefault(); // prevent page refresh
-
-        if (email === "") {
-            alert("must enter email");
-        } else if (name === "") {
-            alert("must enter name");
-        } else if (address === "") {
-            alert("must enter address");
-        } else if (commission === "") {
-            alert("must enter commission amt");
-        } else if (userRank === "") {
-            alert("must enter rank");
-        } else {
-            // submit to database
-
-            // quote entry
-            const quoteData = {
-                address: address,
-                commission: commission,
-                email: email,
-                fullname: name,
-                rank: userRank,
-                profile_picture: profilePic
-            };
-
-            let newQuoteKey = "";
-
-            // get a key for a new quote
-            if (!quoteKey) {
-                newQuoteKey = push(child(dbRef(db), "users")).key;
-            } else {
-                newQuoteKey = quoteKey;
-            }
-
-            const updates = {};
-            updates["/users/" + newQuoteKey] = quoteData;
-
-            await update(dbRef(db), updates);
-
-            closePopup();
-            return newQuoteKey;
-        }
+        // fill editPopup with false
+        setEditPopup(new Array(users.length).fill(false));
     };
 
     return user ? (
-        // logged in
+        // user logged in
         rank === "admin" || rank === "dev" ? (
             // user has permissions
-            <div className="new">
-                <h2>Administration:</h2>
-                {Object.keys(salesteam).map((salesperson, i) => {
-                    return (
-                        <div key={i} className="new__personContainer">
-                            <div className="new__quote">
-                                <div className="new__salesPersonInfo">
-                                    <p className="new__salesPersonId">{salesteam[salesperson]["fullname"]} </p>
-                                    <p className="new__salesPerson">
-                                        {salesteam["fullname"]}
-                                    </p>
-                                </div>
-                                <p className="new__salesname">
-                                    {salesteam[email]}
-                                </p>
-                                <button
-                                    onClick={handleEditButton(salesperson, i)}
-                                    className="new__quoteButton"
-                                >
-                                    View Teammate
-                                </button>
-                                <Popup open={editPopup[i]}>
-                                    {(close) => {
-                                        return (
-                                            <div className="popup">
-                                                <div className="popup__inner">
-                                                    <button
-                                                        onClick={() => {
-                                                            close();
-                                                            closePopup();
-                                                        }}
-                                                        className="popup__closeBtn"
-                                                    >
-                                                        close
-                                                    </button>
-                                                    <div className="new__popup">
-                                                        <h3>
-                                                            Edit team member: {salesteam[salesperson]["fullname"]}
-                                                        </h3>
-                                                        <h3>
-                                                            {
-                                                                salesteam[salesperson][
-                                                                    "email"
-                                                                ]
-                                                            }
-                                                        </h3>
-                                                        <div className="new__salespersonInfo">
-                                                            <span className="new__text">
-                                                                Address: {" "}
-                                                                {salesteam[salesperson]["address"] ? salesteam[salesperson]["address"] : "no address on hand"}
-                                                            </span>
-                                                        </div>
-                                                        <div>
-                                                            <span className="new__text">
-                                                                Position:{" "}
-                                                                {salesteam[salesperson]["rank"]}
-                                                            </span>
-                                                        </div>
-                                                        <form>
-                                                            <div className="new__flex">
-                                                                <label htmlFor="fullname">
-                                                                    Name:{" "}
-                                                                </label>
-                                                                <input
-                                                                    onChange={(e) =>
-                                                                        setName(e.target.value)}
-                                                                    value={name}
-                                                                    type="text"
-                                                                    id="fullname"
-                                                                    name="fullname"
-                                                                />
-                                                            </div> 
-                                                            <div className="new__flex">
-                                                                <label htmlFor="email">
-                                                                    Email:{" "}
-                                                                </label>
-                                                                <input
-                                                                    onChange={(e) =>
-                                                                        setEmail(e.target.value)}
-                                                                    value={email}
-                                                                    type="text"
-                                                                    id="email"
-                                                                    name="email"
-                                                                />
-                                                            </div>  
-                                                            <div className="new__flex">
-                                                                <label htmlFor="address">
-                                                                    Address:{" "}
-                                                                </label>
-                                                                <input
-                                                                    onChange={(e) =>
-                                                                        setAddress(e.target.value)}
-                                                                    value={address}
-                                                                    type="text"
-                                                                    id="address"
-                                                                    name="address"
-                                                                />
-                                                            </div>
-                                                            <div className="new__flex">
-                                                                <label htmlFor="userRank">
-                                                                    Rank:{" "}
-                                                                </label>
-                                                                <input
-                                                                    onChange={(e) =>
-                                                                        setRank(e.target.value)}
-                                                                    value={userRank}
-                                                                    type="text"
-                                                                    id="userRank"
-                                                                    name="userRank"
-                                                                />
-                                                            </div> 
-                                                            <div className="new__flex">
-                                                                <label htmlFor="commission">
-                                                                    Commission:{" "}
-                                                                </label>
-                                                                <input
-                                                                    onChange={(e) =>
-                                                                        setCommission(e.target.value)}
-                                                                    value={commission}
-                                                                    type="text"
-                                                                    id="commission"
-                                                                    name="commission"
-                                                                />
-                                                            </div>                                             
-                                                        </form>
-                                                        <div>
-                                                        <button
-                                                                onClick={handleSaveSalesPerson(salesperson)}
-                                                                className="popup__closeBtn2"
-                                                            >
-                                                                Save
-                                                            </button>
-                                                        </div>
-                                                    </div>
+            <div className="admin">
+                <h2 className="adminTitle">Administration</h2>
+                <div className="flexCont">
+                    <div className="flexLeft">
+                        <div className="divider" />
+                        {users ? (
+                            <div className="associateList">
+                                {users.map((item, i) => {
+                                    // console.log(item[0]);   //key value
+                                    return (
+                                        <div className="associateNode">
+                                            <div className="textData">
+                                                <div className="salesAssociates">
+                                                    {item[1].fullname}
+                                                </div>
+                                                <div className="commission">{`Commission: $${item[1].commission}`}</div>
+                                                <div className="userRank">
+                                                    {item[1].rank}
                                                 </div>
                                             </div>
-                                        );
-                                    }}
-                                </Popup>
+                                            <div className="buttons">
+                                                <button
+                                                    className="adminButton editButton"
+                                                    onClick={() => {
+                                                        // setPopup(true);
+                                                        // handle edit button
+                                                        checkUserData(
+                                                            item[1].fullname,
+                                                            item[1].email,
+                                                            item[1].commission,
+                                                            item[1].address,
+                                                            item[1].rank,
+                                                            i,
+                                                            item[1]
+                                                                .profile_picture
+                                                        );
+                                                    }}
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    className="adminButton deleteButton"
+                                                    onClick={() => {
+                                                        checkUser(item[0]);
+                                                    }}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                            <Popup open={editPopup[i]}>
+                                                {(close) => {
+                                                    return (
+                                                        <div className="popup">
+                                                            <div className="admin__popup">
+                                                                <button
+                                                                    onClick={() => {
+                                                                        close();
+                                                                        closePopup();
+                                                                    }}
+                                                                    className="popup__closeBtn"
+                                                                >
+                                                                    close
+                                                                </button>
+                                                                <FormControl>
+                                                                    <div className="editAssocFields">
+                                                                        <TextField
+                                                                            label="Name"
+                                                                            variant="standard"
+                                                                            sx={{
+                                                                                mb: "30px",
+                                                                            }}
+                                                                            value={
+                                                                                name
+                                                                            }
+                                                                            onChange={(
+                                                                                e
+                                                                            ) =>
+                                                                                setName(
+                                                                                    e
+                                                                                        .target
+                                                                                        .value
+                                                                                )
+                                                                            }
+                                                                        />
+                                                                        <TextField
+                                                                            label="Email"
+                                                                            variant="standard"
+                                                                            sx={{
+                                                                                mb: "30px",
+                                                                            }}
+                                                                            value={
+                                                                                email
+                                                                            }
+                                                                            onChange={(
+                                                                                e
+                                                                            ) =>
+                                                                                setEmail(
+                                                                                    e
+                                                                                        .target
+                                                                                        .value
+                                                                                )
+                                                                            }
+                                                                        />
+                                                                        <TextField
+                                                                            label="Commission"
+                                                                            variant="standard"
+                                                                            sx={{
+                                                                                mb: "30px",
+                                                                            }}
+                                                                            value={
+                                                                                commission
+                                                                            }
+                                                                            onChange={(
+                                                                                e
+                                                                            ) => {
+                                                                                const re =
+                                                                                    /^[0-9\b]+$/;
+                                                                                if (
+                                                                                    e
+                                                                                        .target
+                                                                                        .value ===
+                                                                                        "" ||
+                                                                                    re.test(
+                                                                                        e
+                                                                                            .target
+                                                                                            .value
+                                                                                    )
+                                                                                ) {
+                                                                                    setCommission(
+                                                                                        e
+                                                                                            .target
+                                                                                            .value
+                                                                                    );
+                                                                                }
+                                                                            }}
+                                                                        />
+                                                                        <TextField
+                                                                            label="Address"
+                                                                            variant="standard"
+                                                                            sx={{
+                                                                                mb: "30px",
+                                                                            }}
+                                                                            value={
+                                                                                address
+                                                                            }
+                                                                            onChange={(
+                                                                                e
+                                                                            ) =>
+                                                                                setAddress(
+                                                                                    e
+                                                                                        .target
+                                                                                        .value
+                                                                                )
+                                                                            }
+                                                                        />
+                                                                        <select
+                                                                            onChange={(
+                                                                                e
+                                                                            ) => {
+                                                                                setNewRank(
+                                                                                    e
+                                                                                        .target
+                                                                                        .value
+                                                                                );
+                                                                            }}
+                                                                        >
+                                                                            {item[1]
+                                                                                .rank ===
+                                                                            "user" ? (
+                                                                                <option
+                                                                                    value="user"
+                                                                                    selected
+                                                                                >
+                                                                                    User
+                                                                                </option>
+                                                                            ) : (
+                                                                                <option value="user">
+                                                                                    User
+                                                                                </option>
+                                                                            )}
+                                                                            {item[1]
+                                                                                .rank ===
+                                                                            "salesAssociate" ? (
+                                                                                <option
+                                                                                    value="salesAssociate"
+                                                                                    selected
+                                                                                >
+                                                                                    Sales
+                                                                                    Associate
+                                                                                </option>
+                                                                            ) : (
+                                                                                <option value="salesAssociate">
+                                                                                    Sales
+                                                                                    Associate
+                                                                                </option>
+                                                                            )}
+                                                                            {item[1]
+                                                                                .rank ===
+                                                                            "dev" ? (
+                                                                                <option
+                                                                                    value="dev"
+                                                                                    selected
+                                                                                >
+                                                                                    Developer
+                                                                                </option>
+                                                                            ) : (
+                                                                                <option value="dev">
+                                                                                    Developer
+                                                                                </option>
+                                                                            )}
+                                                                            {item[1]
+                                                                                .rank ===
+                                                                            "admin" ? (
+                                                                                <option
+                                                                                    value="admin"
+                                                                                    selected
+                                                                                >
+                                                                                    Administrator
+                                                                                </option>
+                                                                            ) : (
+                                                                                <option value="admin">
+                                                                                    Administrator
+                                                                                </option>
+                                                                            )}
+                                                                            {item[1]
+                                                                                .rank ===
+                                                                            "inhouse1" ? (
+                                                                                <option
+                                                                                    value="inhouse1"
+                                                                                    selected
+                                                                                >
+                                                                                    In-House
+                                                                                    1
+                                                                                </option>
+                                                                            ) : (
+                                                                                <option value="inhouse1">
+                                                                                    In-House
+                                                                                    1
+                                                                                </option>
+                                                                            )}
+                                                                            {item[1]
+                                                                                .rank ===
+                                                                            "inhouse2" ? (
+                                                                                <option
+                                                                                    value="inhouse2"
+                                                                                    selected
+                                                                                >
+                                                                                    In-House
+                                                                                    2
+                                                                                </option>
+                                                                            ) : (
+                                                                                <option value="inhouse2">
+                                                                                    In-House
+                                                                                    2
+                                                                                </option>
+                                                                            )}
+                                                                        </select>
+                                                                        {/* <div className="dropDown">
+                                                                    <div className="selected">
+                                                                        any text
+                                                                    </div>
+                                                                    <ul>
+                                                                        <li>rank 1</li>
+                                                                        <li>rank 2</li>
+                                                                        <li>rank 3</li>
+                                                                    </ul>
+                                                                </div> */}
+                                                                    </div>
+                                                                    <input
+                                                                        key={
+                                                                            item[0]
+                                                                        }
+                                                                        onClick={editData(
+                                                                            item[0]
+                                                                        )}
+                                                                        className="submitButton"
+                                                                        type="submit"
+                                                                    ></input>
+                                                                </FormControl>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }}
+                                            </Popup>
+                                        </div>
+                                    );
+                                })}
                             </div>
-                        </div>
-                    );
-                })}
-                <h3>
-                    {Object.keys(salesteam).length} sales person
-                    {Object.keys(salesteam).length !== 1 && "s"} found
-                </h3>
+                        ) : (
+                            <div> Loading... </div>
+                        )}
+                        <div className="divider" />
+                    </div>
+                </div>
             </div>
         ) : (
             <InvalidPermissions />
-        )     
+        )
     ) : (
         // user is not logged in
         <NoLogin />

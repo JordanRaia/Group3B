@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Header.css";
 import { Link, Outlet } from "react-router-dom";
-import Logo from "../logo/3B-logos_white.png";
+import Logo from "../logo/3B-logos_black.png";
 // react-bootstrap
 import { Container, Navbar, Nav } from "react-bootstrap";
 //firebase
@@ -86,7 +86,7 @@ function Header() {
 
     return (
         <>
-            <Navbar sticky="top" bg="dark" expand="lg" variant="dark">
+            <Navbar sticky="top" expand="lg">
                 <Container>
                     {/* Logo or Title Here */}
                     <Link to={"/"} style={{ textDecoration: "none" }}>
@@ -138,6 +138,9 @@ function Header() {
                             )}
                             {/* Administration */}
                             {(rank === "admin" || rank === "dev") && (
+                                <div className="header__divider" />
+                            )}
+                            {(rank === "admin" || rank === "dev") && (
                                 <Nav.Link
                                     as={Link}
                                     to={"/Administration"}
@@ -164,25 +167,27 @@ function Header() {
                                 src={profileUrl}
                                 alt="profile"
                             />
-                            <div className="header__flexDown">
+
+                            {/* <div className="divider" /> */}
+
+                            {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
+                            <div className="header__linkFlex">
                                 <div className="header__helloText">
-                                    Hello {user ? name : "Guest"}
+                                    {user ? name : "Guest"}
                                 </div>
-                                {/* If User is signed in it'll say Sign Out otherwise it's Sign In */}
-                                <div className="header__linkFlex">
-                                    <Link
-                                        className="header__link"
-                                        to={!user && "/login"}
+                                <Link
+                                    className="header__link"
+                                    to={!user && "/login"}
+                                >
+                                    <div
+                                        onClick={handleAuth}
+                                        className="header__signIn"
                                     >
-                                        <div
-                                            onClick={handleAuth}
-                                            className="header__signIn"
-                                        >
-                                            {user ? "Sign Out" : "Sign In"}
-                                        </div>
-                                    </Link>
-                                </div>
+                                        {user ? "Sign Out" : "Sign In"}
+                                    </div>
+                                </Link>
                             </div>
+
                             <img
                                 className="header__profilePic"
                                 id="profile1"

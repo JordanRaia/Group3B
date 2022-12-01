@@ -5,7 +5,7 @@
     margin: 0;
     padding: 0;
     height: 100vh;
-    background: linear-gradient(120deg, rgb(182, 244, 146), rgb(51, 139, 147));
+    /* background: linear-gradient(120deg, rgb(182, 244, 146), rgb(51, 139, 147)); */
     overflow: hidden;
 }
 
@@ -53,16 +53,18 @@
 
 .home__flex {
     display: flex;
-    margin-top: 5rem;
-    justify-content: space-evenly;
+    margin: 5rem 0;
+    /* justify-content: space-evenly; */
+    width: 100%;
 }
 
-.home__flexColumn {
+/* .home__flexColumn {
     margin: 2rem;
     margin: 1rem;
-}
+} */
 
-.home__Header {
+
+/* .home__Header {
     font-family: Poppins;
     font-weight: 700;
     font-size: xx-large;
@@ -72,11 +74,64 @@
     font-family: Poppins;
     font-weight: 600;
     font-size: x-large;
-}
+} */
 
 .home__logo {
     border: 5px solid black;
     border-radius: 50%;
     width: 50%;
     margin: 1rem;
+}
+
+.cardContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cardContainer .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 32%;
+    background-color: #3A52CD;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 4px 10px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: 0px 4px 10px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 4px 10px 0px rgba(0,0,0,0.2);
+    overflow: hidden;
+    border: solid 1px #E7E7E7;
+    transition: .2s;
+}
+
+.cardContainer .card .cardImage {
+    height: 275px;
+}
+
+.cardContainer .card .cardContent {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: white;
+    padding: 20px;
+}
+
+.cardContainer .card .cardContent .cardHeader {
+    font-size: 20px;
+    font-weight: 600;
+    transition: .2s
+}
+
+.cardContainer .card:hover .cardContent .cardHeader {
+    color: #3A52CD;
+}
+
+.cardContainer .card:hover {
+    -webkit-box-shadow: 0px 4px 12px 0px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0px 4px 12px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 4px 12px 0px rgba(0,0,0,0.3);
+}
+
+.cardContainer .card .cardContent .cardDesc {
+    font-size: 16px;
+    color: #333
 }

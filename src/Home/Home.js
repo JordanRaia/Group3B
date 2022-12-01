@@ -1,6 +1,7 @@
 import React from "react";
 import "./Home.css";
 import Logo from "../logo/3B-logos_black.png";
+import { Link, Outlet } from "react-router-dom";
 
 function Home() {
     return (
@@ -8,10 +9,45 @@ function Home() {
             <div className="home">
                 <div className="home__flex">
                     <div className="home__flexColumn">
-                        <h1 className="home__Header">Hello There,</h1>
-                        <h2 className="home__subHeader">We're 3B Plant Repair</h2>
+                        <h1>Welcome Back!</h1>
+                        <h3>We're 3B Plant Repair</h3>
+
                     </div>
-                    <img className="home__logo" src={Logo} alt="" />
+                </div>
+                <div className="cardContainer">
+                    <Link className="card" to={"/NewQuote"} style={{ textDecoration: "none" }}>
+                        <img className="cardImage" src={require("../Assets/image1.png")} alt="" />
+                        <div className="cardContent">
+                            <div className="cardHeader">
+                                New Quote
+                            </div>
+                            <p className="cardDesc">
+                                Create itemized quotes
+                            </p>
+                        </div>
+                    </Link>
+                    <Link className="card" to={"/FinalizeQuote"} style={{ textDecoration: "none" }}>
+                        <img className="cardImage" src={require("../Assets/image3.png")} alt="" />
+                        <div className="cardContent">
+                            <div className="cardHeader">
+                                Finalize Quote
+                            </div>
+                            <p className="cardDesc">
+                                Edit and finalize quotes
+                            </p>
+                        </div>
+                    </Link>
+                    <Link className="card" to={"/SanctionQuote"} style={{ textDecoration: "none" }}>
+                        <img className="cardImage" src={require("../Assets/image2.png")} alt="" />
+                        <div className="cardContent">
+                            <div className="cardHeader">
+                                Sanction Quote
+                            </div>
+                            <p className="cardDesc">
+                                Process finalized quotes
+                            </p>
+                        </div>
+                    </Link>
                 </div>
             </div>
         </div>
