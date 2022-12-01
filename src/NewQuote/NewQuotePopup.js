@@ -9,7 +9,6 @@ function NewQuotePopup(props) {
                     onClick={() => props.setTrigger(false)}
                     className="popup__closeBtn"
                 >
-                    close
                 </button>
                 {props.children}
             </div>
