@@ -463,6 +463,7 @@ const Administration = () => {
                         <div className="divider" />
                     </div>
                 </div>
+                <div className="BottomSpace"> </div>
             </div>
         ) : (
             <InvalidPermissions />
