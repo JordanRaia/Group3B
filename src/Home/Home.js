@@ -1,7 +1,7 @@
 import React from "react";
 import "./Home.css";
-import Logo from "../logo/3B-logos_black.png";
-import { Link, Outlet } from "react-router-dom";
+// import Logo from "../logo/3B-logos_black.png";
+import { Link } from "react-router-dom";
 
 function Home() {
     return (
