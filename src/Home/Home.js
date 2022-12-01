@@ -100,6 +100,7 @@ function Home() {
                     )}
                 </div>
             </div>
+            <div className="BottomSpace"> </div>
         </div>
     );
 }
