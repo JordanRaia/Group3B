@@ -16,10 +16,7 @@ function Quotes() {
     const [customers, setCustomers] = useState([]);
     const [user, setUser] = useState({});
     const [rank, setRank] = useState("none");
-    const [currentQuotes, setCurrentQuotes] = useState([]);
-    const [finalizedQuotes, setFinalizedQuotes] = useState([]);
-    const [sanctionedQuotes, setSanctionedQuotes] = useState([]);
-    const [completedQuotes, setCompletedQuotes] = useState([]);
+    const [quotes, setQuotes] = useState([]);
 
     useEffect(() => {
         getCustomers();
@@ -44,35 +41,11 @@ function Quotes() {
             setUser(currentUser);
 
             if (user) {
-                const currentQuotesRef = dbRef(db, `quotes/current quotes/`);
-                const finalizedQuotesRef = dbRef(
-                    db,
-                    `quotes/finalized quotes/`
-                );
-                const sanctionedQuotesRef = dbRef(
-                    db,
-                    `quotes/sanctioned quotes/`
-                );
-                const completedQuotesRef = dbRef(
-                    db,
-                    `quotes/completed quotes/`
-                );
+                const quotesRef = dbRef(db, `quotes/`);
 
-                onValue(currentQuotesRef, (snapshot) => {
+                onValue(quotesRef, (snapshot) => {
                     const data = snapshot.val();
-                    setCurrentQuotes(data);
-                });
-                onValue(finalizedQuotesRef, (snapshot) => {
-                    const data = snapshot.val();
-                    setFinalizedQuotes(data);
-                });
-                onValue(sanctionedQuotesRef, (snapshot) => {
-                    const data = snapshot.val();
-                    setSanctionedQuotes(data);
-                });
-                onValue(completedQuotesRef, (snapshot) => {
-                    const data = snapshot.val();
-                    setCompletedQuotes(data);
+                    setQuotes(data);
                 });
 
                 // get the user's rank
@@ -87,6 +60,8 @@ function Quotes() {
         });
     }
 
+    console.log(quotes);
+
     return user ? (
         rank === "admin" || rank === "dev" ? (
             <div className="quotes">
@@ -99,22 +74,17 @@ function Quotes() {
                     </Link>
                 </div>
                 <h2>Quotes:</h2>
-                <Quote quotes={currentQuotes} customers={customers} />
-                <Quote quotes={finalizedQuotes} customers={customers} />
-                <Quote quotes={sanctionedQuotes} customers={customers} />
-                <Quote quotes={completedQuotes} customers={customers} />
+                {Object.keys(quotes).map((quoteGroup, i) => {
+                    return (
+                        <Quote
+                            quotes={quotes[quoteGroup]}
+                            customers={customers}
+                        />
+                    );
+                })}
                 <h3>
-                    {Object.keys(currentQuotes).length +
-                        Object.keys(finalizedQuotes).length +
-                        Object.keys(sanctionedQuotes).length +
-                        Object.keys(completedQuotes).length}{" "}
-                    quote
-                    {Object.keys(currentQuotes).length +
-                        Object.keys(finalizedQuotes).length +
-                        Object.keys(sanctionedQuotes).length +
-                        Object.keys(completedQuotes).length !==
-                        1 && "s"}{" "}
-                    found
+                    {"2f2"} quote
+                    {true && "s"} found
                 </h3>
             </div>
         ) : (

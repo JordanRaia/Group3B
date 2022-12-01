@@ -106,7 +106,8 @@ function SanctionQuote() {
                         update(dbRef(db), updates);
 
                         alert(
-                            `A commission of ${newCommAmt.toFixed(2)} has been added to ${data["fullname"]}'s total commission.`
+                            `Quote Ordered and set to be processed on ${responseData["processDay"]},
+                            A commission of ${newCommAmt.toFixed(2)} has been added to ${data["fullname"]}'s total commission.`
                         );
 
                         console.log(jsonResponse);
@@ -572,9 +573,7 @@ function SanctionQuote() {
                                                             closePopup();
                                                         }}
                                                         className="popup__closeBtn"
-                                                    >
-                                                        close
-                                                    </button>
+                                                    />
                                                     <div className="new__popup">
                                                         <h3>
                                                             Edit quote: {quote}

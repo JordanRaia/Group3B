@@ -211,7 +211,6 @@ function Quote({ quotes }, customers) {
                                                     }}
                                                     className="popup__closeBtn"
                                                 >
-                                                    close
                                                 </button>
                                                 <div className="new__popup">
                                                     <h3>Quote: {quote}</h3>

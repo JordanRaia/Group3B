@@ -213,9 +213,7 @@ const Administration = () => {
                                                                         closePopup();
                                                                     }}
                                                                     className="popup__closeBtn"
-                                                                >
-                                                                    close
-                                                                </button>
+                                                                />
                                                                 <FormControl>
                                                                     <div className="editAssocFields">
                                                                         <TextField
@@ -358,10 +356,13 @@ const Administration = () => {
                                                                                 >
                                                                                     Developer
                                                                                 </option>
-                                                                            ) : (
+                                                                            ) : rank ===
+                                                                              "dev" ? (
                                                                                 <option value="dev">
                                                                                     Developer
                                                                                 </option>
+                                                                            ) : (
+                                                                                ""
                                                                             )}
                                                                             {item[1]
                                                                                 .rank ===
