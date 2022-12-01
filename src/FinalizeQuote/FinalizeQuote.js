@@ -563,6 +563,7 @@ function FinalizeQuote() {
                     </Link>
                 </div>
                 <h2>Finalized Quotes:</h2>
+                <div className="new__divider" />
                 {Object.keys(quotes).map((quote, i) => {
                     return (
                         <div key={i} className="new__quoteContainer">
@@ -1039,7 +1040,8 @@ function FinalizeQuote() {
                         </div>
                     );
                 })}
-                <h3>
+                <div className="new__divider" />
+                <h3 className="new__quotesFound">
                     {Object.keys(quotes).length} quote
                     {Object.keys(quotes).length !== 1 && "s"} found
                 </h3>

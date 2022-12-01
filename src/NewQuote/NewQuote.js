@@ -821,485 +821,488 @@ function NewQuote() {
                         <span className="new__bulletLink">Customers</span>
                     </Link>
                 </div>
-                <h2>Current Quotes:</h2>
-                {Object.keys(quotes).map((quote, i) => {
-                    return (
-                        <div key={i} className="new__quoteContainer">
-                            <div className="new__quote">
-                                <div className="new__quoteCustomerInfo">
-                                    <p className="new__quoteId">{quote}: </p>
-                                    <p className="new__quoteCustomer">
-                                        {quotes[quote]["customer"]}
+                <h2 className="new__title">Current Quotes:</h2>
+                <div className="new__divider" />
+                <div className="new__quotesContainer">
+                    {Object.keys(quotes).map((quote, i) => {
+                        return (
+                            <div key={i} className="new__quoteContainer">
+                                <div className="new__quote">
+                                    <div className="new__quoteCustomerInfo">
+                                        <p className="new__quoteId">{quote} </p>
+                                        <p className="new__quoteCustomer">
+                                            {quotes[quote]["customer"]}
+                                        </p>
+                                    </div>
+                                    <p className="new__quoteAmount">
+                                        $
+                                        {calculateQuoteAmount({ quote })
+                                            .toLocaleString("en-US", {
+                                                style: "currency",
+                                                currency: "USD",
+                                            })
+                                            .slice(1)}
                                     </p>
-                                </div>
-                                <p className="new__quoteAmount">
-                                    $
-                                    {calculateQuoteAmount({ quote })
-                                        .toLocaleString("en-US", {
-                                            style: "currency",
-                                            currency: "USD",
-                                        })
-                                        .slice(1)}
-                                </p>
-                                <button
-                                    onClick={handleEditButton(quote, i)}
-                                    className="new__quoteButton"
-                                >
-                                    Edit Quote
-                                </button>
-                                <Popup open={editPopup[i]}>
-                                    {(close) => {
-                                        return (
-                                            <div className="popup">
-                                                <div className="popup__inner">
-                                                    <button
-                                                        onClick={() => {
-                                                            close();
-                                                            closePopup();
-                                                        }}
-                                                        className="popup__closeBtn"
-                                                    >             
-                                                    </button>
-                                                    <div className="new__popup">
-                                                        <h3>
-                                                            Edit quote: {quote}
-                                                        </h3>
-                                                        <h3>
-                                                            {
-                                                                quotes[quote][
-                                                                    "customer"
-                                                                ]
-                                                            }
-                                                        </h3>
-                                                        <div className="new__customerInfo">
-                                                            <span className="new__text">
-                                                                {quotes &&
-                                                                    quotes[
-                                                                        quote
-                                                                    ] &&
-                                                                    quotes[
-                                                                        quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ] &&
-                                                                    customers[
+                                    <button
+                                        onClick={handleEditButton(quote, i)}
+                                        className="new__editButton"
+                                    >
+                                        Edit
+                                    </button>
+                                    <Popup open={editPopup[i]}>
+                                        {(close) => {
+                                            return (
+                                                <div className="popup">
+                                                    <div className="popup__inner">
+                                                        <button
+                                                            onClick={() => {
+                                                                close();
+                                                                closePopup();
+                                                            }}
+                                                            className="popup__closeBtn"
+                                                        ></button>
+                                                        <div className="new__popup">
+                                                            <h3>
+                                                                Edit quote: {quote}
+                                                            </h3>
+                                                            <h3>
+                                                                {
+                                                                    quotes[quote][
+                                                                        "customer"
+                                                                    ]
+                                                                }
+                                                            </h3>
+                                                            <div className="new__customerInfo">
+                                                                <span className="new__text">
+                                                                    {quotes &&
+                                                                        quotes[
+                                                                            quote
+                                                                        ] &&
                                                                         quotes[
                                                                             quote
                                                                         ][
                                                                             "customer id"
-                                                                        ]
-                                                                    ] &&
-                                                                    customers[
+                                                                        ] &&
+                                                                        customers[
+                                                                            quotes[
+                                                                                quote
+                                                                            ][
+                                                                                "customer id"
+                                                                            ]
+                                                                        ] &&
+                                                                        customers[
+                                                                            quotes[
+                                                                                quote
+                                                                            ][
+                                                                                "customer id"
+                                                                            ]
+                                                                        ][
+                                                                            "street"
+                                                                        ] &&
+                                                                        customers[
+                                                                            quotes[
+                                                                                quote
+                                                                            ][
+                                                                                "customer id"
+                                                                            ]
+                                                                        ]["street"]}
+                                                                </span>
+                                                                <span className="new__text">
+                                                                    {quotes &&
+                                                                        quotes[
+                                                                            quote
+                                                                        ] &&
                                                                         quotes[
                                                                             quote
                                                                         ][
                                                                             "customer id"
-                                                                        ]
-                                                                    ][
-                                                                        "street"
-                                                                    ] &&
-                                                                    customers[
+                                                                        ] &&
+                                                                        customers[
+                                                                            quotes[
+                                                                                quote
+                                                                            ][
+                                                                                "customer id"
+                                                                            ]
+                                                                        ] &&
+                                                                        customers[
+                                                                            quotes[
+                                                                                quote
+                                                                            ][
+                                                                                "customer id"
+                                                                            ]
+                                                                        ]["city"] &&
+                                                                        customers[
+                                                                            quotes[
+                                                                                quote
+                                                                            ][
+                                                                                "customer id"
+                                                                            ]
+                                                                        ]["city"]}
+                                                                </span>
+                                                                <span className="new__text">
+                                                                    {quotes &&
+                                                                        quotes[
+                                                                            quote
+                                                                        ] &&
                                                                         quotes[
                                                                             quote
                                                                         ][
                                                                             "customer id"
-                                                                        ]
-                                                                    ]["street"]}
-                                                            </span>
-                                                            <span className="new__text">
-                                                                {quotes &&
-                                                                    quotes[
-                                                                        quote
-                                                                    ] &&
-                                                                    quotes[
-                                                                        quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ] &&
-                                                                    customers[
-                                                                        quotes[
-                                                                            quote
+                                                                        ] &&
+                                                                        customers[
+                                                                            quotes[
+                                                                                quote
+                                                                            ][
+                                                                                "customer id"
+                                                                            ]
+                                                                        ] &&
+                                                                        customers[
+                                                                            quotes[
+                                                                                quote
+                                                                            ][
+                                                                                "customer id"
+                                                                            ]
                                                                         ][
-                                                                            "customer id"
-                                                                        ]
-                                                                    ] &&
-                                                                    customers[
-                                                                        quotes[
-                                                                            quote
+                                                                            "contact"
+                                                                        ] &&
+                                                                        customers[
+                                                                            quotes[
+                                                                                quote
+                                                                            ][
+                                                                                "customer id"
+                                                                            ]
                                                                         ][
-                                                                            "customer id"
-                                                                        ]
-                                                                    ]["city"] &&
-                                                                    customers[
-                                                                        quotes[
-                                                                            quote
-                                                                        ][
-                                                                            "customer id"
-                                                                        ]
-                                                                    ]["city"]}
-                                                            </span>
-                                                            <span className="new__text">
-                                                                {quotes &&
-                                                                    quotes[
-                                                                        quote
-                                                                    ] &&
-                                                                    quotes[
-                                                                        quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ] &&
-                                                                    customers[
-                                                                        quotes[
-                                                                            quote
-                                                                        ][
-                                                                            "customer id"
-                                                                        ]
-                                                                    ] &&
-                                                                    customers[
-                                                                        quotes[
-                                                                            quote
-                                                                        ][
-                                                                            "customer id"
-                                                                        ]
-                                                                    ][
-                                                                        "contact"
-                                                                    ] &&
-                                                                    customers[
-                                                                        quotes[
-                                                                            quote
-                                                                        ][
-                                                                            "customer id"
-                                                                        ]
-                                                                    ][
-                                                                        "contact"
-                                                                    ]}
-                                                            </span>
-                                                        </div>
-                                                        <form>
-                                                            <div className="new__flex">
-                                                                <label htmlFor="email">
-                                                                    Email:{" "}
-                                                                </label>
-                                                                <input
-                                                                    onChange={(
-                                                                        e
-                                                                    ) =>
-                                                                        setEmail(
+                                                                            "contact"
+                                                                        ]}
+                                                                </span>
+                                                            </div>
+                                                            <form>
+                                                                <div className="new__flex">
+                                                                    <label htmlFor="email">
+                                                                        Email:{" "}
+                                                                    </label>
+                                                                    <input
+                                                                        onChange={(
                                                                             e
-                                                                                .target
-                                                                                .value
-                                                                        )
-                                                                    }
-                                                                    value={
-                                                                        email
-                                                                    }
-                                                                    type="text"
-                                                                    id="email"
-                                                                    name="email"
-                                                                />
-                                                            </div>
-                                                            <div className="new__flex">
-                                                                <h4>
-                                                                    Line Items:{" "}
-                                                                </h4>
-                                                                <button
-                                                                    onClick={
-                                                                        handleLineButton
-                                                                    }
-                                                                >
-                                                                    New Item
-                                                                </button>
-                                                            </div>
-                                                            {lineItems.map(
-                                                                (item, i) => (
-                                                                    <div>
-                                                                        <label
-                                                                            htmlFor={`item`}
-                                                                        >
-                                                                            item:{" "}
-                                                                        </label>
-                                                                        <input
-                                                                            type="text"
-                                                                            value={
-                                                                                lineItems[
-                                                                                    i
-                                                                                ]
-                                                                            }
-                                                                            onChange={handleFieldChangeLineItem(
-                                                                                i
-                                                                            )}
-                                                                        ></input>
-                                                                        <label
-                                                                            htmlFor={`amount`}
-                                                                        >
-                                                                            {" "}
-                                                                            amount:{" "}
-                                                                        </label>
-                                                                        <CurrencyFormat
-                                                                            onChange={handleFieldChangeLineAmount(
-                                                                                i
-                                                                            )}
-                                                                            value={
-                                                                                lineItemAmount[
-                                                                                    i
-                                                                                ]
-                                                                            }
-                                                                            allowNegative={
-                                                                                false
-                                                                            }
-                                                                            thousandSeparator={
-                                                                                true
-                                                                            }
-                                                                            decimalScale={
-                                                                                2
-                                                                            }
-                                                                            fixedDecimalScale={
-                                                                                true
-                                                                            }
-                                                                            prefix="$"
-                                                                        />
-                                                                        <button
-                                                                            className="new__delete"
-                                                                            onClick={handleDeleteLineItem(
-                                                                                i
-                                                                            )}
-                                                                        >
-                                                                            <DeleteIcon />
-                                                                        </button>
-                                                                    </div>
-                                                                )
-                                                            )}
-                                                            <div className="new__flex">
-                                                                <h4>
-                                                                    Secret
-                                                                    Notes:{" "}
-                                                                </h4>
-                                                                <button
-                                                                    onClick={
-                                                                        handleSecretButton
-                                                                    }
-                                                                >
-                                                                    New Note
-                                                                </button>
-                                                            </div>
-                                                            {secretNotes.map(
-                                                                (note, i) => (
-                                                                    <div>
-                                                                        <label
-                                                                            htmlFor={`note`}
-                                                                        >
-                                                                            note:{" "}
-                                                                        </label>
-                                                                        <input
-                                                                            type="text"
-                                                                            value={
-                                                                                secretNotes[
-                                                                                    i
-                                                                                ]
-                                                                            }
-                                                                            onChange={handleFieldChangeSecretNote(
-                                                                                i
-                                                                            )}
-                                                                        ></input>
-                                                                        <button
-                                                                            className="new__delete"
-                                                                            onClick={handleDeleteSecretNote(
-                                                                                i
-                                                                            )}
-                                                                        >
-                                                                            <DeleteIcon />
-                                                                        </button>
-                                                                    </div>
-                                                                )
-                                                            )}
-                                                            <div className="new__flex">
-                                                                <h4>
-                                                                    Flat
-                                                                    Discounts:{" "}
-                                                                </h4>
-                                                                <button
-                                                                    onClick={
-                                                                        handleFlatDiscountButton
-                                                                    }
-                                                                >
-                                                                    New Discount
-                                                                </button>
-                                                            </div>
-                                                            {flatDiscount.map(
-                                                                (
-                                                                    discount,
-                                                                    i
-                                                                ) => (
-                                                                    <div
-                                                                        key={i}
+                                                                        ) =>
+                                                                            setEmail(
+                                                                                e
+                                                                                    .target
+                                                                                    .value
+                                                                            )
+                                                                        }
+                                                                        value={
+                                                                            email
+                                                                        }
+                                                                        type="text"
+                                                                        id="email"
+                                                                        name="email"
+                                                                    />
+                                                                </div>
+                                                                <div className="new__flex">
+                                                                    <h4>
+                                                                        Line Items:{" "}
+                                                                    </h4>
+                                                                    <button
+                                                                        onClick={
+                                                                            handleLineButton
+                                                                        }
                                                                     >
-                                                                        <label
-                                                                            htmlFor={`item`}
-                                                                        >
-                                                                            discount:{" "}
-                                                                        </label>
-                                                                        <CurrencyFormat
-                                                                            onChange={handleFieldChangeFlatDiscount(
-                                                                                i
-                                                                            )}
-                                                                            value={
-                                                                                flatDiscount[
-                                                                                    i
-                                                                                ]
-                                                                            }
-                                                                            allowNegative={
-                                                                                false
-                                                                            }
-                                                                            thousandSeparator={
-                                                                                true
-                                                                            }
-                                                                            decimalScale={
-                                                                                2
-                                                                            }
-                                                                            fixedDecimalScale={
-                                                                                true
-                                                                            }
-                                                                            max={
-                                                                                amount[
-                                                                                    amount.length -
-                                                                                        1
-                                                                                ]
-                                                                            }
-                                                                            prefix="$"
-                                                                        />
-                                                                        <button
-                                                                            className="new__delete"
-                                                                            onClick={handleDeleteFlatDiscount(
-                                                                                i
-                                                                            )}
-                                                                        >
-                                                                            <DeleteIcon />
-                                                                        </button>
-                                                                    </div>
-                                                                )
-                                                            )}
-                                                            <div className="new__flex">
-                                                                <h4>
-                                                                    Percent
-                                                                    Discounts:{" "}
-                                                                </h4>
-                                                                <button
-                                                                    onClick={
-                                                                        handlePercentDiscountButton
-                                                                    }
-                                                                >
-                                                                    New Discount
-                                                                </button>
-                                                            </div>
-                                                            {percentDiscount.map(
-                                                                (
-                                                                    discount,
-                                                                    i
-                                                                ) => (
-                                                                    <div
-                                                                        key={i}
-                                                                    >
-                                                                        <label
-                                                                            htmlFor={`item`}
-                                                                        >
-                                                                            discount:{" "}
-                                                                        </label>
-                                                                        <input
-                                                                            type="number"
-                                                                            min={
-                                                                                0
-                                                                            }
-                                                                            max={
-                                                                                100
-                                                                            }
-                                                                            placeholder={`0%-100%`}
-                                                                            value={
-                                                                                percentDiscount[
-                                                                                    i
-                                                                                ]
-                                                                            }
-                                                                            onChange={handleFieldChangePercentDiscount(
-                                                                                i
-                                                                            )}
-                                                                        ></input>
-                                                                        <button
-                                                                            className="new__delete"
-                                                                            onClick={handleDeletePercentDiscount(
-                                                                                i
-                                                                            )}
-                                                                        >
-                                                                            <DeleteIcon />
-                                                                        </button>
-                                                                    </div>
-                                                                )
-                                                            )}
-                                                            <div className="new__flex">
-                                                                <p>Amount: </p>
-                                                                <div className="new__discountFlex">
-                                                                    {amount.map(
-                                                                        (
-                                                                            amt
-                                                                        ) => (
-                                                                            <p
-                                                                                key={
-                                                                                    amt
-                                                                                }
-                                                                                className="new__discount"
+                                                                        New Item
+                                                                    </button>
+                                                                </div>
+                                                                {lineItems.map(
+                                                                    (item, i) => (
+                                                                        <div>
+                                                                            <label
+                                                                                htmlFor={`item`}
                                                                             >
-                                                                                <CurrencyFormat
-                                                                                    displayType="text"
-                                                                                    value={
+                                                                                item:{" "}
+                                                                            </label>
+                                                                            <input
+                                                                                type="text"
+                                                                                value={
+                                                                                    lineItems[
+                                                                                        i
+                                                                                    ]
+                                                                                }
+                                                                                onChange={handleFieldChangeLineItem(
+                                                                                    i
+                                                                                )}
+                                                                            ></input>
+                                                                            <label
+                                                                                htmlFor={`amount`}
+                                                                            >
+                                                                                {" "}
+                                                                                amount:{" "}
+                                                                            </label>
+                                                                            <CurrencyFormat
+                                                                                onChange={handleFieldChangeLineAmount(
+                                                                                    i
+                                                                                )}
+                                                                                value={
+                                                                                    lineItemAmount[
+                                                                                        i
+                                                                                    ]
+                                                                                }
+                                                                                allowNegative={
+                                                                                    false
+                                                                                }
+                                                                                thousandSeparator={
+                                                                                    true
+                                                                                }
+                                                                                decimalScale={
+                                                                                    2
+                                                                                }
+                                                                                fixedDecimalScale={
+                                                                                    true
+                                                                                }
+                                                                                prefix="$"
+                                                                            />
+                                                                            <button
+                                                                                className="new__delete"
+                                                                                onClick={handleDeleteLineItem(
+                                                                                    i
+                                                                                )}
+                                                                            >
+                                                                                <DeleteIcon />
+                                                                            </button>
+                                                                        </div>
+                                                                    )
+                                                                )}
+                                                                <div className="new__flex">
+                                                                    <h4>
+                                                                        Secret
+                                                                        Notes:{" "}
+                                                                    </h4>
+                                                                    <button
+                                                                        onClick={
+                                                                            handleSecretButton
+                                                                        }
+                                                                    >
+                                                                        New Note
+                                                                    </button>
+                                                                </div>
+                                                                {secretNotes.map(
+                                                                    (note, i) => (
+                                                                        <div>
+                                                                            <label
+                                                                                htmlFor={`note`}
+                                                                            >
+                                                                                note:{" "}
+                                                                            </label>
+                                                                            <input
+                                                                                type="text"
+                                                                                value={
+                                                                                    secretNotes[
+                                                                                        i
+                                                                                    ]
+                                                                                }
+                                                                                onChange={handleFieldChangeSecretNote(
+                                                                                    i
+                                                                                )}
+                                                                            ></input>
+                                                                            <button
+                                                                                className="new__delete"
+                                                                                onClick={handleDeleteSecretNote(
+                                                                                    i
+                                                                                )}
+                                                                            >
+                                                                                <DeleteIcon />
+                                                                            </button>
+                                                                        </div>
+                                                                    )
+                                                                )}
+                                                                <div className="new__flex">
+                                                                    <h4>
+                                                                        Flat
+                                                                        Discounts:{" "}
+                                                                    </h4>
+                                                                    <button
+                                                                        onClick={
+                                                                            handleFlatDiscountButton
+                                                                        }
+                                                                    >
+                                                                        New Discount
+                                                                    </button>
+                                                                </div>
+                                                                {flatDiscount.map(
+                                                                    (
+                                                                        discount,
+                                                                        i
+                                                                    ) => (
+                                                                        <div
+                                                                            key={i}
+                                                                        >
+                                                                            <label
+                                                                                htmlFor={`item`}
+                                                                            >
+                                                                                discount:{" "}
+                                                                            </label>
+                                                                            <CurrencyFormat
+                                                                                onChange={handleFieldChangeFlatDiscount(
+                                                                                    i
+                                                                                )}
+                                                                                value={
+                                                                                    flatDiscount[
+                                                                                        i
+                                                                                    ]
+                                                                                }
+                                                                                allowNegative={
+                                                                                    false
+                                                                                }
+                                                                                thousandSeparator={
+                                                                                    true
+                                                                                }
+                                                                                decimalScale={
+                                                                                    2
+                                                                                }
+                                                                                fixedDecimalScale={
+                                                                                    true
+                                                                                }
+                                                                                max={
+                                                                                    amount[
+                                                                                        amount.length -
+                                                                                            1
+                                                                                    ]
+                                                                                }
+                                                                                prefix="$"
+                                                                            />
+                                                                            <button
+                                                                                className="new__delete"
+                                                                                onClick={handleDeleteFlatDiscount(
+                                                                                    i
+                                                                                )}
+                                                                            >
+                                                                                <DeleteIcon />
+                                                                            </button>
+                                                                        </div>
+                                                                    )
+                                                                )}
+                                                                <div className="new__flex">
+                                                                    <h4>
+                                                                        Percent
+                                                                        Discounts:{" "}
+                                                                    </h4>
+                                                                    <button
+                                                                        onClick={
+                                                                            handlePercentDiscountButton
+                                                                        }
+                                                                    >
+                                                                        New Discount
+                                                                    </button>
+                                                                </div>
+                                                                {percentDiscount.map(
+                                                                    (
+                                                                        discount,
+                                                                        i
+                                                                    ) => (
+                                                                        <div
+                                                                            key={i}
+                                                                        >
+                                                                            <label
+                                                                                htmlFor={`item`}
+                                                                            >
+                                                                                discount:{" "}
+                                                                            </label>
+                                                                            <input
+                                                                                type="number"
+                                                                                min={
+                                                                                    0
+                                                                                }
+                                                                                max={
+                                                                                    100
+                                                                                }
+                                                                                placeholder={`0%-100%`}
+                                                                                value={
+                                                                                    percentDiscount[
+                                                                                        i
+                                                                                    ]
+                                                                                }
+                                                                                onChange={handleFieldChangePercentDiscount(
+                                                                                    i
+                                                                                )}
+                                                                            ></input>
+                                                                            <button
+                                                                                className="new__delete"
+                                                                                onClick={handleDeletePercentDiscount(
+                                                                                    i
+                                                                                )}
+                                                                            >
+                                                                                <DeleteIcon />
+                                                                            </button>
+                                                                        </div>
+                                                                    )
+                                                                )}
+                                                                <div className="new__flex">
+                                                                    <p>Amount: </p>
+                                                                    <div className="new__discountFlex">
+                                                                        {amount.map(
+                                                                            (
+                                                                                amt
+                                                                            ) => (
+                                                                                <p
+                                                                                    key={
                                                                                         amt
                                                                                     }
-                                                                                    decimalScale={
-                                                                                        2
-                                                                                    }
-                                                                                    fixedDecimalScale={
-                                                                                        true
-                                                                                    }
-                                                                                    prefix="$"
-                                                                                />
-                                                                            </p>
-                                                                        )
-                                                                    )}
+                                                                                    className="new__discount"
+                                                                                >
+                                                                                    <CurrencyFormat
+                                                                                        displayType="text"
+                                                                                        value={
+                                                                                            amt
+                                                                                        }
+                                                                                        decimalScale={
+                                                                                            2
+                                                                                        }
+                                                                                        fixedDecimalScale={
+                                                                                            true
+                                                                                        }
+                                                                                        prefix="$"
+                                                                                    />
+                                                                                </p>
+                                                                            )
+                                                                        )}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <button
-                                                                onClick={handleQuoteSubmit(
-                                                                    quotes[
+                                                                <button
+                                                                    onClick={handleQuoteSubmit(
+                                                                        quotes[
+                                                                            quote
+                                                                        ][
+                                                                            "customer id"
+                                                                        ],
                                                                         quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ],
-                                                                    quote
-                                                                )}
-                                                            >
-                                                                Save
-                                                            </button>
-                                                            <button
-                                                                onClick={handleFinalize(
-                                                                    quotes[
+                                                                    )}
+                                                                >
+                                                                    Save
+                                                                </button>
+                                                                <button
+                                                                    onClick={handleFinalize(
+                                                                        quotes[
+                                                                            quote
+                                                                        ][
+                                                                            "customer id"
+                                                                        ],
                                                                         quote
-                                                                    ][
-                                                                        "customer id"
-                                                                    ],
-                                                                    quote
-                                                                )}
-                                                            >
-                                                                Finalize
-                                                            </button>
-                                                        </form>
+                                                                    )}
+                                                                >
+                                                                    Finalize
+                                                                </button>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        );
-                                    }}
-                                </Popup>
+                                            );
+                                        }}
+                                    </Popup>
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
-                <h3>
+                        );
+                    })}
+                </div>
+                <div className="new__divider" />
+                <h3 className="new__quotesFound">
                     {Object.keys(quotes).length} quote
                     {Object.keys(quotes).length !== 1 && "s"} found
                 </h3>

@@ -537,6 +537,7 @@ function SanctionQuote() {
             // user has permissions
             <div className="new">
                 <h2>Sanctioned Quotes:</h2>
+                <div className="new__divider" />
                 {Object.keys(quotes).map((quote, i) => {
                     return (
                         <div key={i} className="new__quoteContainer">
@@ -987,7 +988,8 @@ function SanctionQuote() {
                         </div>
                     );
                 })}
-                <h3>
+                <div className="new__divider" />
+                <h3 className="new__quotesFound">
                     {Object.keys(quotes).length} quote
                     {Object.keys(quotes).length !== 1 && "s"} found
                 </h3>

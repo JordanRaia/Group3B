@@ -187,12 +187,19 @@ function Quote({ quotes, customers, quote, i, associates, status }) {
                 <div className="new__quote">
                     <div className="div_box">
                         <div className="new__quoteCustomerInfo">
+                            <div className="quotes__dateStatus">
+                                <p className="new__quoteCustomer">
+                                    {dateFormat(quotes[quote]["date"])}{" "}
+                                </p>
+                                <p className="new__quoteCustomer">({status}) </p>
+                            </div>
                             <p className="new__quoteCustomer">
-                                {dateFormat(quotes[quote]["date"])}
-                            </p>
-                            <p className="new__quoteCustomer">({status})</p>
-                            <p className="new__quoteCustomer">
-                                {associates[quotes[quote]["employee"]]["fullname"]} - {quotes[quote]["customer"]}
+                                {
+                                    associates[quotes[quote]["employee"]][
+                                        "fullname"
+                                    ]
+                                }{" "}
+                                - {quotes[quote]["customer"]}
                             </p>
                         </div>
                     </div>

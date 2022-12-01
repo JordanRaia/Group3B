@@ -260,7 +260,7 @@ function Quotes() {
                         )
                     );
                 })}
-                <h3>
+                <h3 className="new__quotesFound">
                     {getQuoteLength()} quote
                     {getQuoteLength() > 1 && "s"} found
                 </h3>

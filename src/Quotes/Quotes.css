@@ -70,6 +70,7 @@
 
 .new__quoteCustomerInfo {
     width: 750px;
+    white-space: pre;
 }
 
 
@@ -87,4 +88,9 @@
 
 .new__quoteAmount {
     width: 250px;
+}
+
+.quotes__dateStatus {
+    display: flex;
+    width: 35%;
 }
