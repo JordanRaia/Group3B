@@ -37,7 +37,7 @@ function SanctionQuote() {
     const [secretNotes, setSecretNotes] = useState([]);
     // for editing quotes
     const [editPopup, setEditPopup] = useState([]);
-    const [jsonResponse, setJsonResponse] = useState([]);
+    // const [jsonResponse, setJsonResponse] = useState([]);
 
     useEffect(() => {
         getCustomers();
@@ -74,7 +74,7 @@ function SanctionQuote() {
             )
             .then(function (response) {
                 const responseData = response.data;
-                setJsonResponse(responseData);
+                // setJsonResponse(responseData);
 
                 // give the sale associate the commission
                 // get commission amount
@@ -95,22 +95,25 @@ function SanctionQuote() {
                         const data = snapshot.val();
 
                         // add commission to commAmt
-                        let commAmt = data["commission"] + newCommAmt;
+                        let commAmt =
+                            Number(data["commission"]) + Number(newCommAmt);
 
                         //set database commission to new amount with added commAmt
                         const updates = {};
                         updates[
                             `/users/${quotes[orderNum]["employee"]}/commission`
-                        ] = commAmt.toFixed(2);
+                        ] = Number(commAmt.toFixed(2));
                         // update database
                         update(dbRef(db), updates);
 
                         alert(
-                            `Quote Ordered and set to be processed on ${responseData["processDay"]},
-                            A commission of ${newCommAmt.toFixed(2)} has been added to ${data["fullname"]}'s total commission.`
+                            `Quote Ordered and set to be processed on ${
+                                responseData["processDay"]
+                            },
+A commission of ${Number(newCommAmt.toFixed(2))} has been added to ${
+                                data["fullname"]
+                            }'s total commission.`
                         );
-
-                        console.log(jsonResponse);
                     },
                     {
                         onlyOnce: true,
@@ -459,8 +462,6 @@ function SanctionQuote() {
 
     const handleProcessOrder = (quoteId, customerId, quoteAmt) => async (e) => {
         e.preventDefault();
-
-        console.log("here")
 
         if (email === "") {
             alert("must enter email");
@@ -921,29 +922,36 @@ function SanctionQuote() {
                                                                 <div className="new__discountFlex">
                                                                     {amount.map(
                                                                         (
-                                                                            amt, i
-                                                                        ) => (
-                                                                            <p
-                                                                                key={
-                                                                                    i
-                                                                                }
-                                                                                className="new__discount"
-                                                                            >
-                                                                                <CurrencyFormat
-                                                                                    displayType="text"
-                                                                                    value={
-                                                                                        amt
-                                                                                    }
-                                                                                    decimalScale={
-                                                                                        2
-                                                                                    }
-                                                                                    fixedDecimalScale={
-                                                                                        true
-                                                                                    }
-                                                                                    prefix="$"
-                                                                                />
-                                                                            </p>
-                                                                        )
+                                                                            amt,
+                                                                            i
+                                                                        ) => {
+                                                                            return (
+                                                                                !isNaN(
+                                                                                    amt
+                                                                                ) && (
+                                                                                    <p
+                                                                                        key={
+                                                                                            amt
+                                                                                        }
+                                                                                        className="new__discount"
+                                                                                    >
+                                                                                        <CurrencyFormat
+                                                                                            displayType="text"
+                                                                                            value={
+                                                                                                amt
+                                                                                            }
+                                                                                            decimalScale={
+                                                                                                2
+                                                                                            }
+                                                                                            fixedDecimalScale={
+                                                                                                true
+                                                                                            }
+                                                                                            prefix="$"
+                                                                                        />
+                                                                                    </p>
+                                                                                )
+                                                                            );
+                                                                        }
                                                                     )}
                                                                 </div>
                                                             </div>

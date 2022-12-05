@@ -718,7 +718,6 @@ function NewQuote() {
                                 {flatDiscount &&
                                     flatDiscount.map((discount, i) => (
                                         <div key={i}>
-                                            {console.log(discount)}
                                             <label htmlFor={`item`}>
                                                 discount:{" "}
                                             </label>
@@ -781,20 +780,26 @@ function NewQuote() {
                                 <div className="new__flex">
                                     <p>Amount: </p>
                                     <div className="new__discountFlex">
-                                        {amount.map((amt) => (
-                                            <p
-                                                key={amt}
-                                                className="new__discount"
-                                            >
-                                                <CurrencyFormat
-                                                    displayType="text"
-                                                    value={amt}
-                                                    decimalScale={2}
-                                                    fixedDecimalScale={true}
-                                                    prefix="$"
-                                                />
-                                            </p>
-                                        ))}
+                                        {amount.map((amt) => {
+                                            return (
+                                                !isNaN(amt) && (
+                                                    <p
+                                                        key={amt}
+                                                        className="new__discount"
+                                                    >
+                                                        <CurrencyFormat
+                                                            displayType="text"
+                                                            value={amt}
+                                                            decimalScale={2}
+                                                            fixedDecimalScale={
+                                                                true
+                                                            }
+                                                            prefix="$"
+                                                        />
+                                                    </p>
+                                                )
+                                            );
+                                        })}
                                     </div>
                                 </div>
                                 <label htmlFor="save">Save for Later: </label>
@@ -864,11 +869,14 @@ function NewQuote() {
                                                         ></button>
                                                         <div className="new__popup">
                                                             <h3>
-                                                                Edit quote: {quote}
+                                                                Edit quote:{" "}
+                                                                {quote}
                                                             </h3>
                                                             <h3>
                                                                 {
-                                                                    quotes[quote][
+                                                                    quotes[
+                                                                        quote
+                                                                    ][
                                                                         "customer"
                                                                     ]
                                                                 }
@@ -906,7 +914,9 @@ function NewQuote() {
                                                                             ][
                                                                                 "customer id"
                                                                             ]
-                                                                        ]["street"]}
+                                                                        ][
+                                                                            "street"
+                                                                        ]}
                                                                 </span>
                                                                 <span className="new__text">
                                                                     {quotes &&
@@ -931,14 +941,18 @@ function NewQuote() {
                                                                             ][
                                                                                 "customer id"
                                                                             ]
-                                                                        ]["city"] &&
+                                                                        ][
+                                                                            "city"
+                                                                        ] &&
                                                                         customers[
                                                                             quotes[
                                                                                 quote
                                                                             ][
                                                                                 "customer id"
                                                                             ]
-                                                                        ]["city"]}
+                                                                        ][
+                                                                            "city"
+                                                                        ]}
                                                                 </span>
                                                                 <span className="new__text">
                                                                     {quotes &&
@@ -1002,7 +1016,8 @@ function NewQuote() {
                                                                 </div>
                                                                 <div className="new__flex">
                                                                     <h4>
-                                                                        Line Items:{" "}
+                                                                        Line
+                                                                        Items:{" "}
                                                                     </h4>
                                                                     <button
                                                                         onClick={
@@ -1013,7 +1028,10 @@ function NewQuote() {
                                                                     </button>
                                                                 </div>
                                                                 {lineItems.map(
-                                                                    (item, i) => (
+                                                                    (
+                                                                        item,
+                                                                        i
+                                                                    ) => (
                                                                         <div>
                                                                             <label
                                                                                 htmlFor={`item`}
@@ -1085,7 +1103,10 @@ function NewQuote() {
                                                                     </button>
                                                                 </div>
                                                                 {secretNotes.map(
-                                                                    (note, i) => (
+                                                                    (
+                                                                        note,
+                                                                        i
+                                                                    ) => (
                                                                         <div>
                                                                             <label
                                                                                 htmlFor={`note`}
@@ -1124,7 +1145,8 @@ function NewQuote() {
                                                                             handleFlatDiscountButton
                                                                         }
                                                                     >
-                                                                        New Discount
+                                                                        New
+                                                                        Discount
                                                                     </button>
                                                                 </div>
                                                                 {flatDiscount.map(
@@ -1133,7 +1155,9 @@ function NewQuote() {
                                                                         i
                                                                     ) => (
                                                                         <div
-                                                                            key={i}
+                                                                            key={
+                                                                                i
+                                                                            }
                                                                         >
                                                                             <label
                                                                                 htmlFor={`item`}
@@ -1190,7 +1214,8 @@ function NewQuote() {
                                                                             handlePercentDiscountButton
                                                                         }
                                                                     >
-                                                                        New Discount
+                                                                        New
+                                                                        Discount
                                                                     </button>
                                                                 </div>
                                                                 {percentDiscount.map(
@@ -1199,7 +1224,9 @@ function NewQuote() {
                                                                         i
                                                                     ) => (
                                                                         <div
-                                                                            key={i}
+                                                                            key={
+                                                                                i
+                                                                            }
                                                                         >
                                                                             <label
                                                                                 htmlFor={`item`}
@@ -1236,7 +1263,9 @@ function NewQuote() {
                                                                     )
                                                                 )}
                                                                 <div className="new__flex">
-                                                                    <p>Amount: </p>
+                                                                    <p>
+                                                                        Amount:{" "}
+                                                                    </p>
                                                                     <div className="new__discountFlex">
                                                                         {amount.map(
                                                                             (

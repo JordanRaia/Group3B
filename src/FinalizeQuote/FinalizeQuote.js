@@ -600,8 +600,7 @@ function FinalizeQuote() {
                                                             closePopup();
                                                         }}
                                                         className="popup__closeBtn"
-                                                    >
-                                                    </button>
+                                                    ></button>
                                                     <div className="new__popup">
                                                         <h3>
                                                             Edit quote: {quote}
@@ -977,28 +976,34 @@ function FinalizeQuote() {
                                                                     {amount.map(
                                                                         (
                                                                             amt
-                                                                        ) => (
-                                                                            <p
-                                                                                key={
+                                                                        ) => {
+                                                                            return (
+                                                                                !isNaN(
                                                                                     amt
-                                                                                }
-                                                                                className="new__discount"
-                                                                            >
-                                                                                <CurrencyFormat
-                                                                                    displayType="text"
-                                                                                    value={
-                                                                                        amt
-                                                                                    }
-                                                                                    decimalScale={
-                                                                                        2
-                                                                                    }
-                                                                                    fixedDecimalScale={
-                                                                                        true
-                                                                                    }
-                                                                                    prefix="$"
-                                                                                />
-                                                                            </p>
-                                                                        )
+                                                                                ) && (
+                                                                                    <p
+                                                                                        key={
+                                                                                            amt
+                                                                                        }
+                                                                                        className="new__discount"
+                                                                                    >
+                                                                                        <CurrencyFormat
+                                                                                            displayType="text"
+                                                                                            value={
+                                                                                                amt
+                                                                                            }
+                                                                                            decimalScale={
+                                                                                                2
+                                                                                            }
+                                                                                            fixedDecimalScale={
+                                                                                                true
+                                                                                            }
+                                                                                            prefix="$"
+                                                                                        />
+                                                                                    </p>
+                                                                                )
+                                                                            );
+                                                                        }
                                                                     )}
                                                                 </div>
                                                             </div>
