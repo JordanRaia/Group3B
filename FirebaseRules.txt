@@ -1,5 +1,8 @@
 {
   "rules": {
+    // allow dev to read and write everything
+    ".read": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'dev'",
+    ".write": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'dev'",
     "quotes" : {
       "completed quotes" : {
         // allow read if admin
@@ -16,7 +19,7 @@
         "finalized quotes" : {
         // allow read if admin or inhouse1
         ".read": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'admin' || root.child('users').child(auth.uid).child('rank').val() === 'inhouse1'",
-        // allow write if sales or inhouse1
+        // allow write if sales, inhouse1
         ".write": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'sales' || root.child('users').child(auth.uid).child('rank').val() === 'inhouse1'"
       },
         "current quotes" : {
@@ -27,13 +30,22 @@
       }
     },
     "users" : {
-      // allow admin to read and write users
+      // allow admin or dev to read and write users
       ".read": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'admin'",
       ".write": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'admin'",
       // allow user to edit their own user data
       "$user_id": {
         ".write": "$user_id === auth.uid",
-        ".read": "$user_id === auth.uid"
+        ".read": "$user_id === auth.uid",
+          "commission": {
+            // allow inhouse2 to read and add commissions
+            ".write": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'inhouse2'",
+            ".read": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'inhouse2'"
+          },
+          "fullname": {
+            // allow inhouse2 to read full name
+            ".read": "auth.uid !== null && root.child('users').child(auth.uid).child('rank').val() === 'inhouse2'"
+          }
       }
     },
   }
